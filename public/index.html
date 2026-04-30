@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveAnimal Nepal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <h1 class="logo">SaveAnimal Nepal</h1>
+      <nav>
+        <a href="#home" data-i18n="nav_home">Home</a>
+        <a href="#report" data-i18n="nav_report">Report Animal</a>
+        <a href="#donate" data-i18n="nav_donate">Donate</a>
+        <a href="#volunteer" data-i18n="nav_volunteer">Volunteer</a>
+        <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#stories" data-i18n="nav_stories">Stories</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+        <a href="#admin" data-i18n="nav_admin">Admin</a>
+      </nav>
+      <button id="langToggle">नेपाली</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <h2 data-i18n="hero_title">Help Save Lives – Rescue Animals in Nepal</h2>
+          <p data-i18n="hero_text">Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.</p>
+          <div class="cta-group">
+            <a class="btn" href="#report" data-i18n="cta_report">Report an Animal</a>
+            <a class="btn secondary" href="#donate" data-i18n="cta_donate">Donate Now</a>
+            <a class="btn outline" href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
+          </div>
+        </div>
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80" alt="Rescued dog"/>
+      </div>
+    </section>
+
+    <section class="stats container">
+      <div><strong id="rescuedCount">0</strong><span data-i18n="stat_rescued">Animals Rescued</span></div>
+      <div><strong id="volunteerCount">0</strong><span data-i18n="stat_volunteers">Volunteers</span></div>
+      <div><strong id="donationCount">0</strong><span data-i18n="stat_donations">Donations (NPR)</span></div>
+      <div><strong id="reportCount">0</strong><span data-i18n="stat_reports">Active Reports</span></div>
+    </section>
+
+    <section id="stories" class="container">
+      <h3 data-i18n="stories_title">Featured Rescue Stories</h3>
+      <div class="cards">
+        <article class="card"><img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Puppy rescue"><h4>Rani's Recovery</h4><p>Found injured near Ring Road, now fully healed and adopted.</p></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80" alt="Dog transformation"><h4>Bruno Before & After</h4><p>Severe skin infection treated with 6-week medical support.</p></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Cat rescue"><h4>Mimi's Second Chance</h4><p>Rescued kitten received emergency surgery and foster care.</p></article>
+      </div>
+    </section>
+
+    <section id="report" class="container panel">
+      <h3 data-i18n="report_title">Report an Injured Animal (Helpline)</h3>
+      <p class="emergency" data-i18n="report_emergency">Emergency Helpline: +977-9800000000</p>
+      <a class="whatsapp" href="https://wa.me/9779800000000" target="_blank" rel="noreferrer">WhatsApp Help</a>
+      <form id="reportForm">
+        <input name="name" placeholder="Your Name" required />
+        <input name="phone" placeholder="Phone" required />
+        <input name="location" placeholder="Location / GPS Pin" required />
+        <textarea name="condition" placeholder="Animal condition" required></textarea>
+        <input type="file" name="animalImage" accept="image/*" />
+        <button type="submit" class="btn">Submit Report</button>
+      </form>
+      <p id="reportStatus"></p>
+    </section>
+
+    <section id="donate" class="container panel">
+      <h3>Donation</h3>
+      <form id="donationForm">
+        <input name="donorName" placeholder="Donor name" required />
+        <input type="number" name="amount" min="100" placeholder="Amount (NPR)" required />
+        <select name="frequency" required>
+          <option value="one-time">One-time</option>
+          <option value="monthly">Monthly</option>
+        </select>
+        <select name="method" required>
+          <option value="eSewa">eSewa</option>
+          <option value="Khalti">Khalti</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+        <button class="btn" type="submit">Submit Donation Intent</button>
+      </form>
+      <p>Fund use: 40% food, 35% medical treatment, 25% shelter and rehabilitation.</p>
+      <p id="donationStatus"></p>
+    </section>
+
+    <section id="volunteer" class="container panel">
+      <h3>Volunteer</h3>
+      <form id="volunteerForm">
+        <input name="fullName" placeholder="Full Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input name="phone" placeholder="Phone" required />
+        <select name="role" required>
+          <option value="Rescue team">Rescue team</option>
+          <option value="Feeding team">Feeding team</option>
+          <option value="Social media">Social media</option>
+        </select>
+        <input name="availability" placeholder="Availability" />
+        <textarea name="reason" placeholder="Why do you want to volunteer?"></textarea>
+        <button class="btn" type="submit">Join Volunteer Program</button>
+      </form>
+      <ul>
+        <li>Hands-on rescue impact</li>
+        <li>Community leadership opportunities</li>
+        <li>Training and rescue coordination skills</li>
+      </ul>
+      <p id="volunteerStatus"></p>
+    </section>
+
+    <section id="about" class="container">
+      <h3>About Us</h3>
+      <p>Our mission is to rescue, heal, and protect vulnerable animals across Nepal.</p>
+      <p>Animal rescue in Nepal is vital due to limited emergency response and growing street animal populations.</p>
+      <div class="team">
+        <div><h4>Dr. Sita Rai</h4><p>Veterinary Lead</p></div>
+        <div><h4>Ramesh Gurung</h4><p>Rescue Operations</p></div>
+        <div><h4>Anita Thapa</h4><p>Volunteer Coordinator</p></div>
+      </div>
+    </section>
+
+    <section id="contact" class="container panel">
+      <h3>Contact</h3>
+      <p>Phone: +977-9800000000 | Email: help@saveanimalnepal.org</p>
+      <iframe title="Nepal map" src="https://www.google.com/maps?q=Kathmandu,Nepal&output=embed"></iframe>
+      <p>Follow us: Facebook | Instagram | TikTok</p>
+    </section>
+
+    <section id="chat" class="chatbox">
+      <h4>Quick Help Chat</h4>
+      <div id="chatMessages"></div>
+      <form id="chatForm">
+        <input name="text" placeholder="Type your message..." required />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <section id="admin" class="container panel">
+      <h3>Admin Dashboard (Demo)</h3>
+      <button id="refreshAdmin" class="btn">Refresh Data</button>
+      <pre id="adminData"></pre>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
