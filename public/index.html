@@ -133,6 +133,7 @@
     </section>
 
     <section id="chat" class="chatbox">
+      <button id="chatToggle" class="chat-toggle" type="button">Hide</button>
       <h4>Quick Help Chat</h4>
       <div id="chatMessages"></div>
       <form id="chatForm">
@@ -146,8 +147,20 @@
       <button id="refreshAdmin" class="btn">Refresh Data</button>
       <pre id="adminData"></pre>
     </section>
+
+    <section id="login" class="container panel">
+      <h3>Login Options</h3>
+      <p>Visitor login or social login choose गर्नुहोस्। Admin को लागि अनुमति email बाट login गर्नुहोस्।</p>
+      <div class="login-actions">
+        <button id="visitorLogin" class="btn secondary" type="button">Visitor Login</button>
+        <button id="googleLogin" class="btn" type="button">Continue with Google</button>
+        <button id="socialLogin" class="btn outline" type="button">Continue with Facebook</button>
+        <button id="logoutBtn" class="btn ghost" type="button">Logout</button>
+      </div>
+      <p id="loginStatus"></p>
+    </section>
   </main>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
