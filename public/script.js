@@ -70,6 +70,26 @@ document.getElementById('volunteerForm').addEventListener('submit', async (e) =>
 });
 
 const chatMessages = document.getElementById('chatMessages');
+const chatBox = document.getElementById('chat');
+const chatToggle = document.getElementById('chatToggle');
+const adminSection = document.getElementById('admin');
+const loginStatus = document.getElementById('loginStatus');
+const ADMIN_EMAIL = 'madan123050@gmail.com';
+
+let currentUser = { role: null, email: null, provider: null };
+
+function updateAccessUI() {
+  if (currentUser.role === 'admin') {
+    adminSection.style.display = 'block';
+    loginStatus.textContent = `Admin login successful (${currentUser.email}). Admin panel खुल्यो।`;
+  } else if (currentUser.role === 'visitor') {
+    adminSection.style.display = 'none';
+    loginStatus.textContent = `Visitor login successful${currentUser.provider ? ` via ${currentUser.provider}` : ''}.`;
+  } else {
+    adminSection.style.display = 'none';
+    loginStatus.textContent = 'Please choose a login option.';
+  }
+}
 function renderChat(messages) {
   chatMessages.innerHTML = messages.map(m => `<div class="msg ${m.from}"><strong>${m.from}:</strong> ${m.text}</div>`).join('');
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -86,6 +106,30 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
   e.target.reset();
 });
 
+chatToggle.addEventListener('click', () => {
+  const minimized = chatBox.classList.toggle('minimized');
+  chatToggle.textContent = minimized ? '💬' : '×';
+});
+
+document.getElementById('visitorLogin').addEventListener('click', () => {
+  currentUser = { role: 'visitor', email: null, provider: 'Guest' };
+  updateAccessUI();
+});
+
+function socialLogin(providerName) {
+  const email = window.prompt(`${providerName} login email enter गर्नुहोस्:`)?.trim().toLowerCase();
+  if (!email) return;
+  currentUser = {
+    role: email === ADMIN_EMAIL ? 'admin' : 'visitor',
+    email,
+    provider: providerName
+  };
+  updateAccessUI();
+}
+
+document.getElementById('googleLogin').addEventListener('click', () => socialLogin('Google'));
+document.getElementById('socialLogin').addEventListener('click', () => socialLogin('Social Media'));
+
 document.getElementById('refreshAdmin').addEventListener('click', async () => {
   const res = await fetch('/api/admin');
   const data = await res.json();
@@ -94,3 +138,4 @@ document.getElementById('refreshAdmin').addEventListener('click', async () => {
 
 loadStats();
 renderChat([{ from: 'bot', text: 'Welcome to SaveAnimal Nepal quick help.' }]);
+updateAccessUI();
