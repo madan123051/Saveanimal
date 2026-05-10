@@ -34,6 +34,12 @@ textarea { min-height: 90px; }
 .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
 iframe { width: 100%; min-height: 250px; border: 0; border-radius: 10px; }
 .chatbox { position: fixed; right: 1rem; bottom: 1rem; width: min(340px, 92vw); background: white; border: 1px solid #ddd; border-radius: 12px; padding: .7rem; box-shadow: 0 8px 18px rgba(0,0,0,.15); }
+.chatbox.minimized { width: auto; padding: .5rem .7rem; }
+.chatbox.minimized h4,
+.chatbox.minimized #chatMessages,
+.chatbox.minimized #chatForm { display: none; }
+.chat-toggle { float: right; width: 32px; height: 32px; border-radius: 999px; border: 1px solid #ccc; background: #f3f4f6; cursor: pointer; }
+.login-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 #chatMessages { max-height: 170px; overflow: auto; background: #f9fafb; padding: .5rem; border-radius: 8px; margin-bottom: .5rem; }
 .msg { margin: .3rem 0; font-size: .9rem; }
 .msg.bot { color: var(--green); }

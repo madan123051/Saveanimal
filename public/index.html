@@ -133,6 +133,7 @@
     </section>
 
     <section id="chat" class="chatbox">
+      <button id="chatToggle" class="chat-toggle" type="button">×</button>
       <h4>Quick Help Chat</h4>
       <div id="chatMessages"></div>
       <form id="chatForm">
@@ -145,6 +146,17 @@
       <h3>Admin Dashboard (Demo)</h3>
       <button id="refreshAdmin" class="btn">Refresh Data</button>
       <pre id="adminData"></pre>
+    </section>
+
+    <section id="login" class="container panel">
+      <h3>Login Options</h3>
+      <p>Visitor login or social login choose गर्नुहोस्। Admin को लागि अनुमति email बाट login गर्नुहोस्।</p>
+      <div class="login-actions">
+        <button id="visitorLogin" class="btn secondary" type="button">Visitor Login</button>
+        <button id="googleLogin" class="btn" type="button">Continue with Google</button>
+        <button id="socialLogin" class="btn outline" type="button">Continue with Social Media</button>
+      </div>
+      <p id="loginStatus"></p>
     </section>
   </main>
 
