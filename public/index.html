@@ -3,43 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveAnimal Nepal</title>
+  <title>SaveAnimal Nepal · WildSaura</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- ═══ TOPBAR ═════════════════════════════════════════════════════════════ -->
   <header class="topbar">
     <div class="container nav">
-      <h1 class="logo">SaveAnimal Nepal</h1>
-      <nav>
-        <a href="#home" data-i18n="nav_home">Home</a>
-        <a href="#report" data-i18n="nav_report">Report Animal</a>
-        <a href="#donate" data-i18n="nav_donate">Donate</a>
+      <h1 class="logo">🐾 SaveAnimal Nepal</h1>
+      <nav id="mainNav">
+        <a href="#home"      data-i18n="nav_home">Home</a>
+        <a href="#report"    data-i18n="nav_report">Report Animal</a>
+        <a href="#donate"    data-i18n="nav_donate">Donate</a>
         <a href="#volunteer" data-i18n="nav_volunteer">Volunteer</a>
-        <a href="#about" data-i18n="nav_about">About</a>
-        <a href="#stories" data-i18n="nav_stories">Stories</a>
-        <a href="#contact" data-i18n="nav_contact">Contact</a>
-        <a href="#admin" data-i18n="nav_admin">Admin</a>
+        <a href="#stories"   data-i18n="nav_stories">Stories</a>
+        <a href="#about"     data-i18n="nav_about">About</a>
+        <a href="#contact"   data-i18n="nav_contact">Contact</a>
       </nav>
-      <button id="langToggle">नेपाली</button>
+      <div class="nav-right">
+        <button id="langToggle" class="btn btn-sm outline">नेपाली</button>
+        <button id="loginNavBtn"   class="btn btn-sm" type="button">Login</button>
+        <button id="profileNavBtn" class="profile-nav-btn" type="button" style="display:none">
+          <img id="navAvatar" src="" alt="avatar" class="nav-avatar" />
+          <span id="navName"></span>
+        </button>
+      </div>
     </div>
   </header>
 
+  <!-- ═══ LOGIN MODAL ════════════════════════════════════════════════════════ -->
+  <div id="loginModal" class="modal-overlay" style="display:none">
+    <div class="modal-card login-card">
+      <button class="modal-close" id="closeLoginModal">✕</button>
+      <div class="login-brand">
+        <span class="login-paw">🐾</span>
+        <h3>Welcome to SaveAnimal Nepal</h3>
+        <p>Login to report animals, donate, or volunteer</p>
+      </div>
+      <div class="login-options">
+        <button id="googleLoginBtn" class="login-option-btn google" type="button">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="22"/>
+          Continue with Google
+        </button>
+        <button id="facebookLoginBtn" class="login-option-btn facebook" type="button">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Continue with Facebook
+        </button>
+        <button id="visitorLoginBtn" class="login-option-btn visitor" type="button">
+          👤 Continue as Visitor
+        </button>
+      </div>
+      <p id="loginModalStatus" class="status neutral" style="display:none"></p>
+    </div>
+  </div>
+
+  <!-- ═══ PROFILE MODAL ══════════════════════════════════════════════════════ -->
+  <div id="profileModal" class="modal-overlay" style="display:none">
+    <div class="modal-card profile-card">
+      <button class="modal-close" id="closeProfileModal">✕</button>
+      <div class="profile-header">
+        <img id="profilePhoto" src="" alt="avatar" class="profile-avatar-large" />
+        <div class="profile-info">
+          <h3 id="profileDisplayName">User</h3>
+          <p  id="profileEmail" class="profile-email"></p>
+          <div class="profile-badges">
+            <span id="profileRoleBadge" class="badge badge-visitor">Visitor</span>
+            <span id="profileProviderBadge" class="badge badge-provider"></span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-stats-row">
+        <div class="pstat"><strong id="myReportCount">—</strong><span>Reports</span></div>
+        <div class="pstat"><strong id="myDonationCount">—</strong><span>Donations</span></div>
+        <div class="pstat"><strong id="myVolunteerStatus">—</strong><span>Volunteer</span></div>
+      </div>
+      <h4 class="activity-heading">Recent Activity</h4>
+      <div id="myActivityList" class="activity-list"></div>
+      <button class="btn ghost profile-logout-btn" id="profileLogoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN CONTENT ═══════════════════════════════════════════════════════ -->
   <main>
+
+    <!-- Hero -->
     <section id="home" class="hero">
       <div class="container hero-grid">
         <div>
           <h2 data-i18n="hero_title">Help Save Lives – Rescue Animals in Nepal</h2>
           <p data-i18n="hero_text">Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.</p>
           <div class="cta-group">
-            <a class="btn" href="#report" data-i18n="cta_report">Report an Animal</a>
-            <a class="btn secondary" href="#donate" data-i18n="cta_donate">Donate Now</a>
-            <a class="btn outline" href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
+            <a class="btn"          href="#report"    data-i18n="cta_report">Report an Animal</a>
+            <a class="btn secondary" href="#donate"    data-i18n="cta_donate">Donate Now</a>
+            <a class="btn outline"   href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
           </div>
         </div>
-        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80" alt="Rescued dog"/>
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80" alt="Rescued dog" />
       </div>
     </section>
 
+    <!-- Stats -->
     <section class="stats container">
       <div><strong id="rescuedCount">0</strong><span data-i18n="stat_rescued">Animals Rescued</span></div>
       <div><strong id="volunteerCount">0</strong><span data-i18n="stat_volunteers">Volunteers</span></div>
@@ -47,31 +111,46 @@
       <div><strong id="reportCount">0</strong><span data-i18n="stat_reports">Active Reports</span></div>
     </section>
 
-    <section id="stories" class="container">
+    <!-- Rescue Stories -->
+    <section id="stories" class="container section-gap">
       <h3 data-i18n="stories_title">Featured Rescue Stories</h3>
       <div class="cards">
-        <article class="card"><img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Puppy rescue"><h4>Rani's Recovery</h4><p>Found injured near Ring Road, now fully healed and adopted.</p></article>
-        <article class="card"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80" alt="Dog transformation"><h4>Bruno Before & After</h4><p>Severe skin infection treated with 6-week medical support.</p></article>
-        <article class="card"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Cat rescue"><h4>Mimi's Second Chance</h4><p>Rescued kitten received emergency surgery and foster care.</p></article>
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Puppy rescue" />
+          <h4>Rani's Recovery</h4>
+          <p>Found injured near Ring Road, now fully healed and adopted.</p>
+        </article>
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80" alt="Dog transformation" />
+          <h4>Bruno Before &amp; After</h4>
+          <p>Severe skin infection treated with 6-week medical support.</p>
+        </article>
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Cat rescue" />
+          <h4>Mimi's Second Chance</h4>
+          <p>Rescued kitten received emergency surgery and foster care.</p>
+        </article>
       </div>
     </section>
 
-    <section id="report" class="container panel">
-      <h3 data-i18n="report_title">Report an Injured Animal (Helpline)</h3>
+    <!-- Report Form -->
+    <section id="report" class="container panel section-gap">
+      <h3 data-i18n="report_title">Report an Injured Animal</h3>
       <p class="emergency" data-i18n="report_emergency">Emergency Helpline: +977-9800000000</p>
       <a class="whatsapp" href="https://wa.me/9779800000000" target="_blank" rel="noreferrer">WhatsApp Help</a>
       <form id="reportForm">
-        <input name="name" placeholder="Your Name" required />
-        <input name="phone" placeholder="Phone" required />
-        <input name="location" placeholder="Location / GPS Pin" required />
-        <textarea name="condition" placeholder="Animal condition" required></textarea>
+        <input name="name"      placeholder="Your Name"          required />
+        <input name="phone"     placeholder="Phone"              required />
+        <input name="location"  placeholder="Location / GPS Pin" required />
+        <textarea name="condition" placeholder="Animal condition (injuries, species, behaviour…)" required></textarea>
         <input type="file" name="animalImage" accept="image/*" />
         <button type="submit" class="btn">Submit Report</button>
       </form>
-      <p id="reportStatus"></p>
+      <p id="reportStatus" class="form-status"></p>
     </section>
 
-    <section id="donate" class="container panel">
+    <!-- Donate -->
+    <section id="donate" class="container panel section-gap">
       <h3>Donation</h3>
       <form id="donationForm">
         <input name="donorName" placeholder="Donor name" required />
@@ -87,37 +166,33 @@
         </select>
         <button class="btn" type="submit">Submit Donation Intent</button>
       </form>
-      <p>Fund use: 40% food, 35% medical treatment, 25% shelter and rehabilitation.</p>
-      <p id="donationStatus"></p>
+      <p class="fund-note">Fund use: 40% food · 35% medical · 25% shelter &amp; rehabilitation</p>
+      <p id="donationStatus" class="form-status"></p>
     </section>
 
-    <section id="volunteer" class="container panel">
+    <!-- Volunteer -->
+    <section id="volunteer" class="container panel section-gap">
       <h3>Volunteer</h3>
       <form id="volunteerForm">
-        <input name="fullName" placeholder="Full Name" required />
+        <input name="fullName" placeholder="Full Name"  required />
         <input type="email" name="email" placeholder="Email" required />
-        <input name="phone" placeholder="Phone" required />
+        <input name="phone"    placeholder="Phone"      required />
         <select name="role" required>
           <option value="Rescue team">Rescue team</option>
           <option value="Feeding team">Feeding team</option>
           <option value="Social media">Social media</option>
         </select>
-        <input name="availability" placeholder="Availability" />
+        <input name="availability" placeholder="Availability (e.g. Weekends)" />
         <textarea name="reason" placeholder="Why do you want to volunteer?"></textarea>
         <button class="btn" type="submit">Join Volunteer Program</button>
       </form>
-      <ul>
-        <li>Hands-on rescue impact</li>
-        <li>Community leadership opportunities</li>
-        <li>Training and rescue coordination skills</li>
-      </ul>
-      <p id="volunteerStatus"></p>
+      <p id="volunteerStatus" class="form-status"></p>
     </section>
 
-    <section id="about" class="container">
+    <!-- About -->
+    <section id="about" class="container section-gap">
       <h3>About Us</h3>
-      <p>Our mission is to rescue, heal, and protect vulnerable animals across Nepal.</p>
-      <p>Animal rescue in Nepal is vital due to limited emergency response and growing street animal populations.</p>
+      <p>Our mission is to rescue, heal, and protect vulnerable animals across Nepal. Part of the <strong>WildSaura</strong> network.</p>
       <div class="team">
         <div><h4>Dr. Sita Rai</h4><p>Veterinary Lead</p></div>
         <div><h4>Ramesh Gurung</h4><p>Rescue Operations</p></div>
@@ -125,40 +200,57 @@
       </div>
     </section>
 
-    <section id="contact" class="container panel">
+    <!-- Contact -->
+    <section id="contact" class="container panel section-gap">
       <h3>Contact</h3>
-      <p>Phone: +977-9800000000 | Email: help@saveanimalnepal.org</p>
+      <p>Phone: +977-9800000000 · Email: help@saveanimalnepal.org</p>
       <iframe title="Nepal map" src="https://www.google.com/maps?q=Kathmandu,Nepal&output=embed"></iframe>
-      <p>Follow us: Facebook | Instagram | TikTok</p>
+      <p>Follow us: Facebook · Instagram · TikTok</p>
     </section>
 
+    <!-- ═══ ADMIN DASHBOARD (admin only) ════════════════════════════════════ -->
+    <section id="admin" class="container admin-panel section-gap" style="display:none">
+      <div class="admin-header">
+        <div>
+          <h3>🛡️ Admin Dashboard</h3>
+          <p class="admin-subtitle">WildSaura · SaveAnimal Nepal</p>
+        </div>
+        <button id="refreshAdmin" class="btn btn-sm">↻ Refresh</button>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="admin-summary">
+        <div class="ascard"><span class="asicon">🐾</span><strong id="as-rescued">—</strong><small>Rescued</small></div>
+        <div class="ascard"><span class="asicon">👥</span><strong id="as-volunteers">—</strong><small>Volunteers</small></div>
+        <div class="ascard orange"><span class="asicon">💰</span><strong id="as-donations">—</strong><small>Donations (NPR)</small></div>
+        <div class="ascard red"><span class="asicon">🚨</span><strong id="as-reports">—</strong><small>Active Reports</small></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="tab-reports">🐾 Reports</button>
+        <button class="tab-btn"        data-tab="tab-volunteers">👥 Volunteers</button>
+        <button class="tab-btn"        data-tab="tab-donations">💰 Donations</button>
+        <button class="tab-btn"        data-tab="tab-messages">💬 Messages</button>
+      </div>
+
+      <div id="tab-reports"    class="tab-content active"><div id="adminReportsList"    class="admin-cards"></div></div>
+      <div id="tab-volunteers" class="tab-content">       <div id="adminVolunteersList" class="admin-cards"></div></div>
+      <div id="tab-donations"  class="tab-content">       <div id="adminDonationsList"  class="admin-cards"></div></div>
+      <div id="tab-messages"   class="tab-content">       <div id="adminMessagesList"   class="admin-cards"></div></div>
+    </section>
+
+    <!-- Chat Widget -->
     <section id="chat" class="chatbox">
       <button id="chatToggle" class="chat-toggle" type="button">Hide</button>
-      <h4>Quick Help Chat</h4>
+      <h4>🐾 Quick Help Chat</h4>
       <div id="chatMessages"></div>
       <form id="chatForm">
-        <input name="text" placeholder="Type your message..." required />
+        <input name="text" placeholder="Type your message…" required />
         <button type="submit">Send</button>
       </form>
     </section>
 
-    <section id="admin" class="container panel">
-      <h3>Admin Dashboard (Demo)</h3>
-      <button id="refreshAdmin" class="btn">Refresh Data</button>
-      <pre id="adminData"></pre>
-    </section>
-
-    <section id="login" class="container panel">
-      <h3>Login Options</h3>
-      <p>Visitor login or social login choose गर्नुहोस्। Admin को लागि अनुमति email बाट login गर्नुहोस्।</p>
-      <div class="login-actions">
-        <button id="visitorLogin" class="btn secondary" type="button">Visitor Login</button>
-        <button id="googleLogin" class="btn" type="button">Continue with Google</button>
-        <button id="socialLogin" class="btn outline" type="button">Continue with Facebook</button>
-        <button id="logoutBtn" class="btn ghost" type="button">Logout</button>
-      </div>
-      <p id="loginStatus"></p>
-    </section>
   </main>
 
   <script type="module" src="script.js"></script>
