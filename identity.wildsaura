@@ -1,0 +1,28 @@
+{
+  "_comment": "WildSaura Network Identity Verification File",
+  "_format":  "wildsaura-identity/v1",
+
+  "network":  "WildSaura",
+  "owner":    "madan123051",
+  "firebase": {
+    "projectId":   "wildsaura-1ef8a",
+    "databaseURL": "https://wildsaura-1ef8a-default-rtdb.firebaseio.com",
+    "authDomain":  "wildsaura-1ef8a.firebaseapp.com"
+  },
+
+  "connected_sites": [
+    {
+      "name":       "SaveAnimal Nepal",
+      "repo":       "madan123051/Saveanimal",
+      "purpose":    "Animal rescue platform for Nepal — report, donate, volunteer",
+      "firebase_app": "1:690017200836:web:a3c519752907c3f66ff791",
+      "verified":   true
+    }
+  ],
+
+  "admin_email": "madan123050@gmail.com",
+
+  "verification_note": "Any site listed in connected_sites that includes this identity.wildsaura file in its repo root is an official part of the WildSaura network and shares the wildsaura-1ef8a Firebase project for authentication, Realtime Database, and analytics.",
+
+  "generated": "2026-06-08"
+}
