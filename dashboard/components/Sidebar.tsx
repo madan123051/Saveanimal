@@ -41,6 +41,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               active={currentPage === 'dashboard'}
             />
             <NavItem
+              icon={<UserIcon size={20} />}
+              label="My Profile"
+              onClick={() => onPageChange('profile')}
+              active={currentPage === 'profile'}
+            />
+            <NavItem
               icon={<Users size={20} />}
               label="Volunteers"
               onClick={() => onPageChange('volunteers')}
@@ -97,6 +103,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               label="Home"
               onClick={() => onPageChange('dashboard')}
               active={currentPage === 'dashboard'}
+            />
+            <NavItem
+              icon={<UserIcon size={20} />}
+              label="My Profile"
+              onClick={() => onPageChange('profile')}
+              active={currentPage === 'profile'}
             />
             <NavItem
               icon={<Target size={20} />}

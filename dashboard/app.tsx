@@ -3,6 +3,7 @@ import { LoginPage } from './components/LoginPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { VolunteerDashboard } from './components/VolunteerDashboard';
 import { VisitorHome } from './components/VisitorHome';
+import { ProfilePage } from './components/ProfilePage';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import './styles.css';
@@ -197,18 +198,21 @@ export const App: React.FC = () => {
           {currentUser.role === 'admin' && (
             <>
               {currentPage === 'dashboard' && <AdminDashboard volunteers={volunteers} activities={activities} />}
+              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
             </>
           )}
 
           {currentUser.role === 'volunteer' && (
             <>
               {currentPage === 'dashboard' && <VolunteerDashboard user={currentUser} activities={activities} />}
+              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
             </>
           )}
 
           {currentUser.role === 'visitor' && (
             <>
               {currentPage === 'dashboard' && <VisitorHome activities={activities} />}
+              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
             </>
           )}
         </div>
