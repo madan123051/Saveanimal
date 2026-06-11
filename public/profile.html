@@ -1,479 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Profile - SaveAnimal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    body {
-      background: #f5f5f5;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* ═══ NAVBAR ═════════════════════════════════════════════════════════ */
-    .profile-navbar {
-      position: sticky;
-      top: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      padding: 16px 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .navbar-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .navbar-logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #0f4c1f;
-    }
-
-    .navbar-actions {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .btn-logout {
-      padding: 8px 16px;
-      background: white;
-      border: 2px solid #ff8c42;
-      color: #ff8c42;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-logout:hover {
-      background: #ff8c42;
-      color: white;
-    }
-
-    /* ═══ PROFILE CONTAINER ══════════════════════════════════════════════ */
-    .profile-wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-
-    .profile-header {
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      margin-bottom: 32px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 32px;
-      align-items: start;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .profile-avatar {
-      width: 140px;
-      height: 140px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #0f4c1f 0%, #1a6b3a 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 48px;
-    }
-
-    .profile-info h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: #222;
-      margin: 0 0 12px 0;
-    }
-
-    .profile-info .bio {
-      color: #666;
-      margin-bottom: 24px;
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    .profile-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 24px;
-      margin-top: 24px;
-    }
-
-    .stat-item {
-      padding: 16px;
-      background: #f5f5f5;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-family: 'Poppins', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: #0f4c1f;
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 13px;
-      color: #999;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-edit-profile {
-      padding: 10px 24px;
-      background: #0f4c1f;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-edit-profile:hover {
-      background: #0d3819;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(15, 76, 31, 0.2);
-    }
-
-    /* ═══ CONTENT GRID ═══════════════════════════════════════════════════ */
-    .profile-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-
-    .profile-card {
-      background: white;
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .card-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: #222;
-      margin: 0 0 24px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .card-edit {
-      font-size: 13px;
-      color: #ff8c42;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    .card-edit:hover {
-      color: #e67e2d;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      color: #222;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .form-group p {
-      color: #666;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    /* ═══ ACTIVITY & PREFERENCES ════════════════════════════════════════ */
-    .activity-item {
-      padding: 16px 0;
-      border-bottom: 1px solid #e0e0e0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-
-    .activity-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .activity-title {
-      font-weight: 600;
-      color: #222;
-      margin-bottom: 4px;
-    }
-
-    .activity-date {
-      font-size: 13px;
-      color: #999;
-    }
-
-    .activity-icon {
-      font-size: 24px;
-    }
-
-    /* ═══ PREFERENCE TOGGLE ═════════════════════════════════════════════ */
-    .preference-item {
-      padding: 16px 0;
-      border-bottom: 1px solid #e0e0e0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .preference-item:last-child {
-      border-bottom: none;
-    }
-
-    .toggle {
-      width: 50px;
-      height: 28px;
-      background: #ddd;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      position: relative;
-      transition: background 0.3s ease;
-    }
-
-    .toggle.active {
-      background: #0f4c1f;
-    }
-
-    .toggle::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      background: white;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: left 0.3s ease;
-    }
-
-    .toggle.active::after {
-      left: 24px;
-    }
-
-    /* ═══ RESPONSIVE ════════════════════════════════════════════════════ */
-    @media (max-width: 768px) {
-      .profile-header {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .profile-avatar {
-        margin: 0 auto;
-      }
-
-      .profile-content {
-        grid-template-columns: 1fr;
-      }
-
-      .profile-info h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - SaveAnimal Nepal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.2.0/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-  <!-- ════ NAVBAR ════ -->
-  <nav class="profile-navbar">
-    <div class="navbar-content">
-      <div class="navbar-logo">SaveAnimal</div>
-      <div class="navbar-actions">
-        <button class="btn-logout">Logout</button>
+<body class="bg-gradient-to-br from-green-50 to-blue-50">
+
+  <!-- PROFILE MODAL (ONLY FOR VISITORS) -->
+  <dialog id="profileModal" class="modal">
+    <div class="modal-box w-full max-w-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-2xl text-green-700">My Profile</h3>
+        <button onclick="handleLogout()" class="btn btn-sm btn-ghost">✕</button>
+      </div>
+
+      <!-- ROLE BADGE -->
+      <div class="mb-6">
+        <span id="userRole" class="badge badge-lg badge-info">Visitor</span>
+      </div>
+
+      <!-- PROFILE INFO -->
+      <div class="space-y-4">
+        <!-- Name -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Full Name</span>
+          </label>
+          <input type="text" id="profileName" placeholder="Visitor" class="input input-bordered" readonly>
+        </div>
+
+        <!-- Email -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Email</span>
+          </label>
+          <input type="email" id="profileEmail" placeholder="visitor@saveanimal.com" class="input input-bordered" readonly>
+        </div>
+
+        <!-- VISITOR MESSAGE -->
+        <div id="visitorMessage" class="alert alert-info mt-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="miter" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>You're viewing as a Visitor. Sign up as a volunteer to unlock more features! 🐾</span>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="modal-action mt-6">
+        <button onclick="window.location.href='/public/index.html'" class="btn btn-primary">Back to Home</button>
+        <button onclick="handleLogout()" class="btn btn-outline">Logout</button>
       </div>
     </div>
-  </nav>
+    <form method="dialog" class="modal-backdrop">
+      <button></button>
+    </form>
+  </dialog>
 
-  <!-- ════ PROFILE WRAPPER ════ -->
-  <div class="profile-wrapper">
-    <!-- ════ PROFILE HEADER ════ -->
-    <div class="profile-header">
-      <div class="profile-avatar">👤</div>
-      <div class="profile-info">
-        <h1>John Doe</h1>
-        <p class="bio">Animal lover and rescue enthusiast. 🐾</p>
-        <div class="profile-stats">
-          <div class="stat-item">
-            <div class="stat-number">8</div>
-            <div class="stat-label">Reports</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">$250</div>
-            <div class="stat-label">Donated</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">3</div>
-            <div class="stat-label">Volunteers</div>
-          </div>
-        </div>
-        <button class="btn-edit-profile" style="margin-top: 24px;">✏️ Edit Profile</button>
-      </div>
-    </div>
-
-    <!-- ════ CONTENT GRID ════ -->
-    <div class="profile-content">
-      <!-- ════ PERSONAL INFO ════ -->
-      <div class="profile-card">
-        <div class="card-title">
-          Personal Information
-          <a href="#" class="card-edit">Edit</a>
-        </div>
-        <div class="form-group">
-          <label>Full Name</label>
-          <p>John Doe</p>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <p>john@example.com</p>
-        </div>
-        <div class="form-group">
-          <label>Phone</label>
-          <p>+91 98765 43210</p>
-        </div>
-        <div class="form-group">
-          <label>Location</label>
-          <p>New Delhi, India</p>
-        </div>
-      </div>
-
-      <!-- ════ RECENT ACTIVITY ════ -->
-      <div class="profile-card">
-        <div class="card-title">Recent Activity</div>
-        <div class="activity-item">
-          <div class="activity-text">
-            <div class="activity-title">Reported stray dog</div>
-            <div class="activity-date">2 days ago</div>
-          </div>
-          <div class="activity-icon">🐕</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-text">
-            <div class="activity-title">Made donation</div>
-            <div class="activity-date">5 days ago</div>
-          </div>
-          <div class="activity-icon">💝</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-text">
-            <div class="activity-title">Joined volunteer program</div>
-            <div class="activity-date">1 week ago</div>
-          </div>
-          <div class="activity-icon">👥</div>
-        </div>
-      </div>
-
-      <!-- ════ ACCOUNT SETTINGS ════ -->
-      <div class="profile-card">
-        <div class="card-title">
-          Account Settings
-          <a href="#" class="card-edit">Manage</a>
-        </div>
-        <div class="preference-item">
-          <div>
-            <div style="font-weight: 600; color: #222; margin-bottom: 4px;">Two-Factor Authentication</div>
-            <div style="font-size: 13px; color: #999;">Secure your account</div>
-          </div>
-          <button class="toggle"></button>
-        </div>
-        <div class="preference-item">
-          <div>
-            <div style="font-weight: 600; color: #222; margin-bottom: 4px;">Email Notifications</div>
-            <div style="font-size: 13px; color: #999;">Updates about rescues</div>
-          </div>
-          <button class="toggle active"></button>
-        </div>
-      </div>
-
-      <!-- ════ NOTIFICATION PREFERENCES ════ -->
-      <div class="profile-card">
-        <div class="card-title">Preferences</div>
-        <div class="preference-item">
-          <div>
-            <div style="font-weight: 600; color: #222; margin-bottom: 4px;">Email Digests</div>
-            <div style="font-size: 13px; color: #999;">Weekly rescue updates</div>
-          </div>
-          <button class="toggle active"></button>
-        </div>
-        <div class="preference-item">
-          <div>
-            <div style="font-weight: 600; color: #222; margin-bottom: 4px;">SMS Alerts</div>
-            <div style="font-size: 13px; color: #999;">Urgent cases near you</div>
-          </div>
-          <button class="toggle"></button>
-        </div>
+  <!-- REDIRECT MESSAGE (for admin/volunteer) -->
+  <div id="redirectMessage" style="display: none;" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 to-blue-500">
+    <div class="card bg-white shadow-2xl max-w-md">
+      <div class="card-body text-center">
+        <h2 class="card-title justify-center text-2xl">Welcome Back! 👋</h2>
+        <p class="text-gray-600">Redirecting to your dashboard...</p>
+        <div class="loading loading-spinner loading-lg mx-auto mt-4"></div>
+        <p class="text-sm text-gray-500 mt-4">If not redirected automatically, <a href="/dashboard/index.html" class="link link-primary">click here</a></p>
       </div>
     </div>
   </div>
 
+  <script src="script.js"></script>
   <script>
-    // Toggle preference buttons
-    document.querySelectorAll('.toggle').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.classList.toggle('active');
-      });
+    // Profile page initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('saveanimal_user'));
+      
+      if (!user) {
+        // No user logged in - show home
+        window.location.href = '/public/index.html';
+        return;
+      }
+
+      // User is admin or volunteer - redirect to dashboard
+      if (user.role === 'admin' || user.role === 'volunteer') {
+        document.getElementById('redirectMessage').style.display = 'flex';
+        setTimeout(() => {
+          window.location.href = '/dashboard/index.html';
+        }, 2000);
+        return;
+      }
+
+      // User is visitor - show profile modal
+      if (user.role === 'visitor') {
+        updateVisitorProfile(user);
+        document.getElementById('profileModal').showModal();
+      }
     });
 
-    // Logout button
-    document.querySelector('.btn-logout').addEventListener('click', function() {
-      // TODO: Connect to Firebase
-      alert('Logging out...');
-      // window.location.href = 'login.html';
-    });
-
-    // Edit buttons
-    document.querySelectorAll('.btn-edit-profile, .card-edit').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        // TODO: Open modal or redirect to edit page
-        alert('Edit functionality coming soon');
-      });
-    });
+    // Update visitor profile display
+    function updateVisitorProfile(user) {
+      document.getElementById('profileName').value = user.name || 'Visitor';
+      document.getElementById('profileEmail').value = user.email || 'visitor@saveanimal.com';
+      document.getElementById('userRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      document.getElementById('userRole').className = 'badge badge-lg badge-info';
+    }
   </script>
 </body>
 </html>

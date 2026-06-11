@@ -45,9 +45,26 @@ export const App: React.FC = () => {
 
   const restoreUserSession = () => {
     try {
-      const savedUser = localStorage.getItem('saveanimal_currentUser');
+      // Try to get user from public/profile.html localStorage
+      const savedUser = localStorage.getItem('saveanimal_user') || 
+                       localStorage.getItem('saveanimal_currentUser');
+      
       if (savedUser) {
         const user = JSON.parse(savedUser);
+        
+        // Validate user has role
+        if (!user.role) {
+          console.warn('Invalid user data, redirecting to login');
+          return;
+        }
+
+        // Only allow admin/volunteer access to dashboard
+        if (user.role === 'visitor') {
+          // Redirect visitors back to profile page
+          window.location.href = '/public/profile.html';
+          return;
+        }
+
         setCurrentUser(user);
         setCurrentPage('dashboard');
       }
@@ -149,8 +166,9 @@ export const App: React.FC = () => {
       };
     }
     
-    // Save user session to localStorage
+    // Save user session to localStorage (use same key as public site)
     try {
+      localStorage.setItem('saveanimal_user', JSON.stringify(userData));
       localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
     } catch (error) {
       console.error('Failed to save user session:', error);
@@ -163,62 +181,80 @@ export const App: React.FC = () => {
   const handleLogout = () => {
     // Clear user session from localStorage
     try {
+      localStorage.removeItem('saveanimal_user');
       localStorage.removeItem('saveanimal_currentUser');
     } catch (error) {
       console.error('Failed to clear user session:', error);
     }
     
     setCurrentUser(null);
-    setCurrentPage('login');
-    setSidebarOpen(true);
+    setCurrentPage('dashboard');
   };
 
+  // If no user, show login
   if (!currentUser) {
-    return <LoginPage onLogin={handleLogin} volunteers={volunteers} />;
+    return <LoginPage volunteers={volunteers} onLogin={handleLogin} />;
   }
 
+  // Render based on current page and role
+  const renderContent = () => {
+    if (currentPage === 'profile') {
+      return <ProfilePage user={currentUser} onNavigate={setCurrentPage} />;
+    }
+
+    switch (currentUser.role) {
+      case 'admin':
+        return <AdminDashboard volunteers={volunteers} activities={activities} currentUser={currentUser} />;
+      
+      case 'volunteer':
+        return <VolunteerDashboard user={currentUser} activities={activities} />;
+      
+      case 'visitor':
+        return <VisitorHome />;
+      
+      default:
+        return <VisitorHome />;
+    }
+  };
+
   return (
-    <div className="app-container">
-      <Sidebar
-        user={currentUser}
-        sidebarOpen={sidebarOpen}
-        currentPage={currentPage}
-        onPageChange={(page) => {
-          setCurrentPage(page);
-          setSidebarOpen(false);
-        }}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        onLogout={handleLogout}
-      />
-
-      <main className="main-content">
-        <Header user={currentUser} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-
-        <div className="content-area">
-          {currentUser.role === 'admin' && (
-            <>
-              {currentPage === 'dashboard' && <AdminDashboard volunteers={volunteers} activities={activities} />}
-              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
-            </>
-          )}
-
-          {currentUser.role === 'volunteer' && (
-            <>
-              {currentPage === 'dashboard' && <VolunteerDashboard user={currentUser} activities={activities} />}
-              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
-            </>
-          )}
-
-          {currentUser.role === 'visitor' && (
-            <>
-              {currentPage === 'dashboard' && <VisitorHome activities={activities} />}
-              {currentPage === 'profile' && <ProfilePage user={currentUser} activities={activities} />}
-            </>
-          )}
-        </div>
-      </main>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Only show header and sidebar if user is logged in AND not a visitor */}
+      {currentUser && currentUser.role !== 'visitor' && (
+        <>
+          <Header 
+            user={currentUser} 
+            onLogout={handleLogout}
+            sidebarOpen={sidebarOpen}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          />
+          <div className="flex flex-1">
+            <Sidebar 
+              isOpen={sidebarOpen}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                setSidebarOpen(false);
+              }}
+              userRole={currentUser.role}
+              onLogout={handleLogout}
+            />
+            <main className="flex-1 p-4 md:p-8">
+              {renderContent()}
+            </main>
+          </div>
+        </>
+      )}
+      
+      {/* For visitors, just show the content */}
+      {currentUser && currentUser.role === 'visitor' && (
+        <main className="flex-1">
+          {renderContent()}
+        </main>
+      )}
     </div>
   );
 };
 
-createRoot(document.getElementById('root')!).render(<App />);
+const root = createRoot(document.getElementById('root')!);
+root.render(<App />);
