@@ -15,9 +15,10 @@ export const App: React.FC = () => {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
 
-  // Initialize demo data
+  // Initialize demo data and restore session
   useEffect(() => {
     initializeDemoData();
+    restoreUserSession();
   }, []);
 
   // Auto-close sidebar on scroll
@@ -40,6 +41,19 @@ export const App: React.FC = () => {
       clearTimeout(scrollTimeout);
     };
   }, [sidebarOpen]);
+
+  const restoreUserSession = () => {
+    try {
+      const savedUser = localStorage.getItem('saveanimal_currentUser');
+      if (savedUser) {
+        const user = JSON.parse(savedUser);
+        setCurrentUser(user);
+        setCurrentPage('dashboard');
+      }
+    } catch (error) {
+      console.error('Failed to restore user session:', error);
+    }
+  };
 
   const initializeDemoData = () => {
     const demoVolunteers: Volunteer[] = [
@@ -134,11 +148,25 @@ export const App: React.FC = () => {
       };
     }
     
+    // Save user session to localStorage
+    try {
+      localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Failed to save user session:', error);
+    }
+    
     setCurrentUser(userData);
     setCurrentPage('dashboard');
   };
 
   const handleLogout = () => {
+    // Clear user session from localStorage
+    try {
+      localStorage.removeItem('saveanimal_currentUser');
+    } catch (error) {
+      console.error('Failed to clear user session:', error);
+    }
+    
     setCurrentUser(null);
     setCurrentPage('login');
     setSidebarOpen(true);
