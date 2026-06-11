@@ -16,7 +16,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
 import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js';
 
-// ── Firebase Config (WildSaura) ───────────────────────────────────────────────
+// -- Firebase Config (WildSaura) ---
 const firebaseConfig = {
   apiKey:            'AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y',
   authDomain:        'wildsaura-1ef8a.firebaseapp.com',
@@ -35,13 +35,13 @@ getAnalytics(firebaseApp);
 
 const ADMIN_EMAIL = 'madan123050@gmail.com';
 
-// ── i18n ──────────────────────────────────────────────────────────────────────
+// -- i18n --
 const i18n = {
   en: {
     nav_home: 'Home', nav_report: 'Report Animal', nav_donate: 'Donate',
     nav_volunteer: 'Volunteer', nav_about: 'About', nav_stories: 'Stories',
     nav_contact: 'Contact',
-    hero_title: 'Help Save Lives \u2013 Rescue Animals in Nepal',
+    hero_title: 'Help Save Lives – Rescue Animals in Nepal',
     hero_text:  'Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.',
     cta_report: 'Report an Animal', cta_donate: 'Donate Now', cta_volunteer: 'Join as Volunteer',
     stat_rescued: 'Animals Rescued', stat_volunteers: 'Volunteers',
@@ -51,39 +51,39 @@ const i18n = {
     report_emergency: 'Emergency Helpline: +977-9800000000'
   },
   np: {
-    nav_home:      '\u0917\u0943\u0939\u092a\u0943\u0937\u094d\u0920',
-    nav_report:    '\u091c\u0928\u093e\u0935\u0930 \u0930\u093f\u092a\u094b\u0930\u094d\u091f',
-    nav_donate:    '\u0926\u093e\u0928',
-    nav_volunteer: '\u0938\u094d\u0935\u092f\u0902\u0938\u0947\u0935\u0915',
-    nav_about:     '\u0939\u093e\u092e\u094d\u0930\u094b \u092c\u093e\u0930\u0947\u092e\u093e',
-    nav_stories:   '\u0909\u0926\u094d\u0927\u093e\u0930 \u0915\u0925\u093e\u0939\u0930\u0942',
-    nav_contact:   '\u0938\u092e\u094d\u092a\u0930\u094d\u0915',
-    hero_title:    '\u091c\u0940\u0935\u0928 \u092c\u091a\u093e\u0914\u0902 \u2013 \u0928\u0947\u092a\u093e\u0932\u0915\u093e \u091c\u0928\u093e\u0935\u0930 \u0909\u0926\u094d\u0927\u093e\u0930 \u0917\u0930\u094c\u0902',
-    hero_text:     '\u0939\u093e\u092e\u0940 \u092e\u093f\u0932\u0947\u0930 \u0918\u093e\u0907\u0924\u0947 \u0938\u0921\u0915 \u091c\u0928\u093e\u0935\u0930\u0932\u093e\u0908 \u0909\u0926\u094d\u0927\u093e\u0930\u0964',
-    cta_report:    '\u091c\u0928\u093e\u0935\u0930 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0917\u0930\u094d\u0928\u0941\u0939\u094b\u0938\u094d',
-    cta_donate:    '\u0905\u0939\u093f\u0932\u0947 \u0926\u093e\u0928 \u0917\u0930\u094d\u0928\u0941\u0939\u094b\u0938\u094d',
-    cta_volunteer: '\u0938\u094d\u0935\u092f\u0902\u0938\u0947\u0935\u0915 \u092c\u0928\u094d\u0928\u0941\u0939\u094b\u0938\u094d',
-    stat_rescued:    '\u0909\u0926\u094d\u0927\u093e\u0930 \u0917\u0930\u093f\u090f\u0915\u093e \u091c\u0928\u093e\u0935\u0930',
-    stat_volunteers: '\u0938\u094d\u0935\u092f\u0902\u0938\u0947\u0935\u0915',
-    stat_donations:  '\u0926\u093e\u0928 (\u0930\u0941)',
-    stat_reports:    '\u0938\u0915\u094d\u0930\u093f\u092f \u0930\u093f\u092a\u094b\u0930\u094d\u091f',
-    stories_title:   '\u092a\u094d\u0930\u092e\u0941\u0916 \u0909\u0926\u094d\u0927\u093e\u0930 \u0915\u0925\u093e\u0939\u0930\u0942',
-    report_title:    '\u0918\u093e\u0907\u0924\u0947 \u091c\u0928\u093e\u0935\u0930 \u0930\u093f\u092a\u094b\u0930\u094d\u091f',
-    report_emergency:'\u0906\u092a\u0924\u0915\u093e\u0932\u0940\u0928 \u0939\u0947\u0932\u094d\u092a\u0932\u093e\u0907\u0928: +977-9800000000'
+    nav_home:      'गृहपृष्ठ',
+    nav_report:    'जनावर रिपोर्ट',
+    nav_donate:    'दान',
+    nav_volunteer: 'स्वयंसेवक',
+    nav_about:     'हामो बारेमा',
+    nav_stories:   'उद्धार कथाहरू',
+    nav_contact:   'सम्पर्क',
+    hero_title:    'जीवन बचाऊं – नेपालका जनावर उद्धार गरौं',
+    hero_text:     'हामी मिलेर घाइते सडक जनावरलाई उद्धार गर्छौं।',
+    cta_report:    'जनावर रिपोर्ट गर्नुहोस्',
+    cta_donate:    'अहिले दान गर्नुहोस्',
+    cta_volunteer: 'स्वयंसेवक बन्नुहोस्',
+    stat_rescued:    'उद्धार गरिएका जनावर',
+    stat_volunteers: 'स्वयंसेवक',
+    stat_donations:  'दान (रु)',
+    stat_reports:    'सक्रिय रिपोर्ट',
+    stories_title:   'प्रमुख उद्धार कथाहरू',
+    report_title:    'घाइते जनावर रिपोर्ट',
+    report_emergency:'आपत्कालीन हेल्पलाईण: +977-9800000000'
   }
 };
 
-// ── Language toggle ───────────────────────────────────────────────────────────
+// -- Language toggle --
 let currentLang = 'en';
 document.getElementById('langToggle').addEventListener('click', () => {
   currentLang = currentLang === 'en' ? 'np' : 'en';
-  document.getElementById('langToggle').textContent = currentLang === 'en' ? '\u0928\u0947\u092a\u093e\u0932\u0940' : 'English';
+  document.getElementById('langToggle').textContent = currentLang === 'en' ? 'नेपाली' : 'English';
   document.querySelectorAll('[data-i18n]').forEach(el => {
     el.textContent = i18n[currentLang][el.dataset.i18n] || el.textContent;
   });
 });
 
-// ── Real-time stats ───────────────────────────────────────────────────────────
+// -- Real-time stats --
 onValue(ref(rtdb, 'stats'), snap => {
   const d = snap.val() || {};
   document.getElementById('rescuedCount').textContent   = d.rescued       ?? 0;
@@ -97,7 +97,7 @@ onValue(ref(rtdb, 'stats'), snap => {
   document.getElementById('as-reports').textContent    = d.activeReports ?? 0;
 });
 
-// ── Login Modal ───────────────────────────────────────────────────────────────
+// -- Login Modal --
 const loginModal   = document.getElementById('loginModal');
 const profileModal = document.getElementById('profileModal');
 
@@ -147,7 +147,7 @@ document.getElementById('profileLogoutBtn').addEventListener('click', async () =
   closeProfileModal();
 });
 
-// ── Nav / Profile UI ──────────────────────────────────────────────────────────
+// -- Nav / Profile UI --
 function updateNavUI(user, isVisitor = false) {
   const loginBtn   = document.getElementById('loginNavBtn');
   const profileBtn = document.getElementById('profileNavBtn');
@@ -207,7 +207,7 @@ function updateNavUI(user, isVisitor = false) {
 // Auth state
 onAuthStateChanged(auth, user => updateNavUI(user));
 
-// ── My Activity (for profile modal) ──────────────────────────────────────────
+// -- My Activity (for profile modal) --
 function loadMyActivity() {
   const user = auth.currentUser;
   if (!user) {
@@ -264,7 +264,7 @@ function renderMyActivity(reports) {
   `).join('');
 }
 
-// ── Forms ─────────────────────────────────────────────────────────────────────
+// -- Forms --
 function formToObj(form) {
   return Object.fromEntries(new FormData(form).entries());
 }
@@ -337,7 +337,7 @@ document.getElementById('volunteerForm').addEventListener('submit', async e => {
   }
 });
 
-// ── Chat ──────────────────────────────────────────────────────────────────────
+// -- Chat --
 const BOT_REPLIES = {
   rescue:    'For emergency rescue, call +977-9800000000 now and share your exact location.',
   donate:    'You can donate through eSewa, Khalti, or bank transfer on our Donation page.',
@@ -363,7 +363,28 @@ onValue(ref(rtdb, 'messages'), snap => {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-document.getElementById('chatForm').addEventListener('submit', async e => {
+const chatBox = document.getElementById('chat');
+const chatToggle = document.getElementById('chatToggle');
+const chatForm = document.getElementById('chatForm');
+
+// Chat toggle - shows/hides the chat body
+chatToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const minimized = chatBox.classList.toggle('minimized');
+  chatToggle.textContent = minimized ? '💬 Open Chat' : '✕ Hide';
+});
+
+// Close chat when clicking outside
+document.addEventListener('click', (e) => {
+  if (!chatBox.contains(e.target) && !e.target.closest('.chat-widget')) {
+    if (!chatBox.classList.contains('minimized')) {
+      chatBox.classList.add('minimized');
+      chatToggle.textContent = '💬 Open Chat';
+    }
+  }
+});
+
+chatForm.addEventListener('submit', async e => {
   e.preventDefault();
   const text = e.target.elements.text.value.trim();
   if (!text) return;
@@ -374,14 +395,7 @@ document.getElementById('chatForm').addEventListener('submit', async e => {
   e.target.reset();
 });
 
-const chatBox    = document.getElementById('chat');
-const chatToggle = document.getElementById('chatToggle');
-chatToggle.addEventListener('click', () => {
-  const minimized = chatBox.classList.toggle('minimized');
-  chatToggle.textContent = minimized ? '💬 Open Chat' : 'Hide';
-});
-
-// ── Admin Dashboard ───────────────────────────────────────────────────────────
+// -- Admin Dashboard --
 function loadAdminData() {
   // Reports
   onValue(ref(rtdb, 'reports'), snap => {
