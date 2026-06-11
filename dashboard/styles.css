@@ -1,0 +1,250 @@
+/* Global Styles */
+:root {
+  --transition: 0.3s ease;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* App Container */
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+  width: 250px;
+  @apply bg-gradient-to-b from-slate-700 to-slate-800 text-white flex flex-col shadow-xl;
+  transition: transform var(--transition);
+  overflow-y: auto;
+  z-index: 100;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-header {
+  @apply p-6 border-b border-slate-600 flex justify-between items-center;
+}
+
+.logo {
+  @apply flex items-center gap-3 text-lg font-bold transition;
+}
+
+.logo:hover {
+  @apply scale-105;
+}
+
+.logo-icon {
+  animation: heartbeat 2s infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.sidebar-toggle {
+  @apply bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition hidden;
+}
+
+.sidebar-toggle:hover {
+  @apply scale-110;
+}
+
+.sidebar-nav {
+  @apply flex-1 p-4 flex flex-col gap-2;
+}
+
+.nav-item {
+  @apply flex items-center gap-4 px-6 py-3 rounded-lg cursor-pointer transition text-slate-300 hover:text-white hover:bg-slate-600 border-l-4 border-transparent hover:border-l-error hover:pl-7 active:border-l-error active:bg-slate-600 active:bg-opacity-20;
+  font-weight: 500;
+}
+
+.nav-item.active {
+  @apply text-white border-l-error pl-7;
+}
+
+.nav-item svg {
+  @apply flex-shrink-0;
+}
+
+.sidebar-footer {
+  @apply p-4 border-t border-slate-600;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+  @apply flex-1 flex flex-col ml-64 transition;
+  margin-left: 250px;
+}
+
+.sidebar.closed ~ .main-content {
+  margin-left: 0;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  @apply bg-white dark:bg-base-200 px-10 py-5 flex justify-between items-center shadow-md border-b border-base-300;
+}
+
+.header-left {
+  @apply flex items-center gap-5;
+}
+
+.header-left h2 {
+  @apply text-2xl font-bold text-base-content;
+}
+
+.menu-btn {
+  @apply bg-base-200 hover:bg-base-300 dark:bg-base-300 dark:hover:bg-base-400 border-none p-2 rounded-lg cursor-pointer text-base-content transition hidden;
+}
+
+.menu-btn:hover {
+  @apply opacity-80;
+}
+
+.header-right {
+  @apply flex items-center gap-5;
+}
+
+/* ==================== CONTENT AREA ==================== */
+.content-area {
+  @apply flex-1 p-10 overflow-y-auto bg-gradient-to-br from-base-100 to-base-200;
+}
+
+.dashboard-content {
+  @apply animate-fadeIn;
+}
+
+.dashboard-content h3 {
+  @apply text-base-content;
+}
+
+/* ==================== LOGIN PAGE ==================== */
+.login-container {
+  @apply flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500;
+}
+
+.login-card {
+  @apply bg-white dark:bg-base-200 p-12 rounded-2xl shadow-2xl w-full max-w-md;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-header {
+  @apply text-center mb-8;
+}
+
+.login-header h1 {
+  @apply text-base-content font-bold text-2xl mt-4;
+}
+
+.login-header p {
+  @apply text-base-content/60 mt-1;
+}
+
+.login-form {
+  @apply flex flex-col gap-6;
+}
+
+.role-selector label,
+.volunteer-select label {
+  @apply block font-semibold text-base-content mb-3;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
+
+  .content-area {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar-toggle {
+    @apply block;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .header {
+    @apply px-5 py-4;
+  }
+
+  .header-left h2 {
+    @apply text-lg;
+  }
+
+  .content-area {
+    @apply p-5;
+  }
+
+  .menu-btn {
+    @apply block;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    @apply flex-col gap-3;
+  }
+
+  .login-card {
+    @apply p-6;
+  }
+
+  .content-area {
+    @apply p-4;
+  }
+}
