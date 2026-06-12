@@ -5,9 +5,10 @@ import type { User } from '../types';
 interface ProfilePageProps {
   user: User;
   activities: any[];
+  onNavigate?: (page: string) => void;
 }
 
-export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) => {
+export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNavigate }) => {
   const isVolunteer = user.role === 'volunteer';
   const isAdmin = user.role === 'admin';
 
@@ -37,7 +38,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
                     backgroundColor: isAdmin ? '#3b82f6' : isVolunteer ? '#10b981' : '#6366f1',
                     color: 'white'
                   }}>
-                    {isAdmin ? '👨‍💼 Admin' : isVolunteer ? '🤝 Volunteer' : '👤 Visitor'}
+                    {isAdmin ? '\u{1F468}\u200D\u{1F4BC} Admin' : isVolunteer ? '\uD83E\uDD1D Volunteer' : '\uD83D\uDC64 Visitor'}
                   </p>
                 </div>
                 <button className="btn btn-outline btn-sm gap-2">
@@ -57,33 +58,33 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
                     </div>
                   </div>
                 )}
-                
-                {'phone' in user && user.phone && (
+
+                {'phone' in user && (user as any).phone && (
                   <div className="flex items-center gap-3">
                     <Phone size={18} className="text-primary" />
                     <div>
                       <p className="text-sm opacity-70">Phone</p>
-                      <p className="font-semibold">{user.phone}</p>
+                      <p className="font-semibold">{(user as any).phone}</p>
                     </div>
                   </div>
                 )}
 
-                {'joinDate' in user && user.joinDate && (
+                {'joinDate' in user && (user as any).joinDate && (
                   <div className="flex items-center gap-3">
                     <Calendar size={18} className="text-primary" />
                     <div>
                       <p className="text-sm opacity-70">Join Date</p>
-                      <p className="font-semibold">{new Date(user.joinDate).toLocaleDateString()}</p>
+                      <p className="font-semibold">{new Date((user as any).joinDate).toLocaleDateString()}</p>
                     </div>
                   </div>
                 )}
 
-                {'status' in user && user.status && (
+                {'status' in user && (user as any).status && (
                   <div className="flex items-center gap-3">
                     <Award size={18} className="text-primary" />
                     <div>
                       <p className="text-sm opacity-70">Status</p>
-                      <p className="font-semibold text-success">{user.status}</p>
+                      <p className="font-semibold text-success">{(user as any).status}</p>
                     </div>
                   </div>
                 )}
@@ -96,42 +97,38 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
       {/* Volunteer-Specific Stats */}
       {isVolunteer && (
         <>
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="card bg-base-200 shadow-md">
               <div className="card-body text-center">
                 <Clock size={32} className="mx-auto mb-2 text-primary" />
                 <p className="text-sm opacity-70">Total Hours</p>
-                <p className="text-3xl font-bold text-primary">{'hours' in user ? user.hours : 0}</p>
+                <p className="text-3xl font-bold text-primary">{'hours' in user ? (user as any).hours : 0}</p>
               </div>
             </div>
-
             <div className="card bg-base-200 shadow-md">
               <div className="card-body text-center">
                 <Target size={32} className="mx-auto mb-2 text-success" />
                 <p className="text-sm opacity-70">Activities</p>
-                <p className="text-3xl font-bold text-success">{'activities' in user ? user.activities : 0}</p>
+                <p className="text-3xl font-bold text-success">{'activities' in user ? (user as any).activities : 0}</p>
               </div>
             </div>
-
             <div className="card bg-base-200 shadow-md">
               <div className="card-body text-center">
                 <Award size={32} className="mx-auto mb-2 text-warning" />
                 <p className="text-sm opacity-70">Skills</p>
-                <p className="text-3xl font-bold text-warning">{'skills' in user ? (user.skills as any[]).length : 0}</p>
+                <p className="text-3xl font-bold text-warning">{'skills' in user ? ((user as any).skills as any[]).length : 0}</p>
               </div>
             </div>
           </div>
 
-          {/* Skills */}
-          {'skills' in user && (user.skills as any[]).length > 0 && (
+          {'skills' in user && ((user as any).skills as any[]).length > 0 && (
             <div className="card bg-base-200 shadow-lg mb-8">
               <div className="card-body">
                 <h3 className="card-title text-xl mb-4">Skills & Expertise</h3>
                 <div className="flex flex-wrap gap-3">
-                  {(user.skills as any[]).map((skill, idx) => (
+                  {((user as any).skills as any[]).map((skill: string, idx: number) => (
                     <span key={idx} className="badge badge-lg badge-primary gap-2">
-                      ✓ {skill}
+                      \u2713 {skill}
                     </span>
                   ))}
                 </div>
@@ -139,7 +136,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
             </div>
           )}
 
-          {/* Recent Activities */}
           <div className="card bg-base-200 shadow-lg">
             <div className="card-body">
               <h3 className="card-title text-xl mb-4">Recent Activities</h3>
@@ -151,7 +147,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
                         <div>
                           <h4 className="font-semibold text-lg">{activity.title}</h4>
                           <p className="text-sm opacity-70 mt-1">{activity.description}</p>
-                          <p className="text-sm opacity-50 mt-2">📅 {activity.date}</p>
+                          <p className="text-sm opacity-50 mt-2">\uD83D\uDCC5 {activity.date}</p>
                         </div>
                         <span className={`badge ${
                           activity.status === 'Completed' ? 'badge-success' :
@@ -171,7 +167,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
         </>
       )}
 
-      {/* Admin-Specific Section */}
       {isAdmin && (
         <div className="card bg-base-200 shadow-lg">
           <div className="card-body">
@@ -186,7 +181,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities }) =>
                 <p className="text-lg font-semibold text-primary">System Administrator</p>
               </div>
               <div className="alert alert-info mt-4">
-                <span>✓ You have full access to all dashboard features and user management tools</span>
+                <span>\u2713 You have full access to all dashboard features and user management tools</span>
               </div>
             </div>
           </div>

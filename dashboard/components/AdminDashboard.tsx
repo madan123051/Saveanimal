@@ -1,45 +1,26 @@
 import React from 'react';
-import type { Volunteer, Activity } from '../types';
+import type { Volunteer, Activity, User } from '../types';
 import { StatCard } from './StatCard';
 
 interface AdminDashboardProps {
   volunteers: Volunteer[];
   activities: Activity[];
+  currentUser?: User;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ volunteers, activities }) => {
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ volunteers, activities, currentUser }) => {
   const totalHours = volunteers.reduce((sum, v) => sum + v.hours, 0);
   const completedActivities = activities.filter(a => a.status === 'Completed').length;
 
   return (
     <div className="dashboard-content">
       <h3 className="text-3xl font-bold mb-8">Admin Dashboard</h3>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard
-          title="Total Volunteers"
-          value={volunteers.length}
-          icon="👥"
-          color="info"
-        />
-        <StatCard
-          title="Total Hours"
-          value={totalHours}
-          icon="⏱️"
-          color="success"
-        />
-        <StatCard
-          title="Completed Activities"
-          value={completedActivities}
-          icon="✅"
-          color="warning"
-        />
-        <StatCard
-          title="Upcoming Activities"
-          value={activities.filter(a => a.status === 'Upcoming').length}
-          icon="📅"
-          color="primary"
-        />
+        <StatCard title="Total Volunteers" value={volunteers.length} icon="\uD83D\uDC65" color="info" />
+        <StatCard title="Total Hours" value={totalHours} icon="\u23F1\uFE0F" color="success" />
+        <StatCard title="Completed Activities" value={completedActivities} icon="\u2705" color="warning" />
+        <StatCard title="Upcoming Activities" value={activities.filter(a => a.status === 'Upcoming').length} icon="\uD83D\uDCC5" color="primary" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
