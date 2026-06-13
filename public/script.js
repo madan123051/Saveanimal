@@ -19,36 +19,63 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
   document.getElementById('loginNavBtn')?.addEventListener('click', () => openModal('loginModal'));
   document.getElementById('closeLoginModal')?.addEventListener('click', () => closeModal('loginModal'));
-  document.getElementById('googleLoginBtn')?.addEventListener('click', () => simulateLogin('volunteer'));
-  document.getElementById('facebookLoginBtn')?.addEventListener('click', () => simulateLogin('admin'));
-  document.getElementById('visitorLoginBtn')?.addEventListener('click', () => simulateLogin('visitor'));
   document.getElementById('closeProfileModal')?.addEventListener('click', () => closeModal('profileModal'));
   document.getElementById('profileLogoutBtn')?.addEventListener('click', handleLogout);
   document.getElementById('profileNavBtn')?.addEventListener('click', () => openModal('profileModal'));
   document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
+
+  // Login form submission
+  document.getElementById('loginForm')?.addEventListener('submit', handleLoginFormSubmit);
+
+  // Role buttons in login modal
+  document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('loginRoleInput').value = btn.dataset.role;
+    });
+  });
+
   document.querySelectorAll('.modal-overlay').forEach(modal => {
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
   });
 }
 
-function simulateLogin(role) {
-  const mockUsers = {
-    volunteer: { id: 'VOL-'+Date.now(), role:'volunteer', name:'Priya Shrestha', email:'priya@saveanimal.com', avatar:'👩‍🔬', hours:45, activities:12, skills:['Rescue','Feeding','Social Media'] },
-    admin: { id: 'ADM-'+Date.now(), role:'admin', name:'Admin Team', email:'admin@saveanimal.com', avatar:'👨‍💼', department:'Management' },
-    visitor: { id: 'VIS-'+Date.now(), role:'visitor', name:'Guest User', email:'visitor@example.com', avatar:'👤' }
+function handleLoginFormSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('loginNameInput').value.trim();
+  const email = document.getElementById('loginEmailInput').value.trim();
+  const role = document.getElementById('loginRoleInput').value || 'visitor';
+
+  if (!name || !email) {
+    showStatus('loginModalStatus', 'Please enter your name and email.', 'error');
+    return;
+  }
+
+  const avatarMap = { volunteer: '🤝', admin: '🛡️', visitor: '👤' };
+  const userData = {
+    id: role.toUpperCase().slice(0,3) + '-' + Date.now(),
+    role,
+    name,
+    email,
+    avatar: avatarMap[role] || '👤',
+    loginTime: new Date().toISOString()
   };
-  const userData = { ...(mockUsers[role] || mockUsers.visitor), loginTime: new Date().toISOString() };
+
   localStorage.setItem('saveanimal_user', JSON.stringify(userData));
   localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
   currentUser = userData;
+
   if (role === 'volunteer' || role === 'admin') {
     closeModal('loginModal');
-    showStatus('loginModalStatus', `Welcome ${userData.name}! Redirecting to dashboard...`, 'success');
-    setTimeout(() => { window.location.href = '/dashboard/index.html'; }, 1500);
+    showStatus('loginModalStatus', `Welcome ${name}! Redirecting to dashboard...`, 'success');
+    setTimeout(() => { window.location.href = '/dashboard/index.html'; }, 1200);
   } else {
-    updateUIForUser(); closeModal('loginModal'); openModal('profileModal');
+    updateUIForUser();
+    closeModal('loginModal');
+    openModal('profileModal');
   }
 }
 
@@ -82,7 +109,12 @@ function updateUIForUser() {
 }
 
 function updateProfileModal() {
-  const els = { displayName: document.getElementById('profileDisplayName'), email: document.getElementById('profileEmail'), roleBadge: document.getElementById('profileRoleBadge'), profilePhoto: document.getElementById('profilePhoto') };
+  const els = {
+    displayName: document.getElementById('profileDisplayName'),
+    email: document.getElementById('profileEmail'),
+    roleBadge: document.getElementById('profileRoleBadge'),
+    profilePhoto: document.getElementById('profilePhoto')
+  };
   if (!currentUser) {
     if (els.displayName) els.displayName.textContent = 'Not Logged In';
     if (els.email) els.email.textContent = 'Login to view profile';
@@ -93,14 +125,17 @@ function updateProfileModal() {
   if (els.email) els.email.textContent = currentUser.email || 'No email';
   if (els.profilePhoto) els.profilePhoto.textContent = currentUser.avatar || '👤';
   const roleMap = { admin: 'error', volunteer: 'success', visitor: 'info' };
-  if (els.roleBadge) { els.roleBadge.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1); els.roleBadge.className = `badge badge-${roleMap[currentUser.role]||'info'}`; }
+  if (els.roleBadge) {
+    els.roleBadge.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    els.roleBadge.className = `badge badge-${roleMap[currentUser.role]||'info'}`;
+  }
   const rc = document.getElementById('myReportCount'), dc = document.getElementById('myDonationCount'), vs = document.getElementById('myVolunteerStatus');
-  if (currentUser.role === 'volunteer') { if (rc) rc.textContent = currentUser.activities||'0'; if (vs) vs.textContent = '✓ Active'; if (dc) dc.textContent = '—'; }
+  if (currentUser.role === 'volunteer') { if (rc) rc.textContent = '0'; if (vs) vs.textContent = '✓ Active'; if (dc) dc.textContent = '—'; }
   else if (currentUser.role === 'admin') { if (rc) rc.textContent = '0'; if (dc) dc.textContent = '0'; if (vs) vs.textContent = 'Admin'; }
   else { if (rc) rc.textContent = '—'; if (dc) dc.textContent = '—'; if (vs) vs.textContent = '—'; }
   const al = document.getElementById('myActivityList');
   if (al) {
-    if (currentUser.role === 'volunteer') al.innerHTML = `<div class="activity-item"><span>🐾</span><div><strong>${currentUser.activities||0} rescue activities</strong><small>${currentUser.hours||0} hours volunteered</small></div></div>`;
+    if (currentUser.role === 'volunteer') al.innerHTML = `<div class="activity-item"><span>🤝</span><div><strong>Volunteer Account</strong><small>Go to dashboard for full details</small></div></div>`;
     else if (currentUser.role === 'admin') al.innerHTML = `<div class="activity-item"><span>🛡️</span><div><strong>Admin Access</strong><small>View dashboard for full stats</small></div></div>`;
     else al.innerHTML = `<div class="activity-item"><span>📝</span><div><strong>Visitor Mode</strong><small>Report animals and view our work</small></div></div>`;
   }
@@ -142,7 +177,7 @@ function setupFormSubmissions() {
     const volunteer = { id:'VOL-'+Date.now(), name:f.get('fullName'), email:f.get('email'), phone:f.get('phone'), role:f.get('role'), availability:f.get('availability'), reason:f.get('reason'), joinDate:new Date().toISOString(), status:'Pending' };
     let volunteers = JSON.parse(localStorage.getItem('volunteers')||'[]');
     volunteers.push(volunteer); localStorage.setItem('volunteers', JSON.stringify(volunteers));
-    showStatus('volunteerStatus',"\u2713 Welcome! We'll contact you soon.",'success'); e.target.reset(); updatePageStats();
+    showStatus('volunteerStatus','\u2713 Welcome! We\'ll contact you soon.','success'); e.target.reset(); updatePageStats();
   });
 }
 
@@ -155,7 +190,7 @@ function handleChatSubmit(e) {
   const userMsg = document.createElement('div'); userMsg.className = 'chat-msg user-msg'; userMsg.textContent = message; div.appendChild(userMsg);
   setTimeout(() => {
     const botMsg = document.createElement('div'); botMsg.className = 'chat-msg bot-msg';
-    const r = ['🐾 How can I help you today?',"That's a great question! 💙","We're here to help! 🐾","Thank you! 🙏 Contact us via email.",'You can report animals via our form. 📝'];
+    const r = ['🐾 How can I help you today?','That\'s a great question! 💙','We\'re here to help! 🐾','Thank you! 🙏 Contact us via email.','You can report animals via our form. 📝'];
     botMsg.textContent = r[Math.floor(Math.random()*r.length)]; div.appendChild(botMsg); div.scrollTop = div.scrollHeight;
   }, 500);
   input.value = ''; div.scrollTop = div.scrollHeight;
