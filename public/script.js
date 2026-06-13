@@ -2,415 +2,190 @@
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Load user from localStorage
   const savedUser = localStorage.getItem('saveanimal_user');
   if (savedUser) {
-    try {
-      currentUser = JSON.parse(savedUser);
-      updateUIForUser();
-    } catch (e) {
-      console.error('Failed to load user:', e);
-      localStorage.removeItem('saveanimal_user');
-    }
+    try { currentUser = JSON.parse(savedUser); updateUIForUser(); }
+    catch (e) { console.error('Failed to load user:', e); localStorage.removeItem('saveanimal_user'); }
   }
-
-  // Load saved language preference
   const savedLang = localStorage.getItem('preferredLanguage') || 'en';
   document.documentElement.lang = savedLang;
   updateLanguageToggleButton(savedLang);
-
-  // Setup all event listeners
+  if (savedLang === 'ne') applyTranslations('ne');
   setupEventListeners();
-
-  // Load and display data
   updatePageStats();
   setupFormSubmissions();
 });
 
-// ============ EVENT LISTENER SETUP ============
 function setupEventListeners() {
-  // Login modal
   document.getElementById('loginNavBtn')?.addEventListener('click', () => openModal('loginModal'));
   document.getElementById('closeLoginModal')?.addEventListener('click', () => closeModal('loginModal'));
-  
-  // Social login buttons
   document.getElementById('googleLoginBtn')?.addEventListener('click', () => simulateLogin('volunteer'));
   document.getElementById('facebookLoginBtn')?.addEventListener('click', () => simulateLogin('admin'));
   document.getElementById('visitorLoginBtn')?.addEventListener('click', () => simulateLogin('visitor'));
-
-  // Profile modal
   document.getElementById('closeProfileModal')?.addEventListener('click', () => closeModal('profileModal'));
   document.getElementById('profileLogoutBtn')?.addEventListener('click', handleLogout);
   document.getElementById('profileNavBtn')?.addEventListener('click', () => openModal('profileModal'));
-
-  // Language toggle
   document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
-
-  // Chat widget
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
-
-  // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
   });
 }
 
-// ============ LOGIN SYSTEM ============
 function simulateLogin(role) {
-  // Mock login (in production, use Firebase)
   const mockUsers = {
-    volunteer: {
-      id: 'VOL-' + Date.now(),
-      role: 'volunteer',
-      name: 'Priya Shrestha',
-      email: 'priya@saveanimal.com',
-      avatar: '👩\u200d🔬',
-      hours: 45,
-      activities: 12,
-      skills: ['Rescue', 'Feeding', 'Social Media']
-    },
-    admin: {
-      id: 'ADM-' + Date.now(),
-      role: 'admin',
-      name: 'Admin Team',
-      email: 'admin@saveanimal.com',
-      avatar: '👨\u200d💼',
-      department: 'Management'
-    },
-    visitor: {
-      id: 'VIS-' + Date.now(),
-      role: 'visitor',
-      name: 'Guest User',
-      email: 'visitor@example.com',
-      avatar: '👤'
-    }
+    volunteer: { id: 'VOL-'+Date.now(), role:'volunteer', name:'Priya Shrestha', email:'priya@saveanimal.com', avatar:'👩‍🔬', hours:45, activities:12, skills:['Rescue','Feeding','Social Media'] },
+    admin: { id: 'ADM-'+Date.now(), role:'admin', name:'Admin Team', email:'admin@saveanimal.com', avatar:'👨‍💼', department:'Management' },
+    visitor: { id: 'VIS-'+Date.now(), role:'visitor', name:'Guest User', email:'visitor@example.com', avatar:'👤' }
   };
-
-  const userData = mockUsers[role] || mockUsers.visitor;
-  userData.loginTime = new Date().toISOString();
-
+  const userData = { ...(mockUsers[role] || mockUsers.visitor), loginTime: new Date().toISOString() };
   localStorage.setItem('saveanimal_user', JSON.stringify(userData));
+  localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
   currentUser = userData;
-
-  // Role-based redirect
   if (role === 'volunteer' || role === 'admin') {
     closeModal('loginModal');
     showStatus('loginModalStatus', `Welcome ${userData.name}! Redirecting to dashboard...`, 'success');
-    setTimeout(() => {
-      window.location.href = '/dashboard/index.html';
-    }, 1500);
+    setTimeout(() => { window.location.href = '/dashboard/index.html'; }, 1500);
   } else {
-    // Visitor: show profile modal
-    updateUIForUser();
-    closeModal('loginModal');
-    openModal('profileModal');
+    updateUIForUser(); closeModal('loginModal'); openModal('profileModal');
   }
 }
 
 function handleLogout() {
   if (confirm('Are you sure you want to logout?')) {
     localStorage.removeItem('saveanimal_user');
-    currentUser = null;
-    updateUIForUser();
-    closeModal('profileModal');
+    localStorage.removeItem('saveanimal_currentUser');
+    currentUser = null; updateUIForUser(); closeModal('profileModal');
     showStatus('profileModal', 'You have been logged out', 'success', 2000);
   }
 }
 
-// ============ UI UPDATES ============
 function updateUIForUser() {
   const loginBtn = document.getElementById('loginNavBtn');
   const profileBtn = document.getElementById('profileNavBtn');
   const adminSection = document.getElementById('admin');
-
   if (!currentUser) {
     loginBtn?.style.removeProperty('display');
-    profileBtn?.style.setProperty('display', 'none', 'important');
+    profileBtn?.style.setProperty('display','none','important');
     if (adminSection) adminSection.style.display = 'none';
-    updateProfileModal();
-    return;
+    updateProfileModal(); return;
   }
-
-  // Update navbar
-  loginBtn?.style.setProperty('display', 'none', 'important');
+  loginBtn?.style.setProperty('display','none','important');
   profileBtn?.style.removeProperty('display');
-  
   const navAvatar = document.getElementById('navAvatar');
   const navName = document.getElementById('navName');
   if (navAvatar) navAvatar.textContent = currentUser.avatar || '👤';
   if (navName) navName.textContent = currentUser.name?.split(' ')[0] || 'User';
-
-  // Show admin section if admin
-  if (currentUser.role === 'admin' && adminSection) {
-    adminSection.style.display = 'block';
-    updateAdminPanel();
-  }
-
-  // Update profile modal
+  if (currentUser.role === 'admin' && adminSection) { adminSection.style.display = 'block'; updateAdminPanel(); }
   updateProfileModal();
 }
 
 function updateProfileModal() {
-  const displayName = document.getElementById('profileDisplayName');
-  const email = document.getElementById('profileEmail');
-  const roleBadge = document.getElementById('profileRoleBadge');
-  const providerBadge = document.getElementById('profileProviderBadge');
-  const profilePhoto = document.getElementById('profilePhoto');
-
+  const els = { displayName: document.getElementById('profileDisplayName'), email: document.getElementById('profileEmail'), roleBadge: document.getElementById('profileRoleBadge'), profilePhoto: document.getElementById('profilePhoto') };
   if (!currentUser) {
-    displayName.textContent = 'Not Logged In';
-    email.textContent = 'Login to view profile';
-    roleBadge.textContent = 'Guest';
-    roleBadge.className = 'badge badge-info';
-    providerBadge.textContent = '';
+    if (els.displayName) els.displayName.textContent = 'Not Logged In';
+    if (els.email) els.email.textContent = 'Login to view profile';
+    if (els.roleBadge) { els.roleBadge.textContent = 'Guest'; els.roleBadge.className = 'badge badge-info'; }
     return;
   }
-
-  displayName.textContent = currentUser.name || 'User';
-  email.textContent = currentUser.email || 'No email';
-  profilePhoto.textContent = currentUser.avatar || '👤';
-
-  // Role badge
+  if (els.displayName) els.displayName.textContent = currentUser.name || 'User';
+  if (els.email) els.email.textContent = currentUser.email || 'No email';
+  if (els.profilePhoto) els.profilePhoto.textContent = currentUser.avatar || '👤';
   const roleMap = { admin: 'error', volunteer: 'success', visitor: 'info' };
-  const roleText = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-  roleBadge.textContent = roleText;
-  roleBadge.className = `badge badge-${roleMap[currentUser.role] || 'info'}`;
-
-  // Stats
-  const reportCount = document.getElementById('myReportCount');
-  const donationCount = document.getElementById('myDonationCount');
-  const volunteerStatus = document.getElementById('myVolunteerStatus');
-
-  if (currentUser.role === 'volunteer') {
-    reportCount.textContent = currentUser.activities || '0';
-    volunteerStatus.textContent = '✓ Active';
-    donationCount.textContent = '—';
-  } else if (currentUser.role === 'admin') {
-    reportCount.textContent = localStorage.getItem('rescueReports')?.split(',').length || '0';
-    donationCount.textContent = localStorage.getItem('donations')?.split(',').length || '0';
-    volunteerStatus.textContent = 'Admin';
-  } else {
-    reportCount.textContent = '—';
-    donationCount.textContent = '—';
-    volunteerStatus.textContent = '—';
-  }
-
-  // Activity list
-  const activityList = document.getElementById('myActivityList');
-  if (currentUser.role === 'volunteer') {
-    activityList.innerHTML = `
-      <div class="activity-item">
-        <span>🐾</span>
-        <div>
-          <strong>${currentUser.activities || 0} rescue activities</strong>
-          <small>${currentUser.hours || 0} hours volunteered</small>
-        </div>
-      </div>
-      <div class="activity-item">
-        <span>📚</span>
-        <div>
-          <strong>Skills</strong>
-          <small>${(currentUser.skills || []).join(', ')}</small>
-        </div>
-      </div>
-    `;
-  } else if (currentUser.role === 'admin') {
-    activityList.innerHTML = `
-      <div class="activity-item">
-        <span>🛡️</span>
-        <div>
-          <strong>Admin Access</strong>
-          <small>View dashboard for full stats</small>
-        </div>
-      </div>
-    `;
-  } else {
-    activityList.innerHTML = `
-      <div class="activity-item">
-        <span>📝</span>
-        <div>
-          <strong>Visitor Mode</strong>
-          <small>Report animals and view our work</small>
-        </div>
-      </div>
-    `;
+  if (els.roleBadge) { els.roleBadge.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1); els.roleBadge.className = `badge badge-${roleMap[currentUser.role]||'info'}`; }
+  const rc = document.getElementById('myReportCount'), dc = document.getElementById('myDonationCount'), vs = document.getElementById('myVolunteerStatus');
+  if (currentUser.role === 'volunteer') { if (rc) rc.textContent = currentUser.activities||'0'; if (vs) vs.textContent = '✓ Active'; if (dc) dc.textContent = '—'; }
+  else if (currentUser.role === 'admin') { if (rc) rc.textContent = '0'; if (dc) dc.textContent = '0'; if (vs) vs.textContent = 'Admin'; }
+  else { if (rc) rc.textContent = '—'; if (dc) dc.textContent = '—'; if (vs) vs.textContent = '—'; }
+  const al = document.getElementById('myActivityList');
+  if (al) {
+    if (currentUser.role === 'volunteer') al.innerHTML = `<div class="activity-item"><span>🐾</span><div><strong>${currentUser.activities||0} rescue activities</strong><small>${currentUser.hours||0} hours volunteered</small></div></div>`;
+    else if (currentUser.role === 'admin') al.innerHTML = `<div class="activity-item"><span>🛡️</span><div><strong>Admin Access</strong><small>View dashboard for full stats</small></div></div>`;
+    else al.innerHTML = `<div class="activity-item"><span>📝</span><div><strong>Visitor Mode</strong><small>Report animals and view our work</small></div></div>`;
   }
 }
 
-// ============ PAGE STATS ============
 function updatePageStats() {
   try {
-    const reports = JSON.parse(localStorage.getItem('rescueReports') || '[]');
-    const donations = JSON.parse(localStorage.getItem('donations') || '[]');
-    const volunteers = JSON.parse(localStorage.getItem('volunteers') || '[]');
-
-    document.getElementById('rescuedCount').textContent = Math.floor(reports.length * 2.5) || 0;
-    document.getElementById('volunteerCount').textContent = volunteers.length || 0;
-    document.getElementById('donationCount').textContent = donations.reduce((sum, d) => sum + (parseInt(d.amount) || 0), 0) || 0;
-    document.getElementById('reportCount').textContent = reports.length || 0;
-  } catch (e) {
-    console.error('Error updating stats:', e);
-  }
+    const reports = JSON.parse(localStorage.getItem('rescueReports')||'[]');
+    const donations = JSON.parse(localStorage.getItem('donations')||'[]');
+    const volunteers = JSON.parse(localStorage.getItem('volunteers')||'[]');
+    const e = (id) => document.getElementById(id);
+    if (e('rescuedCount')) e('rescuedCount').textContent = Math.floor(reports.length*2.5)||0;
+    if (e('volunteerCount')) e('volunteerCount').textContent = volunteers.length||0;
+    if (e('donationCount')) e('donationCount').textContent = donations.reduce((s,d)=>s+(parseInt(d.amount)||0),0)||0;
+    if (e('reportCount')) e('reportCount').textContent = reports.length||0;
+  } catch(e) { console.error('Error updating stats:',e); }
 }
 
-// ============ FORM SUBMISSIONS ============
 function setupFormSubmissions() {
-  // Report form
   document.getElementById('reportForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const report = {
-      id: 'RESCUE-' + Date.now(),
-      name: formData.get('name'),
-      phone: formData.get('phone'),
-      location: formData.get('location'),
-      condition: formData.get('condition'),
-      timestamp: new Date().toISOString(),
-      status: 'Pending'
-    };
-    
-    let reports = JSON.parse(localStorage.getItem('rescueReports') || '[]');
-    reports.push(report);
-    localStorage.setItem('rescueReports', JSON.stringify(reports));
-    
-    showStatus('reportStatus', '✓ Report submitted! Our team will respond soon.', 'success');
-    e.target.reset();
-    updatePageStats();
+    const f = new FormData(e.target);
+    const report = { id:'RESCUE-'+Date.now(), name:f.get('name'), phone:f.get('phone'), location:f.get('location'), condition:f.get('condition'), timestamp:new Date().toISOString(), status:'Pending' };
+    let reports = JSON.parse(localStorage.getItem('rescueReports')||'[]');
+    reports.push(report); localStorage.setItem('rescueReports', JSON.stringify(reports));
+    showStatus('reportStatus','✓ Report submitted! Our team will respond soon.','success'); e.target.reset(); updatePageStats();
   });
-
-  // Donation form
   document.getElementById('donationForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const donation = {
-      id: 'DONATION-' + Date.now(),
-      donor: formData.get('donorName'),
-      amount: formData.get('amount'),
-      frequency: formData.get('frequency'),
-      method: formData.get('method'),
-      timestamp: new Date().toISOString()
-    };
-    
-    let donations = JSON.parse(localStorage.getItem('donations') || '[]');
-    donations.push(donation);
-    localStorage.setItem('donations', JSON.stringify(donations));
-    
-    showStatus('donationStatus', `✓ Thank you! Donation of NPR ${donation.amount} recorded.`, 'success');
-    e.target.reset();
-    updatePageStats();
+    const f = new FormData(e.target);
+    const donation = { id:'DONATION-'+Date.now(), donor:f.get('donorName'), amount:f.get('amount'), frequency:f.get('frequency'), method:f.get('method'), timestamp:new Date().toISOString() };
+    let donations = JSON.parse(localStorage.getItem('donations')||'[]');
+    donations.push(donation); localStorage.setItem('donations', JSON.stringify(donations));
+    showStatus('donationStatus',`✓ Thank you! Donation of NPR ${donation.amount} recorded.`,'success'); e.target.reset(); updatePageStats();
   });
-
-  // Volunteer form
   document.getElementById('volunteerForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const volunteer = {
-      id: 'VOL-' + Date.now(),
-      name: formData.get('fullName'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      role: formData.get('role'),
-      availability: formData.get('availability'),
-      reason: formData.get('reason'),
-      joinDate: new Date().toISOString(),
-      status: 'Pending'
-    };
-    
-    let volunteers = JSON.parse(localStorage.getItem('volunteers') || '[]');
-    volunteers.push(volunteer);
-    localStorage.setItem('volunteers', JSON.stringify(volunteers));
-    
-    showStatus('volunteerStatus', '✓ Welcome! We\'ll contact you soon.', 'success');
-    e.target.reset();
-    updatePageStats();
+    const f = new FormData(e.target);
+    const volunteer = { id:'VOL-'+Date.now(), name:f.get('fullName'), email:f.get('email'), phone:f.get('phone'), role:f.get('role'), availability:f.get('availability'), reason:f.get('reason'), joinDate:new Date().toISOString(), status:'Pending' };
+    let volunteers = JSON.parse(localStorage.getItem('volunteers')||'[]');
+    volunteers.push(volunteer); localStorage.setItem('volunteers', JSON.stringify(volunteers));
+    showStatus('volunteerStatus',"\u2713 Welcome! We'll contact you soon.",'success'); e.target.reset(); updatePageStats();
   });
 }
 
-// ============ CHATBOT ============
 function handleChatSubmit(e) {
   e.preventDefault();
   const input = e.target.querySelector('input[name="text"]');
   const message = input.value.trim();
-  
   if (!message) return;
-
-  // Add user message
-  const messagesDiv = document.getElementById('chatMessages');
-  const userMsg = document.createElement('div');
-  userMsg.className = 'chat-msg user-msg';
-  userMsg.textContent = message;
-  messagesDiv.appendChild(userMsg);
-
-  // Simulate bot response
+  const div = document.getElementById('chatMessages');
+  const userMsg = document.createElement('div'); userMsg.className = 'chat-msg user-msg'; userMsg.textContent = message; div.appendChild(userMsg);
   setTimeout(() => {
-    const botMsg = document.createElement('div');
-    botMsg.className = 'chat-msg bot-msg';
-    
-    const responses = [
-      '🐾 How can I help you today?',
-      'That\'s a great question! 💙 Have you checked our report form?',
-      'We\'re here to help! 🐾 Would you like to volunteer or donate?',
-      'Thank you for your interest! 🙏 Feel free to contact us via email.',
-      'You can report injured animals through our quick form. 📝'
-    ];
-    botMsg.textContent = responses[Math.floor(Math.random() * responses.length)];
-    messagesDiv.appendChild(botMsg);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    const botMsg = document.createElement('div'); botMsg.className = 'chat-msg bot-msg';
+    const r = ['🐾 How can I help you today?',"That's a great question! 💙","We're here to help! 🐾","Thank you! 🙏 Contact us via email.",'You can report animals via our form. 📝'];
+    botMsg.textContent = r[Math.floor(Math.random()*r.length)]; div.appendChild(botMsg); div.scrollTop = div.scrollHeight;
   }, 500);
-
-  input.value = '';
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  input.value = ''; div.scrollTop = div.scrollHeight;
 }
 
 function toggleChat() {
-  const chatWidget = document.getElementById('chat');
-  chatWidget.classList.toggle('minimized');
-  const toggle = document.getElementById('chatToggle');
-  toggle.textContent = chatWidget.classList.contains('minimized') ? '💬 Open Chat' : '💬 Close Chat';
+  const w = document.getElementById('chat'); w.classList.toggle('minimized');
+  document.getElementById('chatToggle').textContent = w.classList.contains('minimized') ? '💬 Open Chat' : '💬 Close Chat';
 }
 
-// ============ LANGUAGE TOGGLE ============
+// ============ LANGUAGE ============
+const translations = {
+  en: { nav_home:'Home', nav_stories:'Stories', nav_report:'Report', nav_donate:'Donate', nav_volunteer:'Volunteer', nav_about:'About', nav_contact:'Contact', hero_title:'Help Save Lives –<br>Rescue Animals in Nepal', hero_text:'Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.', cta_report:'Report an Animal', cta_donate:'Donate Now', cta_volunteer:'Join as Volunteer', stat_rescued:'Animals Rescued', stat_volunteers:'Volunteers', stat_donations:'Donations (NPR)', stat_reports:'Active Reports', stories_title:'Featured Rescue Stories', report_title:'Report an Injured Animal' },
+  ne: { nav_home:'गृहपृष्ठ', nav_stories:'कथाहरू', nav_report:'रिपोर्ट', nav_donate:'दान दिनुहोस्', nav_volunteer:'स्वयंसेवक', nav_about:'हाम्रोबारे', nav_contact:'सम्पर्क', hero_title:'जीवन बचाउन मद्दत गर्नुस् –<br>नेपालमा जनावरहरू उद्धार गर्नुस्', hero_text:'हामी मिलेर घाइते सडक जनावरहरू उद्धार गर्छौं, खाना र औषधि उपचार प्रदान गर्छौं, र दयालु नेपाल निर्माण गर्छौं।', cta_report:'जनावर रिपोर्ट गर्नुस्', cta_donate:'अहिले दान दिनुस्', cta_volunteer:'स्वयंसेवकको रूपमा जोडिनुस्', stat_rescued:'उद्धार गरिएका जनावरहरू', stat_volunteers:'स्वयंसेवकहरू', stat_donations:'दान (NPR)', stat_reports:'सक्रिय रिपोर्टहरू', stories_title:'विशेष उद्धार कथाहरू', report_title:'घाइते जनावर रिपोर्ट गर्नुस्' }
+};
+
+function applyTranslations(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
+  });
+}
+
 function toggleLanguage() {
   const currentLang = document.documentElement.lang || 'en';
   const newLang = currentLang === 'en' ? 'ne' : 'en';
-  
   document.documentElement.lang = newLang;
   localStorage.setItem('preferredLanguage', newLang);
   updateLanguageToggleButton(newLang);
-
-  // Simple translation (in production, use i18n library)
-  const translations = {
-    en: {
-      'nav_home': 'Home',
-      'nav_stories': 'Stories',
-      'nav_report': 'Report',
-      'nav_donate': 'Donate',
-      'nav_volunteer': 'Volunteer',
-      'nav_about': 'About',
-      'nav_contact': 'Contact'
-    },
-    ne: {
-      'nav_home': 'गृह',
-      'nav_stories': 'कहानीहरू',
-      'nav_report': 'रिपोर्ट',
-      'nav_donate': 'दान दिनुहोस्',
-      'nav_volunteer': 'स्वेच्छासेवक',
-      'nav_about': 'बारेमा',
-      'nav_contact': 'सम्पर्क'
-    }
-  };
-
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (translations[newLang]?.[key]) {
-      el.textContent = translations[newLang][key];
-    }
-  });
+  applyTranslations(newLang);
 }
 
 function updateLanguageToggleButton(lang) {
@@ -418,54 +193,32 @@ function updateLanguageToggleButton(lang) {
   if (btn) btn.textContent = lang === 'en' ? 'नेपाली' : 'English';
 }
 
-// ============ ADMIN PANEL ============
 function updateAdminPanel() {
   try {
-    const reports = JSON.parse(localStorage.getItem('rescueReports') || '[]');
-    const volunteers = JSON.parse(localStorage.getItem('volunteers') || '[]');
-    const donations = JSON.parse(localStorage.getItem('donations') || '[]');
-
-    document.getElementById('as-rescued').textContent = reports.length * 3 || 0;
-    document.getElementById('as-volunteers').textContent = volunteers.length || 0;
-    document.getElementById('as-donations').textContent = donations.reduce((sum, d) => sum + (parseInt(d.amount) || 0), 0) || 0;
-    document.getElementById('as-reports').textContent = reports.filter(r => r.status === 'Pending').length || 0;
-
-    // Tab switching
+    const reports = JSON.parse(localStorage.getItem('rescueReports')||'[]');
+    const volunteers = JSON.parse(localStorage.getItem('volunteers')||'[]');
+    const donations = JSON.parse(localStorage.getItem('donations')||'[]');
+    const e = (id) => document.getElementById(id);
+    if (e('as-rescued')) e('as-rescued').textContent = reports.length*3||0;
+    if (e('as-volunteers')) e('as-volunteers').textContent = volunteers.length||0;
+    if (e('as-donations')) e('as-donations').textContent = donations.reduce((s,d)=>s+(parseInt(d.amount)||0),0)||0;
+    if (e('as-reports')) e('as-reports').textContent = reports.filter(r=>r.status==='Pending').length||0;
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab)?.classList.add('active');
       });
     });
-  } catch (e) {
-    console.error('Admin panel error:', e);
-  }
+  } catch(e) { console.error('Admin panel error:',e); }
 }
 
-// ============ UTILITY FUNCTIONS ============
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.style.display = 'flex';
-}
-
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.style.display = 'none';
-}
-
-function showStatus(elementId, message, type = 'info', duration = 3000) {
+function openModal(id) { const m=document.getElementById(id); if(m) m.style.display='flex'; }
+function closeModal(id) { const m=document.getElementById(id); if(m) m.style.display='none'; }
+function showStatus(elementId, message, type='info', duration=3000) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  
-  el.textContent = message;
-  el.className = `status ${type}`;
-  el.style.display = 'block';
-  
-  if (duration > 0) {
-    setTimeout(() => {
-      el.style.display = 'none';
-    }, duration);
-  }
+  el.textContent = message; el.className = `status ${type}`; el.style.display = 'block';
+  if (duration > 0) setTimeout(() => { el.style.display='none'; }, duration);
 }

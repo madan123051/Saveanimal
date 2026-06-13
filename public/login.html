@@ -6,224 +6,36 @@
   <title>Login - SaveAnimal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    body {
-      background: linear-gradient(135deg, #0f4c1f 0%, #1a6b3a 50%, #0d3819 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .login-container {
-      width: 100%;
-      max-width: 420px;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-    }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .login-header h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: #0f4c1f;
-      margin: 0 0 8px 0;
-    }
-
-    .login-header p {
-      color: #666;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      color: #222;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.3s ease;
-      box-sizing: border-box;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #ff8c42;
-      box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
-    }
-
-    .remember-forgot {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      font-size: 14px;
-    }
-
-    .remember-forgot a {
-      color: #ff8c42;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .remember-forgot a:hover {
-      color: #e67e2d;
-    }
-
-    .remember-forgot input[type="checkbox"] {
-      width: auto;
-      margin-right: 8px;
-    }
-
-    .btn-login {
-      width: 100%;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #0f4c1f 0%, #1a6b3a 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .btn-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(15, 76, 31, 0.3);
-    }
-
-    .btn-login:active {
-      transform: translateY(0);
-    }
-
-    .login-status {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 14px;
-      display: none;
-      padding: 10px;
-      border-radius: 8px;
-    }
-
-    .login-status.success {
-      display: block;
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .login-status.error {
-      display: block;
-      background: #ffebee;
-      color: #c62828;
-    }
-
-    .divider {
-      margin: 32px 0;
-      position: relative;
-      text-align: center;
-    }
-
-    .divider::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: #e0e0e0;
-    }
-
-    .divider span {
-      background: white;
-      padding: 0 12px;
-      color: #999;
-      font-size: 13px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .social-login {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .btn-social {
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      background: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .btn-social:hover {
-      border-color: #ff8c42;
-      background: #fff9f5;
-    }
-
-    .signup-link {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .signup-link a {
-      color: #0f4c1f;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    .signup-link a:hover {
-      color: #ff8c42;
-    }
-
-    @media (max-width: 480px) {
-      .login-container {
-        padding: 24px;
-      }
-
-      .login-header h1 {
-        font-size: 28px;
-      }
-    }
+    body { background: linear-gradient(135deg, #0f4c1f 0%, #1a6b3a 50%, #0d3819 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; font-family: 'Inter', sans-serif; }
+    .login-container { width: 100%; max-width: 420px; padding: 40px; background: rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+    .login-header { text-align: center; margin-bottom: 32px; }
+    .login-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 700; color: #0f4c1f; margin: 0 0 8px 0; }
+    .login-header p { color: #666; margin: 0; font-size: 14px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; color: #222; margin-bottom: 8px; font-size: 14px; }
+    .form-group input { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; transition: all 0.3s ease; box-sizing: border-box; }
+    .form-group input:focus { outline: none; border-color: #ff8c42; box-shadow: 0 0 0 3px rgba(255,140,66,0.1); }
+    .remember-forgot { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; }
+    .remember-forgot a { color: #ff8c42; text-decoration: none; font-weight: 500; }
+    .btn-login { width: 100%; padding: 12px 24px; background: linear-gradient(135deg, #0f4c1f 0%, #1a6b3a 100%); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(15,76,31,0.3); }
+    .login-status { text-align: center; margin-top: 12px; font-size: 14px; display: none; padding: 10px; border-radius: 8px; }
+    .login-status.success { display: block; background: #e8f5e9; color: #2e7d32; }
+    .login-status.error { display: block; background: #ffebee; color: #c62828; }
+    .divider { margin: 24px 0; position: relative; text-align: center; }
+    .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #e0e0e0; }
+    .divider span { background: white; padding: 0 12px; color: #999; font-size: 13px; position: relative; z-index: 1; }
+    .social-login { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .btn-social { padding: 11px 8px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.3s ease; font-family: 'Inter', sans-serif; text-align: center; }
+    .btn-social:hover { border-color: #0f4c1f; background: #f0faf4; }
+    .btn-social.admin-btn { border-color: #ff8c42; }
+    .btn-social.admin-btn:hover { background: #fff9f5; border-color: #e67e2d; }
+    .signup-link { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+    .signup-link a { color: #0f4c1f; text-decoration: none; font-weight: 600; }
+    @media (max-width: 480px) { .login-container { padding: 24px; } .social-login { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -232,99 +44,72 @@
       <h1>SaveAnimal</h1>
       <p>Welcome back to save lives</p>
     </div>
-
     <form id="loginForm">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
       </div>
-
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="••••••••"
-          required
-        />
+        <input type="password" id="password" name="password" placeholder="••••••••" required />
       </div>
-
       <div class="remember-forgot">
-        <label style="margin: 0; display: flex; align-items: center; color: #666;">
+        <label style="margin:0;display:flex;align-items:center;color:#666;">
           <input type="checkbox" name="remember" />
-          <span style="margin-left: 6px;">Remember me</span>
+          <span style="margin-left:6px;">Remember me</span>
         </label>
         <a href="#forgot">Forgot password?</a>
       </div>
-
       <button type="submit" class="btn-login">Sign In</button>
       <div id="loginStatus" class="login-status"></div>
     </form>
-
-    <div class="divider">
-      <span>Or continue with</span>
-    </div>
-
+    <div class="divider"><span>Or continue with</span></div>
     <div class="social-login">
-      <button type="button" class="btn-social" onclick="quickLogin('google')">🔵 Google</button>
-      <button type="button" class="btn-social" onclick="quickLogin('github')">🐙 GitHub</button>
+      <button type="button" class="btn-social" onclick="quickLogin('google','volunteer')">🔵 Google<br><small style="color:#888;">Volunteer</small></button>
+      <button type="button" class="btn-social" onclick="quickLogin('github','volunteer')">🐙 GitHub<br><small style="color:#888;">Volunteer</small></button>
+      <button type="button" class="btn-social admin-btn" onclick="quickLogin('admin','admin')">👨‍💼 Admin<br><small style="color:#e67e2d;">Quick Login</small></button>
     </div>
-
     <div class="signup-link">
       Don't have an account? <a href="signup.html">Create one</a>
     </div>
   </div>
-
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const statusEl = document.getElementById('loginStatus');
-
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+      var statusEl = document.getElementById('loginStatus');
       if (!email || !password) {
         statusEl.textContent = 'Please enter email and password.';
         statusEl.className = 'login-status error';
         return;
       }
-
-      // Save user session to localStorage
-      const userData = {
+      var userData = {
         id: 'USER-' + Date.now(),
         role: email.toLowerCase().includes('admin') ? 'admin' : 'volunteer',
         name: email.split('@')[0],
         email: email,
-        avatar: '\uD83D\uDC64',
+        avatar: '👤',
         loginTime: new Date().toISOString()
       };
       localStorage.setItem('saveanimal_user', JSON.stringify(userData));
-
-      statusEl.textContent = '\u2713 Login successful! Redirecting to dashboard...';
+      localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
+      statusEl.textContent = '✓ Login successful! Redirecting to dashboard...';
       statusEl.className = 'login-status success';
-
-      // Redirect to dashboard after short delay
-      setTimeout(function() {
-        window.location.href = '/dashboard/index.html';
-      }, 1000);
+      setTimeout(function() { window.location.href = '/dashboard/index.html'; }, 1000);
     });
 
-    function quickLogin(provider) {
-      const userData = {
+    function quickLogin(provider, role) {
+      var userData = {
         id: 'USER-' + Date.now(),
-        role: 'volunteer',
-        name: provider === 'google' ? 'Google User' : 'GitHub User',
-        email: provider + '@saveanimal.com',
-        avatar: provider === 'google' ? '\uD83D\uDD35' : '\uD83D\uDC19',
+        role: role,
+        name: role === 'admin' ? 'Admin User' : (provider === 'google' ? 'Google User' : 'GitHub User'),
+        email: role === 'admin' ? 'admin@saveanimal.com' : (provider + '@saveanimal.com'),
+        avatar: role === 'admin' ? '👨‍💼' : (provider === 'google' ? '🔵' : '🐙'),
         loginTime: new Date().toISOString()
       };
       localStorage.setItem('saveanimal_user', JSON.stringify(userData));
+      localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
       window.location.href = '/dashboard/index.html';
     }
   </script>
