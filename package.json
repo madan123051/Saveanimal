@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'Using pre-built bundle.js'"
+    "build": "npm run build:dashboard && npm run start",
+    "build:dashboard": "esbuild dashboard/app.tsx --bundle --outfile=dashboard/bundle.js --platform=browser --jsx=automatic --external:lucide-react --external:react --external:react-dom"
   },
   "dependencies": {
     "express": "^4.19.2",
@@ -17,6 +18,8 @@
   "devDependencies": {
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.23.0",
+    "lucide-react": "^0.408.0",
     "typescript": "^5.4.5"
   }
 }
