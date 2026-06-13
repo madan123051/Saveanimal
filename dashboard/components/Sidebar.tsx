@@ -1,82 +1,46 @@
 import React from 'react';
-import { X, LogOut, Home, Users, BarChart3, Target, Clock, User as UserIcon, Heart } from 'lucide-react';
+import type { UserRole } from '../types';
 
 interface SidebarProps {
   isOpen: boolean;
   currentPage: string;
   onPageChange: (page: string) => void;
-  userRole: string;
+  userRole: UserRole;
   onLogout: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
-  isOpen,
-  currentPage,
-  onPageChange,
-  userRole,
-  onLogout
-}) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, currentPage, onPageChange, userRole, onLogout }) => {
   return (
-    <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-      <div className="sidebar-header">
-        <div className="logo">
-          <Heart className="logo-icon" size={32} fill="currentColor" />
-          <span>SaveAnimal</span>
-        </div>
-      </div>
-
-      <nav className="sidebar-nav">
+    <aside className={`bg-gray-900 text-white flex flex-col transition-all duration-300 ${isOpen ? 'w-56' : 'w-0 overflow-hidden'}`} style={{ minHeight: 'calc(100vh - 56px)' }}>
+      <div className="p-4 flex items-center gap-2 border-b border-gray-700"><span className="text-2xl">🐾</span><span className="font-bold text-lg">SaveAnimal</span></div>
+      <nav className="flex-1 p-3 space-y-1">
         {userRole === 'admin' && (
-          <>
-            <NavItem icon={<Home size={20} />} label="Dashboard" onClick={() => onPageChange('dashboard')} active={currentPage === 'dashboard'} />
-            <NavItem icon={<UserIcon size={20} />} label="My Profile" onClick={() => onPageChange('profile')} active={currentPage === 'profile'} />
-            <NavItem icon={<Users size={20} />} label="Volunteers" onClick={() => onPageChange('volunteers')} active={currentPage === 'volunteers'} />
-            <NavItem icon={<Target size={20} />} label="Activities" onClick={() => onPageChange('activities')} active={currentPage === 'activities'} />
-            <NavItem icon={<BarChart3 size={20} />} label="Reports" onClick={() => onPageChange('reports')} active={currentPage === 'reports'} />
-          </>
+          <><NavItem icon="🏠" label="Dashboard" active={currentPage === 'dashboard'} onClick={() => onPageChange('dashboard')} />
+          <NavItem icon="👤" label="My Profile" active={currentPage === 'profile'} onClick={() => onPageChange('profile')} />
+          <NavItem icon="👥" label="Volunteers" active={currentPage === 'volunteers'} onClick={() => onPageChange('volunteers')} />
+          <NavItem icon="🎯" label="Activities" active={currentPage === 'activities'} onClick={() => onPageChange('activities')} />
+          <NavItem icon="📊" label="Reports" active={currentPage === 'reports'} onClick={() => onPageChange('reports')} /></>
         )}
-
         {userRole === 'volunteer' && (
-          <>
-            <NavItem icon={<Home size={20} />} label="Dashboard" onClick={() => onPageChange('dashboard')} active={currentPage === 'dashboard'} />
-            <NavItem icon={<UserIcon size={20} />} label="My Profile" onClick={() => onPageChange('profile')} active={currentPage === 'profile'} />
-            <NavItem icon={<Clock size={20} />} label="My Hours" onClick={() => onPageChange('hours')} active={currentPage === 'hours'} />
-            <NavItem icon={<Target size={20} />} label="Activities" onClick={() => onPageChange('activities')} active={currentPage === 'activities'} />
-          </>
+          <><NavItem icon="🏠" label="Dashboard" active={currentPage === 'dashboard'} onClick={() => onPageChange('dashboard')} />
+          <NavItem icon="👤" label="My Profile" active={currentPage === 'profile'} onClick={() => onPageChange('profile')} />
+          <NavItem icon="⏱️" label="My Hours" active={currentPage === 'hours'} onClick={() => onPageChange('hours')} />
+          <NavItem icon="🎯" label="Activities" active={currentPage === 'activities'} onClick={() => onPageChange('activities')} /></>
         )}
-
         {userRole === 'visitor' && (
-          <>
-            <NavItem icon={<Home size={20} />} label="Home" onClick={() => onPageChange('dashboard')} active={currentPage === 'dashboard'} />
-            <NavItem icon={<UserIcon size={20} />} label="My Profile" onClick={() => onPageChange('profile')} active={currentPage === 'profile'} />
-            <NavItem icon={<Target size={20} />} label="Events" onClick={() => onPageChange('activities')} active={currentPage === 'activities'} />
-            <NavItem icon={<Users size={20} />} label="About Us" onClick={() => onPageChange('about')} active={currentPage === 'about'} />
-          </>
+          <><NavItem icon="🏠" label="Home" active={currentPage === 'dashboard'} onClick={() => onPageChange('dashboard')} />
+          <NavItem icon="👤" label="My Profile" active={currentPage === 'profile'} onClick={() => onPageChange('profile')} />
+          <NavItem icon="🎯" label="Events" active={currentPage === 'activities'} onClick={() => onPageChange('activities')} /></>
         )}
       </nav>
-
-      <div className="sidebar-footer">
-        <button className="btn btn-error btn-outline w-full btn-sm" onClick={onLogout}>
-          <LogOut size={18} />
-          <span>Logout</span>
-        </button>
-      </div>
+      <div className="p-3 border-t border-gray-700"><button onClick={onLogout} className="w-full py-2 px-3 rounded-lg text-sm text-red-400 hover:bg-red-900/30 transition flex items-center gap-2">🚪 Logout</button></div>
     </aside>
   );
 };
 
-interface NavItemProps {
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-  active: boolean;
-}
-
-const NavItem: React.FC<NavItemProps> = ({ icon, label, onClick, active }) => {
-  return (
-    <button className={`nav-item ${active ? 'active' : ''}`} onClick={onClick}>
-      {icon}
-      <span>{label}</span>
-    </button>
-  );
-};
+interface NavItemProps { icon: string; label: string; onClick: () => void; active: boolean; }
+const NavItem: React.FC<NavItemProps> = ({ icon, label, onClick, active }) => (
+  <button onClick={onClick} className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 text-sm transition ${active ? 'bg-green-600 text-white font-semibold' : 'text-gray-300 hover:bg-gray-700'}`}>
+    <span>{icon}</span><span>{label}</span>
+  </button>
+);

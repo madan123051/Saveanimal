@@ -1,192 +1,111 @@
 import React from 'react';
-import { Edit2, Mail, Phone, Calendar, Award, Clock, Target } from 'lucide-react';
-import type { User } from '../types';
+import type { User, Activity } from '../types';
 
-interface ProfilePageProps {
-  user: User;
-  activities: any[];
-  onNavigate?: (page: string) => void;
-}
+interface ProfilePageProps { user: User; activities: Activity[]; onNavigate?: (page: string) => void; }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNavigate }) => {
   const isVolunteer = user.role === 'volunteer';
   const isAdmin = user.role === 'admin';
 
   return (
-    <div className="profile-page">
-      <h1 className="text-4xl font-bold mb-8">My Profile</h1>
-
-      {/* Profile Header Card */}
-      <div className="card bg-base-200 shadow-lg mb-8">
-        <div className="card-body">
-          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
-            {/* Avatar */}
-            <div className="avatar placeholder">
-              <div className="bg-primary text-white rounded-full w-24 flex items-center justify-center">
-                <span className="text-3xl font-bold">
-                  {user.name.charAt(0).toUpperCase()}
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">My Profile</h1>
+      <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+          <div className="w-20 h-20 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">{user.name.charAt(0).toUpperCase()}</div>
+          <div className="flex-1">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">{user.name}</h2>
+                <span className={`inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold ${isAdmin ? 'bg-blue-100 text-blue-700' : isVolunteer ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                  {isAdmin ? '👨‍💼 Admin' : isVolunteer ? '🤝 Volunteer' : '👁️ Visitor'}
                 </span>
               </div>
             </div>
-
-            {/* User Info */}
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-3xl font-bold">{user.name}</h2>
-                  <p className="text-lg badge badge-lg mt-2" style={{
-                    backgroundColor: isAdmin ? '#3b82f6' : isVolunteer ? '#10b981' : '#6366f1',
-                    color: 'white'
-                  }}>
-                    {isAdmin ? '\u{1F468}\u200D\u{1F4BC} Admin' : isVolunteer ? '\uD83E\uDD1D Volunteer' : '\uD83D\uDC64 Visitor'}
-                  </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+              {user.email && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400">📧</span>
+                  <div><p className="text-xs text-gray-400">Email</p><p className="font-medium text-gray-700">{user.email}</p></div>
                 </div>
-                <button className="btn btn-outline btn-sm gap-2">
-                  <Edit2 size={16} />
-                  Edit Profile
-                </button>
-              </div>
-
-              {/* Contact Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                {'email' in user && user.email && (
-                  <div className="flex items-center gap-3">
-                    <Mail size={18} className="text-primary" />
-                    <div>
-                      <p className="text-sm opacity-70">Email</p>
-                      <p className="font-semibold">{user.email}</p>
-                    </div>
-                  </div>
-                )}
-
-                {'phone' in user && (user as any).phone && (
-                  <div className="flex items-center gap-3">
-                    <Phone size={18} className="text-primary" />
-                    <div>
-                      <p className="text-sm opacity-70">Phone</p>
-                      <p className="font-semibold">{(user as any).phone}</p>
-                    </div>
-                  </div>
-                )}
-
-                {'joinDate' in user && (user as any).joinDate && (
-                  <div className="flex items-center gap-3">
-                    <Calendar size={18} className="text-primary" />
-                    <div>
-                      <p className="text-sm opacity-70">Join Date</p>
-                      <p className="font-semibold">{new Date((user as any).joinDate).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                )}
-
-                {'status' in user && (user as any).status && (
-                  <div className="flex items-center gap-3">
-                    <Award size={18} className="text-primary" />
-                    <div>
-                      <p className="text-sm opacity-70">Status</p>
-                      <p className="font-semibold text-success">{(user as any).status}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              )}
+              {user.phone && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400">📱</span>
+                  <div><p className="text-xs text-gray-400">Phone</p><p className="font-medium text-gray-700">{user.phone}</p></div>
+                </div>
+              )}
+              {user.joinDate && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400">📅</span>
+                  <div><p className="text-xs text-gray-400">Member Since</p><p className="font-medium text-gray-700">{new Date(user.joinDate).toLocaleDateString()}</p></div>
+                </div>
+              )}
+              {user.status && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-gray-400">🏅</span>
+                  <div><p className="text-xs text-gray-400">Status</p><p className="font-medium text-green-600">{user.status}</p></div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Volunteer-Specific Stats */}
       {isVolunteer && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="card bg-base-200 shadow-md">
-              <div className="card-body text-center">
-                <Clock size={32} className="mx-auto mb-2 text-primary" />
-                <p className="text-sm opacity-70">Total Hours</p>
-                <p className="text-3xl font-bold text-primary">{'hours' in user ? (user as any).hours : 0}</p>
-              </div>
-            </div>
-            <div className="card bg-base-200 shadow-md">
-              <div className="card-body text-center">
-                <Target size={32} className="mx-auto mb-2 text-success" />
-                <p className="text-sm opacity-70">Activities</p>
-                <p className="text-3xl font-bold text-success">{'activities' in user ? (user as any).activities : 0}</p>
-              </div>
-            </div>
-            <div className="card bg-base-200 shadow-md">
-              <div className="card-body text-center">
-                <Award size={32} className="mx-auto mb-2 text-warning" />
-                <p className="text-sm opacity-70">Skills</p>
-                <p className="text-3xl font-bold text-warning">{'skills' in user ? ((user as any).skills as any[]).length : 0}</p>
-              </div>
-            </div>
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="bg-white rounded-xl shadow-sm p-4 text-center"><p className="text-3xl font-bold text-green-600">{user.hours || 0}</p><p className="text-sm text-gray-500 mt-1">⏱️ Total Hours</p></div>
+            <div className="bg-white rounded-xl shadow-sm p-4 text-center"><p className="text-3xl font-bold text-blue-600">{user.activities || 0}</p><p className="text-sm text-gray-500 mt-1">🎯 Activities</p></div>
+            <div className="bg-white rounded-xl shadow-sm p-4 text-center"><p className="text-3xl font-bold text-yellow-600">{user.skills?.length || 0}</p><p className="text-sm text-gray-500 mt-1">⭐ Skills</p></div>
           </div>
-
-          {'skills' in user && ((user as any).skills as any[]).length > 0 && (
-            <div className="card bg-base-200 shadow-lg mb-8">
-              <div className="card-body">
-                <h3 className="card-title text-xl mb-4">Skills & Expertise</h3>
-                <div className="flex flex-wrap gap-3">
-                  {((user as any).skills as any[]).map((skill: string, idx: number) => (
-                    <span key={idx} className="badge badge-lg badge-primary gap-2">
-                      \u2713 {skill}
-                    </span>
-                  ))}
-                </div>
+          {user.skills && user.skills.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
+              <h3 className="font-bold text-gray-700 mb-3">Skills & Expertise</h3>
+              <div className="flex flex-wrap gap-2">
+                {user.skills.map((skill, idx) => (
+                  <span key={idx} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">✓ {skill}</span>
+                ))}
               </div>
             </div>
           )}
-
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body">
-              <h3 className="card-title text-xl mb-4">Recent Activities</h3>
-              {activities.length > 0 ? (
-                <div className="space-y-3">
-                  {activities.slice(0, 5).map((activity) => (
-                    <div key={activity.id} className="p-4 bg-base-100 rounded-lg border border-base-300">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-semibold text-lg">{activity.title}</h4>
-                          <p className="text-sm opacity-70 mt-1">{activity.description}</p>
-                          <p className="text-sm opacity-50 mt-2">\uD83D\uDCC5 {activity.date}</p>
-                        </div>
-                        <span className={`badge ${
-                          activity.status === 'Completed' ? 'badge-success' :
-                          activity.status === 'Upcoming' ? 'badge-info' : 'badge-warning'
-                        }`}>
-                          {activity.status}
-                        </span>
-                      </div>
+          <div className="bg-white rounded-xl shadow-sm p-5">
+            <h3 className="font-bold text-gray-700 mb-4">Recent Activities</h3>
+            {activities.length > 0 ? (
+              <div className="space-y-3">
+                {activities.slice(0, 5).map((activity) => (
+                  <div key={activity.id} className="p-3 bg-gray-50 rounded-lg flex justify-between items-start">
+                    <div>
+                      <h4 className="font-semibold text-gray-800">{activity.title}</h4>
+                      <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                      <p className="text-xs text-gray-400 mt-1">📅 {activity.date}</p>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-center opacity-70 py-8">No activities yet</p>
-              )}
-            </div>
+                    <span className={`ml-3 px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${activity.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{activity.status}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-400 py-6">No activities yet</p>
+            )}
           </div>
         </>
       )}
-
       {isAdmin && (
-        <div className="card bg-base-200 shadow-lg">
-          <div className="card-body">
-            <h3 className="card-title text-xl mb-4">Admin Information</h3>
-            <div className="space-y-4">
-              <div className="p-4 bg-base-100 rounded-lg">
-                <p className="text-sm opacity-70">Admin ID</p>
-                <p className="text-lg font-semibold">{user.id}</p>
-              </div>
-              <div className="p-4 bg-base-100 rounded-lg">
-                <p className="text-sm opacity-70">Role</p>
-                <p className="text-lg font-semibold text-primary">System Administrator</p>
-              </div>
-              <div className="alert alert-info mt-4">
-                <span>\u2713 You have full access to all dashboard features and user management tools</span>
-              </div>
-            </div>
+        <div className="bg-white rounded-xl shadow-sm p-5">
+          <h3 className="font-bold text-gray-700 mb-4">Admin Information</h3>
+          <div className="space-y-3">
+            <div className="p-3 bg-gray-50 rounded-lg"><p className="text-xs text-gray-400">Admin ID</p><p className="font-semibold text-gray-800">{user.id}</p></div>
+            <div className="p-3 bg-gray-50 rounded-lg"><p className="text-xs text-gray-400">Role</p><p className="font-semibold text-blue-600">System Administrator</p></div>
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">✓ Full access to all dashboard features and user management tools</div>
           </div>
+        </div>
+      )}
+      {!isVolunteer && !isAdmin && (
+        <div className="bg-white rounded-xl shadow-sm p-5">
+          <h3 className="font-bold text-gray-700 mb-3">Visitor Account</h3>
+          <p className="text-gray-500 mb-4">You are browsing as a visitor. Join us as a volunteer to make a difference!</p>
+          <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition" onClick={() => window.location.href = '/'}>🐾 Become a Volunteer</button>
         </div>
       )}
     </div>
   );
-};
+}
