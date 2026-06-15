@@ -510,7 +510,7 @@
             }
             return element;
           };
-          function createElement3(type, config, children) {
+          function createElement(type, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -971,7 +971,7 @@
             }
             return lazyType;
           }
-          function forwardRef3(render) {
+          function forwardRef(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1609,7 +1609,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement3.apply(this, arguments);
+            var element = createElement.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1869,7 +1869,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef3;
+          exports.forwardRef = forwardRef;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -9416,7 +9416,7 @@
               }
             }
           }
-          function createElement3(type, props, rootContainerElement, parentNamespace) {
+          function createElement(type, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -10286,7 +10286,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement3(type, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement(type, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -24487,302 +24487,53 @@
   });
 
   // dashboard/app.tsx
-  var import_react4 = __toESM(require_react());
+  var import_react2 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // dashboard/components/LoginPage.tsx
-  var import_react3 = __toESM(require_react());
-
-  // node_modules/lucide-react/dist/esm/createLucideIcon.js
-  var import_react2 = __toESM(require_react());
-
-  // node_modules/lucide-react/dist/esm/shared/src/utils.js
-  var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-  var mergeClasses = (...classes) => classes.filter((className, index, array) => {
-    return Boolean(className) && array.indexOf(className) === index;
-  }).join(" ");
-
-  // node_modules/lucide-react/dist/esm/Icon.js
   var import_react = __toESM(require_react());
-
-  // node_modules/lucide-react/dist/esm/defaultAttributes.js
-  var defaultAttributes = {
-    xmlns: "http://www.w3.org/2000/svg",
-    width: 24,
-    height: 24,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  };
-
-  // node_modules/lucide-react/dist/esm/Icon.js
-  var Icon = (0, import_react.forwardRef)(
-    ({
-      color = "currentColor",
-      size = 24,
-      strokeWidth = 2,
-      absoluteStrokeWidth,
-      className = "",
-      children,
-      iconNode,
-      ...rest
-    }, ref) => {
-      return (0, import_react.createElement)(
-        "svg",
-        {
-          ref,
-          ...defaultAttributes,
-          width: size,
-          height: size,
-          stroke: color,
-          strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-          className: mergeClasses("lucide", className),
-          ...rest
-        },
-        [
-          ...iconNode.map(([tag, attrs]) => (0, import_react.createElement)(tag, attrs)),
-          ...Array.isArray(children) ? children : [children]
-        ]
-      );
-    }
-  );
-
-  // node_modules/lucide-react/dist/esm/createLucideIcon.js
-  var createLucideIcon = (iconName, iconNode) => {
-    const Component = (0, import_react2.forwardRef)(
-      ({ className, ...props }, ref) => (0, import_react2.createElement)(Icon, {
-        ref,
-        iconNode,
-        className: mergeClasses(`lucide-${toKebabCase(iconName)}`, className),
-        ...props
-      })
-    );
-    Component.displayName = `${iconName}`;
-    return Component;
-  };
-
-  // node_modules/lucide-react/dist/esm/icons/award.js
-  var Award = createLucideIcon("Award", [
-    [
-      "path",
-      {
-        d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
-        key: "1yiouv"
-      }
-    ],
-    ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/bar-chart-3.js
-  var BarChart3 = createLucideIcon("BarChart3", [
-    ["path", { d: "M3 3v18h18", key: "1s2lah" }],
-    ["path", { d: "M18 17V9", key: "2bz60n" }],
-    ["path", { d: "M13 17V5", key: "1frdt8" }],
-    ["path", { d: "M8 17v-3", key: "17ska0" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/bell.js
-  var Bell = createLucideIcon("Bell", [
-    ["path", { d: "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9", key: "1qo2s2" }],
-    ["path", { d: "M10.3 21a1.94 1.94 0 0 0 3.4 0", key: "qgo35s" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/calendar.js
-  var Calendar = createLucideIcon("Calendar", [
-    ["path", { d: "M8 2v4", key: "1cmpym" }],
-    ["path", { d: "M16 2v4", key: "4m81vk" }],
-    ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-    ["path", { d: "M3 10h18", key: "8toen8" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/clock.js
-  var Clock = createLucideIcon("Clock", [
-    ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-    ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/heart.js
-  var Heart = createLucideIcon("Heart", [
-    [
-      "path",
-      {
-        d: "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
-        key: "c3ymky"
-      }
-    ]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/house.js
-  var House = createLucideIcon("House", [
-    ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
-    [
-      "path",
-      {
-        d: "M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
-        key: "1d0kgt"
-      }
-    ]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/log-out.js
-  var LogOut = createLucideIcon("LogOut", [
-    ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
-    ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
-    ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/mail.js
-  var Mail = createLucideIcon("Mail", [
-    ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
-    ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/menu.js
-  var Menu = createLucideIcon("Menu", [
-    ["line", { x1: "4", x2: "20", y1: "12", y2: "12", key: "1e0a9i" }],
-    ["line", { x1: "4", x2: "20", y1: "6", y2: "6", key: "1owob3" }],
-    ["line", { x1: "4", x2: "20", y1: "18", y2: "18", key: "yk5zj1" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/pen.js
-  var Pen = createLucideIcon("Pen", [
-    [
-      "path",
-      {
-        d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-        key: "1a8usu"
-      }
-    ]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/phone.js
-  var Phone = createLucideIcon("Phone", [
-    [
-      "path",
-      {
-        d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
-        key: "foiqr5"
-      }
-    ]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/target.js
-  var Target = createLucideIcon("Target", [
-    ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-    ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-    ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/user.js
-  var User = createLucideIcon("User", [
-    ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
-    ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/users.js
-  var Users = createLucideIcon("Users", [
-    ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
-    ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
-    ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
-    ["path", { d: "M16 3.13a4 4 0 0 1 0 7.75", key: "1da9ce" }]
-  ]);
-
-  // dashboard/components/LoginPage.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime());
   var LoginPage = ({ onLogin, volunteers }) => {
-    const [selectedRole, setSelectedRole] = (0, import_react3.useState)("volunteer");
-    const [selectedId, setSelectedId] = (0, import_react3.useState)("V001");
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "login-container", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "login-card", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "login-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Heart, { size: 48, fill: "currentColor", className: "text-error" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "SaveAnimal NGO" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Unified Login Portal" })
+    const [selectedRole, setSelectedRole] = (0, import_react.useState)("volunteer");
+    const [selectedId, setSelectedId] = (0, import_react.useState)("V001");
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-center mb-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-6xl mb-3", children: "\u{1F43E}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { className: "text-2xl font-bold text-gray-800", children: "SaveAnimal NGO" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-gray-500 mt-1", children: "Unified Login Portal" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "login-form", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "role-selector", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-semibold mb-3", children: "Login As:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid grid-cols-1 gap-2", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-              "button",
-              {
-                className: `btn btn-sm ${selectedRole === "volunteer" ? "btn-primary" : "btn-outline"}`,
-                onClick: () => {
-                  setSelectedRole("volunteer");
-                  setSelectedId("V001");
-                },
-                children: "\u{1F464} Volunteer"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-              "button",
-              {
-                className: `btn btn-sm ${selectedRole === "admin" ? "btn-primary" : "btn-outline"}`,
-                onClick: () => setSelectedRole("admin"),
-                children: "\u{1F468}\u200D\u{1F4BC} Admin"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-              "button",
-              {
-                className: `btn btn-sm ${selectedRole === "visitor" ? "btn-primary" : "btn-outline"}`,
-                onClick: () => setSelectedRole("visitor"),
-                children: "\u{1F441}\uFE0F Visitor"
-              }
-            )
-          ] })
-        ] }),
-        selectedRole === "volunteer" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "volunteer-select", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-semibold mb-2", children: "Select Volunteer:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-            "select",
-            {
-              className: "select select-bordered w-full",
-              value: selectedId,
-              onChange: (e) => setSelectedId(e.target.value),
-              children: volunteers.map((v) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", { value: v.id, children: [
-                v.name,
-                " (",
-                v.id,
-                ")"
-              ] }, v.id))
-            }
-          )
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          "button",
-          {
-            className: "btn btn-primary w-full",
-            onClick: () => onLogin(selectedRole, selectedId),
-            children: "Login to Dashboard"
-          }
-        )
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mb-6", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-semibold text-gray-700 mb-3", children: "Login As:" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid grid-cols-1 gap-2", children: [{ role: "volunteer", label: "\u{1F91D} Volunteer", id: "V001" }, { role: "admin", label: "\u{1F468}\u200D\u{1F4BC} Admin", id: "ADMIN001" }, { role: "visitor", label: "\u{1F441}\uFE0F Visitor", id: "GUEST001" }].map(({ role, label, id }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: `py-2 px-4 rounded-lg border-2 text-sm font-medium transition ${selectedRole === role ? "border-green-500 bg-green-50 text-green-700" : "border-gray-200 hover:border-gray-300 text-gray-600"}`, onClick: () => {
+          setSelectedRole(role);
+          setSelectedId(id);
+        }, children: label }, role)) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "alert alert-info mt-6", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-sm", children: "\u{1F512} This is a demo interface." }) })
+      selectedRole === "volunteer" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mb-6", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-semibold text-gray-700 mb-2", children: "Select Volunteer:" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("select", { className: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-500", value: selectedId, onChange: (e) => setSelectedId(e.target.value), children: volunteers.map((v) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", { value: v.id, children: [
+          v.name,
+          " (",
+          v.id,
+          ")"
+        ] }, v.id)) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "w-full py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition", onClick: () => onLogin(selectedRole, selectedId), children: "Login to Dashboard \u2192" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-center text-xs text-gray-400 mt-4", children: "\u{1F512} Demo interface" })
     ] }) });
   };
 
   // dashboard/components/StatCard.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime());
   var StatCard = ({ title, value, icon, color }) => {
-    const colorClass = {
-      primary: "border-l-primary",
-      secondary: "border-l-secondary",
-      accent: "border-l-accent",
-      info: "border-l-info",
-      success: "border-l-success",
-      warning: "border-l-warning",
-      error: "border-l-error"
-    }[color];
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: `card bg-base-100 border-l-4 ${colorClass} shadow-sm hover:shadow-md transition`, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card-body p-4 flex flex-row items-center gap-4", children: [
+    const colorClass = { primary: "border-l-4 border-blue-500", secondary: "border-l-4 border-purple-500", accent: "border-l-4 border-pink-500", info: "border-l-4 border-cyan-500", success: "border-l-4 border-green-500", warning: "border-l-4 border-yellow-500", error: "border-l-4 border-red-500" }[color];
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: `bg-white rounded-lg shadow-sm p-4 flex flex-row items-center gap-4 ${colorClass} hover:shadow-md transition`, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "text-4xl", children: icon }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm text-base-content/60 font-semibold uppercase", children: title }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-3xl font-bold", children: value })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm text-gray-500 font-semibold uppercase", children: title }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-3xl font-bold text-gray-800", children: value })
       ] })
-    ] }) });
+    ] });
   };
 
   // dashboard/components/AdminDashboard.tsx
@@ -24790,45 +24541,45 @@
   var AdminDashboard = ({ volunteers, activities, currentUser }) => {
     const totalHours = volunteers.reduce((sum, v) => sum + v.hours, 0);
     const completedActivities = activities.filter((a) => a.status === "Completed").length;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "dashboard-content", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { className: "text-3xl font-bold mb-8", children: "Admin Dashboard" }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Total Volunteers", value: volunteers.length, icon: "\\uD83D\\uDC65", color: "info" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Total Hours", value: totalHours, icon: "\\u23F1\\uFE0F", color: "success" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Completed Activities", value: completedActivities, icon: "\\u2705", color: "warning" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Upcoming Activities", value: activities.filter((a) => a.status === "Upcoming").length, icon: "\\uD83D\\uDCC5", color: "primary" })
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "p-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { className: "text-2xl font-bold text-gray-800 mb-6", children: "Admin Dashboard" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Total Volunteers", value: volunteers.length, icon: "\u{1F465}", color: "info" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Total Hours", value: totalHours, icon: "\u23F1\uFE0F", color: "success" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Completed Activities", value: completedActivities, icon: "\u2705", color: "warning" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StatCard, { title: "Upcoming Activities", value: activities.filter((a) => a.status === "Upcoming").length, icon: "\u{1F4C5}", color: "primary" })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "card bg-base-200", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { className: "card-title text-lg", children: "Recent Volunteers" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "space-y-3", children: volunteers.slice(0, 3).map((v) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-between items-center p-3 bg-base-100 rounded-lg", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { className: "font-bold text-gray-700 text-lg mb-4", children: "Recent Volunteers" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "space-y-3", children: volunteers.slice(0, 3).map((v) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-between items-center p-3 bg-gray-50 rounded-lg", children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "font-semibold", children: v.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-sm text-base-content/60", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "font-semibold text-gray-800", children: v.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-sm text-gray-500", children: [
                 v.hours,
-                " hours \u2022 ",
+                " hours \xB7 ",
                 v.activities,
                 " activities"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "badge badge-success", children: v.status })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium", children: v.status })
           ] }, v.id)) })
-        ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "card bg-base-200", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { className: "card-title text-lg", children: "Upcoming Activities" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "space-y-3", children: activities.filter((a) => a.status === "Upcoming").map((a) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-between items-center p-3 bg-base-100 rounded-lg", children: [
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { className: "font-bold text-gray-700 text-lg mb-4", children: "Upcoming Activities" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "space-y-3", children: activities.filter((a) => a.status === "Upcoming").map((a) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-between items-center p-3 bg-gray-50 rounded-lg", children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "font-semibold", children: a.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-sm text-base-content/60", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "font-semibold text-gray-800", children: a.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-sm text-gray-500", children: [
                 a.date,
-                " \u2022 ",
+                " \xB7 ",
                 a.volunteers,
                 " volunteers"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "badge badge-info", children: a.status })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium", children: a.status })
           ] }, a.id)) })
-        ] }) })
+        ] })
       ] })
     ] });
   };
@@ -24836,93 +24587,62 @@
   // dashboard/components/VolunteerDashboard.tsx
   var import_jsx_runtime4 = __toESM(require_jsx_runtime());
   var VolunteerDashboard = ({ user, activities }) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "dashboard-content", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-3xl font-bold mb-8", children: "Your Dashboard" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          StatCard,
-          {
-            title: "Volunteer Hours",
-            value: user.hours || 0,
-            icon: "\u23F1\uFE0F",
-            color: "success"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          StatCard,
-          {
-            title: "Activities Joined",
-            value: user.activities || 0,
-            icon: "\u{1F3AF}",
-            color: "info"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          StatCard,
-          {
-            title: "Member Since",
-            value: user.joinDate ? user.joinDate.split("-")[0] : "2024",
-            icon: "\u{1F4C5}",
-            color: "primary"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          StatCard,
-          {
-            title: "Skills",
-            value: user.skills?.length || 0,
-            icon: "\u2B50",
-            color: "warning"
-          }
-        )
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "p-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-2xl font-bold text-gray-800 mb-6", children: "Your Dashboard" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(StatCard, { title: "Volunteer Hours", value: user.hours || 0, icon: "\u23F1\uFE0F", color: "success" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(StatCard, { title: "Activities Joined", value: user.activities || 0, icon: "\u{1F3AF}", color: "info" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(StatCard, { title: "Member Since", value: user.joinDate ? user.joinDate.split("-")[0] : "2024", icon: "\u{1F4C5}", color: "primary" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(StatCard, { title: "Skills", value: user.skills?.length || 0, icon: "\u2B50", color: "warning" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "card bg-base-200", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "card-body", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h4", { className: "card-title text-lg mb-4", children: "Upcoming Activities" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "space-y-3", children: activities.filter((a) => a.status === "Upcoming").map((a) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex justify-between items-center p-4 bg-base-100 rounded-lg", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h4", { className: "font-bold text-gray-700 text-lg mb-4", children: "Upcoming Activities" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "space-y-3", children: activities.filter((a) => a.status === "Upcoming").map((a) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex justify-between items-center p-4 bg-gray-50 rounded-lg", children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex-1", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "font-semibold", children: a.title }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "text-sm text-base-content/60", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "font-semibold text-gray-800", children: a.title }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "text-sm text-gray-500", children: [
               a.date,
-              " \u2022 ",
+              " \xB7 ",
               a.volunteers,
-              " volunteers"
-            ] })
+              " volunteers needed"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-sm text-gray-600 mt-1", children: a.description })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "btn btn-primary btn-sm", children: "Join" })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition", children: "Join" })
         ] }, a.id)) })
-      ] }) })
+      ] })
     ] });
   };
 
   // dashboard/components/VisitorHome.tsx
   var import_jsx_runtime5 = __toESM(require_jsx_runtime());
   var VisitorHome = ({ activities }) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "dashboard-content", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "p-6", children: [
       /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "mb-8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-4xl font-bold mb-2", children: "Welcome to SaveAnimal NGO" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-base-content/60", children: "Making a difference for animals, one action at a time \u{1F43E}" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-3xl font-bold text-gray-800 mb-2", children: "Welcome to SaveAnimal NGO \u{1F43E}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-gray-500", children: "Making a difference for animals, one action at a time" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "card bg-base-200 mb-8", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "card-body", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "card-title", children: "About Us" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-base-content/80", children: "We are dedicated to animal welfare and protection. Our volunteer community works tirelessly to rescue, rehabilitate, and rehome animals in need." })
-      ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-2xl font-bold mb-6", children: "Our Activities" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: activities.map((a) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "card bg-base-200 shadow hover:shadow-lg transition", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "card-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bg-green-50 border border-green-200 rounded-xl p-5 mb-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "font-bold text-green-800 text-lg mb-2", children: "About Us" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-green-700", children: "We are dedicated to animal welfare and protection. Our volunteer community works tirelessly to rescue, rehabilitate, and rehome animals in need." })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-xl font-bold text-gray-800 mb-4", children: "Our Activities" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: activities.map((a) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition", children: [
         /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex justify-between items-start mb-2", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h4", { className: "card-title text-lg", children: a.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `badge ${a.status === "Completed" ? "badge-success" : "badge-info"}`, children: a.status })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h4", { className: "font-bold text-gray-800", children: a.title }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `px-2 py-1 rounded-full text-xs font-medium ${a.status === "Completed" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`, children: a.status })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-sm text-base-content/60", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-sm text-gray-500 mb-2", children: [
           "\u{1F4C5} ",
           a.date
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-base-content/80 my-3", children: a.description }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-sm text-base-content/60", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-sm text-gray-600 mb-3", children: a.description }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-sm text-gray-500", children: [
           "\u{1F465} ",
           a.volunteers,
           " Volunteers"
         ] })
-      ] }) }, a.id)) })
+      ] }, a.id)) })
     ] });
   };
 
@@ -24931,189 +24651,173 @@
   var ProfilePage = ({ user, activities, onNavigate }) => {
     const isVolunteer = user.role === "volunteer";
     const isAdmin = user.role === "admin";
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "profile-page", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "text-4xl font-bold mb-8", children: "My Profile" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-lg mb-8", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card-body", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex flex-col md:flex-row gap-8 items-start md:items-center", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "avatar placeholder", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "bg-primary text-white rounded-full w-24 flex items-center justify-center", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-3xl font-bold", children: user.name.charAt(0).toUpperCase() }) }) }),
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "text-2xl font-bold text-gray-800 mb-6", children: "My Profile" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "bg-white rounded-xl shadow-sm p-6 mb-6", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex flex-col md:flex-row gap-6 items-start md:items-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "w-20 h-20 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl font-bold flex-shrink-0", children: user.name.charAt(0).toUpperCase() }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex-1", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center justify-between mb-4", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-3xl font-bold", children: user.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg badge badge-lg mt-2", style: {
-                backgroundColor: isAdmin ? "#3b82f6" : isVolunteer ? "#10b981" : "#6366f1",
-                color: "white"
-              }, children: isAdmin ? "\u{1F468}\u200D\u{1F4BC} Admin" : isVolunteer ? "\u{1F91D} Volunteer" : "\u{1F464} Visitor" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("button", { className: "btn btn-outline btn-sm gap-2", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Pen, { size: 16 }),
-              "Edit Profile"
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4 mt-6", children: [
-            "email" in user && user.email && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Mail, { size: 18, className: "text-primary" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "flex items-start justify-between mb-2", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-2xl font-bold text-gray-800", children: user.name }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: `inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold ${isAdmin ? "bg-blue-100 text-blue-700" : isVolunteer ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`, children: isAdmin ? "\u{1F468}\u200D\u{1F4BC} Admin" : isVolunteer ? "\u{1F91D} Volunteer" : "\u{1F441}\uFE0F Visitor" })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3 mt-4", children: [
+            user.email && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-2 text-sm", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-gray-400", children: "\u{1F4E7}" }),
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Email" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold", children: user.email })
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Email" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-medium text-gray-700", children: user.email })
               ] })
             ] }),
-            "phone" in user && user.phone && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Phone, { size: 18, className: "text-primary" }),
+            user.phone && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-2 text-sm", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-gray-400", children: "\u{1F4F1}" }),
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Phone" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold", children: user.phone })
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Phone" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-medium text-gray-700", children: user.phone })
               ] })
             ] }),
-            "joinDate" in user && user.joinDate && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Calendar, { size: 18, className: "text-primary" }),
+            user.joinDate && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-2 text-sm", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-gray-400", children: "\u{1F4C5}" }),
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Join Date" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold", children: new Date(user.joinDate).toLocaleDateString() })
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Member Since" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-medium text-gray-700", children: new Date(user.joinDate).toLocaleDateString() })
               ] })
             ] }),
-            "status" in user && user.status && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Award, { size: 18, className: "text-primary" }),
+            user.status && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center gap-2 text-sm", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-gray-400", children: "\u{1F3C5}" }),
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Status" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold text-success", children: user.status })
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Status" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-medium text-green-600", children: user.status })
               ] })
             ] })
           ] })
         ] })
-      ] }) }) }),
+      ] }) }),
       isVolunteer && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6 mb-8", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-md", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body text-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Clock, { size: 32, className: "mx-auto mb-2 text-primary" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Total Hours" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-primary", children: "hours" in user ? user.hours : 0 })
-          ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-md", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body text-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Target, { size: 32, className: "mx-auto mb-2 text-success" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Activities" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-success", children: "activities" in user ? user.activities : 0 })
-          ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-md", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body text-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Award, { size: 32, className: "mx-auto mb-2 text-warning" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Skills" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-warning", children: "skills" in user ? user.skills.length : 0 })
-          ] }) })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "grid grid-cols-3 gap-4 mb-6", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-4 text-center", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-green-600", children: user.hours || 0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-1", children: "\u23F1\uFE0F Total Hours" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-4 text-center", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-blue-600", children: user.activities || 0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-1", children: "\u{1F3AF} Activities" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-4 text-center", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-3xl font-bold text-yellow-600", children: user.skills?.length || 0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-1", children: "\u2B50 Skills" })
+          ] })
         ] }),
-        "skills" in user && user.skills.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-lg mb-8", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "card-title text-xl mb-4", children: "Skills & Expertise" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "flex flex-wrap gap-3", children: user.skills.map((skill, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "badge badge-lg badge-primary gap-2", children: [
-            "\\u2713 ",
+        user.skills && user.skills.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5 mb-6", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "font-bold text-gray-700 mb-3", children: "Skills & Expertise" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "flex flex-wrap gap-2", children: user.skills.map((skill, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium", children: [
+            "\u2713 ",
             skill
           ] }, idx)) })
-        ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-lg", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "card-title text-xl mb-4", children: "Recent Activities" }),
-          activities.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "space-y-3", children: activities.slice(0, 5).map((activity) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "p-4 bg-base-100 rounded-lg border border-base-300", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex justify-between items-start", children: [
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "font-bold text-gray-700 mb-4", children: "Recent Activities" }),
+          activities.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "space-y-3", children: activities.slice(0, 5).map((activity) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-3 bg-gray-50 rounded-lg flex justify-between items-start", children: [
             /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h4", { className: "font-semibold text-lg", children: activity.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70 mt-1", children: activity.description }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-sm opacity-50 mt-2", children: [
-                "\\uD83D\\uDCC5 ",
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h4", { className: "font-semibold text-gray-800", children: activity.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-1", children: activity.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-xs text-gray-400 mt-1", children: [
+                "\u{1F4C5} ",
                 activity.date
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: `badge ${activity.status === "Completed" ? "badge-success" : activity.status === "Upcoming" ? "badge-info" : "badge-warning"}`, children: activity.status })
-          ] }) }, activity.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-center opacity-70 py-8", children: "No activities yet" })
-        ] }) })
-      ] }),
-      isAdmin && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "card bg-base-200 shadow-lg", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-body", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "card-title text-xl mb-4", children: "Admin Information" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-4 bg-base-100 rounded-lg", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Admin ID" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg font-semibold", children: user.id })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-4 bg-base-100 rounded-lg", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm opacity-70", children: "Role" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg font-semibold text-primary", children: "System Administrator" })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "alert alert-info mt-4", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\\u2713 You have full access to all dashboard features and user management tools" }) })
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: `ml-3 px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${activity.status === "Completed" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`, children: activity.status })
+          ] }, activity.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-center text-gray-400 py-6", children: "No activities yet" })
         ] })
-      ] }) })
+      ] }),
+      isAdmin && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "font-bold text-gray-700 mb-4", children: "Admin Information" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "space-y-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-3 bg-gray-50 rounded-lg", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Admin ID" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold text-gray-800", children: user.id })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-3 bg-gray-50 rounded-lg", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs text-gray-400", children: "Role" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-semibold text-blue-600", children: "System Administrator" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700", children: "\u2713 Full access to all dashboard features and user management tools" })
+        ] })
+      ] }),
+      !isVolunteer && !isAdmin && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-white rounded-xl shadow-sm p-5", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "font-bold text-gray-700 mb-3", children: "Visitor Account" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-gray-500 mb-4", children: "You are browsing as a visitor. Join us as a volunteer to make a difference!" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition", onClick: () => window.location.href = "/", children: "\u{1F43E} Become a Volunteer" })
+      ] })
     ] });
   };
 
   // dashboard/components/Sidebar.tsx
   var import_jsx_runtime7 = __toESM(require_jsx_runtime());
-  var Sidebar = ({
-    isOpen,
-    currentPage,
-    onPageChange,
-    userRole,
-    onLogout
-  }) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("aside", { className: `sidebar ${isOpen ? "open" : "closed"}`, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "sidebar-header", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "logo", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Heart, { className: "logo-icon", size: 32, fill: "currentColor" }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "SaveAnimal" })
-      ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("nav", { className: "sidebar-nav", children: [
+  var Sidebar = ({ isOpen, currentPage, onPageChange, userRole, onLogout }) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("aside", { className: `bg-gray-900 text-white flex flex-col transition-all duration-300 ${isOpen ? "w-56" : "w-0 overflow-hidden"}`, style: { minHeight: "calc(100vh - 56px)" }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "p-4 flex items-center gap-2 border-b border-gray-700", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-2xl", children: "\u{1F43E}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "font-bold text-lg", children: "SaveAnimal" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("nav", { className: "flex-1 p-3 space-y-1", children: [
         userRole === "admin" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(House, { size: 20 }), label: "Dashboard", onClick: () => onPageChange("dashboard"), active: currentPage === "dashboard" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(User, { size: 20 }), label: "My Profile", onClick: () => onPageChange("profile"), active: currentPage === "profile" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Users, { size: 20 }), label: "Volunteers", onClick: () => onPageChange("volunteers"), active: currentPage === "volunteers" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Target, { size: 20 }), label: "Activities", onClick: () => onPageChange("activities"), active: currentPage === "activities" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BarChart3, { size: 20 }), label: "Reports", onClick: () => onPageChange("reports"), active: currentPage === "reports" })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3E0}", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F464}", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F465}", label: "Volunteers", active: currentPage === "volunteers", onClick: () => onPageChange("volunteers") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3AF}", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F4CA}", label: "Reports", active: currentPage === "reports", onClick: () => onPageChange("reports") })
         ] }),
         userRole === "volunteer" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(House, { size: 20 }), label: "Dashboard", onClick: () => onPageChange("dashboard"), active: currentPage === "dashboard" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(User, { size: 20 }), label: "My Profile", onClick: () => onPageChange("profile"), active: currentPage === "profile" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Clock, { size: 20 }), label: "My Hours", onClick: () => onPageChange("hours"), active: currentPage === "hours" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Target, { size: 20 }), label: "Activities", onClick: () => onPageChange("activities"), active: currentPage === "activities" })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3E0}", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F464}", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u23F1\uFE0F", label: "My Hours", active: currentPage === "hours", onClick: () => onPageChange("hours") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3AF}", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") })
         ] }),
         userRole === "visitor" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(House, { size: 20 }), label: "Home", onClick: () => onPageChange("dashboard"), active: currentPage === "dashboard" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(User, { size: 20 }), label: "My Profile", onClick: () => onPageChange("profile"), active: currentPage === "profile" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Target, { size: 20 }), label: "Events", onClick: () => onPageChange("activities"), active: currentPage === "activities" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Users, { size: 20 }), label: "About Us", onClick: () => onPageChange("about"), active: currentPage === "about" })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3E0}", label: "Home", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F464}", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(NavItem, { icon: "\u{1F3AF}", label: "Events", active: currentPage === "activities", onClick: () => onPageChange("activities") })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "sidebar-footer", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("button", { className: "btn btn-error btn-outline w-full btn-sm", onClick: onLogout, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LogOut, { size: 18 }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "Logout" })
-      ] }) })
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "p-3 border-t border-gray-700", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { onClick: onLogout, className: "w-full py-2 px-3 rounded-lg text-sm text-red-400 hover:bg-red-900/30 transition flex items-center gap-2", children: "\u{1F6AA} Logout" }) })
     ] });
   };
-  var NavItem = ({ icon, label, onClick, active }) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("button", { className: `nav-item ${active ? "active" : ""}`, onClick, children: [
-      icon,
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: label })
-    ] });
-  };
+  var NavItem = ({ icon, label, onClick, active }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("button", { onClick, className: `w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 text-sm transition ${active ? "bg-green-600 text-white font-semibold" : "text-gray-300 hover:bg-gray-700"}`, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: icon }),
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: label })
+  ] });
 
   // dashboard/components/Header.tsx
   var import_jsx_runtime8 = __toESM(require_jsx_runtime());
-  var Header = ({ user, onLogout, sidebarOpen, onToggleSidebar }) => {
+  var Header = ({ user, onLogout, onToggleSidebar }) => {
     const getRoleLabel = (role) => {
       switch (role) {
         case "admin":
           return "\u{1F468}\u200D\u{1F4BC} Admin";
         case "volunteer":
-          return "\u{1F464} Volunteer";
+          return "\u{1F91D} Volunteer";
         case "visitor":
           return "\u{1F441}\uFE0F Visitor";
         default:
           return role;
       }
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("header", { className: "header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "header-left", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { className: "menu-btn", onClick: onToggleSidebar, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Menu, { size: 24 }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("h2", { className: "text-2xl font-bold", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("header", { className: "bg-white shadow-sm px-4 py-3 flex items-center justify-between sticky top-0 z-40", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { className: "p-2 rounded-lg hover:bg-gray-100 transition", onClick: onToggleSidebar, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", viewBox: "0 0 24 24", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("line", { x1: "3", y1: "6", x2: "21", y2: "6" }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("line", { x1: "3", y1: "12", x2: "21", y2: "12" }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("line", { x1: "3", y1: "18", x2: "21", y2: "18" })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("h2", { className: "text-xl font-bold text-gray-800", children: [
           "Welcome, ",
           user.name,
-          "! \\uD83D\\uDC4B"
+          "! \u{1F44B}"
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "header-right", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "badge badge-primary", children: getRoleLabel(user.role) }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Bell, { size: 20, className: "cursor-pointer hover:scale-110 transition" }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { className: "btn btn-sm btn-error btn-outline ml-2", onClick: onLogout, children: "Logout" })
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700", children: getRoleLabel(user.role) }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { onClick: onLogout, className: "px-3 py-1 rounded-lg text-sm text-red-600 hover:bg-red-50 transition font-medium", children: "Logout" })
       ] })
     ] });
   };
@@ -25121,12 +24825,12 @@
   // dashboard/app.tsx
   var import_jsx_runtime9 = __toESM(require_jsx_runtime());
   var App = () => {
-    const [currentUser, setCurrentUser] = (0, import_react4.useState)(null);
-    const [sidebarOpen, setSidebarOpen] = (0, import_react4.useState)(true);
-    const [currentPage, setCurrentPage] = (0, import_react4.useState)("dashboard");
-    const [volunteers, setVolunteers] = (0, import_react4.useState)([]);
-    const [activities, setActivities] = (0, import_react4.useState)([]);
-    (0, import_react4.useEffect)(() => {
+    const [currentUser, setCurrentUser] = (0, import_react2.useState)(null);
+    const [sidebarOpen, setSidebarOpen] = (0, import_react2.useState)(true);
+    const [currentPage, setCurrentPage] = (0, import_react2.useState)("dashboard");
+    const [volunteers, setVolunteers] = (0, import_react2.useState)([]);
+    const [activities, setActivities] = (0, import_react2.useState)([]);
+    (0, import_react2.useEffect)(() => {
       initializeDemoData();
       restoreUserSession();
     }, []);
@@ -25259,165 +24963,5 @@ react/cjs/react-jsx-runtime.development.js:
    *
    * This source code is licensed under the MIT license found in the
    * LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/shared/src/utils.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/defaultAttributes.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/Icon.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/createLucideIcon.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/award.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/bar-chart-3.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/bell.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/calendar.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/clock.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/heart.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/house.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/log-out.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/mail.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/menu.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/pen.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/phone.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/target.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/user.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/icons/users.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/lucide-react.js:
-  (**
-   * @license lucide-react v0.408.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
    *)
 */
