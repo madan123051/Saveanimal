@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
-import type { Volunteer } from '../types';
+import React from 'react';
 
-interface LoginPageProps { onLogin: (role: string, id: string) => void; volunteers: Volunteer[]; }
-
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, volunteers }) => {
-  const [selectedRole, setSelectedRole] = useState('volunteer');
-  const [selectedId, setSelectedId] = useState('V001');
-
+function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
-        <div className="text-center mb-8"><div className="text-6xl mb-3">🐾</div><h1 className="text-2xl font-bold text-gray-800">SaveAnimal NGO</h1><p className="text-gray-500 mt-1">Unified Login Portal</p></div>
-        <div className="mb-6"><label className="block text-sm font-semibold text-gray-700 mb-3">Login As:</label><div className="grid grid-cols-1 gap-2">
-          {[{ role: 'volunteer', label: '🤝 Volunteer', id: 'V001' }, { role: 'admin', label: '👨‍💼 Admin', id: 'ADMIN001' }, { role: 'visitor', label: '👁️ Visitor', id: 'GUEST001' }].map(({ role, label, id }) => (
-            <button key={role} className={`py-2 px-4 rounded-lg border-2 text-sm font-medium transition ${selectedRole === role ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 hover:border-gray-300 text-gray-600'}`} onClick={() => { setSelectedRole(role); setSelectedId(id); }}>{label}</button>
-          ))}
-        </div></div>
-        {selectedRole === 'volunteer' && (
-          <div className="mb-6"><label className="block text-sm font-semibold text-gray-700 mb-2">Select Volunteer:</label><select className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-500" value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
-            {volunteers.map(v => (<option key={v.id} value={v.id}>{v.name} ({v.id})</option>))}
-          </select></div>
-        )}
-        <button className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition" onClick={() => onLogin(selectedRole, selectedId)}>Login to Dashboard →</button>
-        <p className="text-center text-xs text-gray-400 mt-4">🔒 Demo interface</p>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+    }}>
+      <div style={{
+        background: 'white',
+        padding: '40px',
+        borderRadius: '20px',
+        textAlign: 'center',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px' }}>🐾</div>
+        <h1 style={{ color: '#10b981', marginBottom: '10px' }}>SaveAnimal Nepal</h1>
+        <p style={{ color: '#6b7280', marginBottom: '30px' }}>Redirecting to login page...</p>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid rgba(16, 185, 129, 0.3)',
+          borderTopColor: '#10b981',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+          margin: '0 auto'
+        }} />
       </div>
+      <script dangerouslySetInnerHTML={{
+        __html: 'window.location.href = "/login.html";'
+      }} />
     </div>
   );
-};
+}
+
+export default LoginPage;

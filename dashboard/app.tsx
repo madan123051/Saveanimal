@@ -1,98 +1,306 @@
-import React, { useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
-import { LoginPage } from './components/LoginPage';
-import { AdminDashboard } from './components/AdminDashboard';
-import { VolunteerDashboard } from './components/VolunteerDashboard';
-import { VisitorHome } from './components/VisitorHome';
-import { ProfilePage } from './components/ProfilePage';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
-import type { User, Volunteer, Activity } from './types';
+import React, { useEffect, useState } from 'react';
+import { UserRole } from './types';
+import LoginPage from './components/LoginPage';
 
-export const App: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
-  const [activities, setActivities] = useState<Activity[]>([]);
+interface User {
+  uid: string;
+  email: string;
+  displayName?: string;
+}
+
+interface AuthState {
+  user: User | null;
+  role: UserRole;
+  loading: boolean;
+  error: string | null;
+}
+
+function App() {
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    role: 'visitor',
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
-    initializeDemoData();
-    restoreUserSession();
+    // Check if user is logged in
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      setAuthState(prev => ({ ...prev, loading: false }));
+      return;
+    }
+
+    // Fetch user role from API
+    fetchUserRole(token);
   }, []);
 
-  const restoreUserSession = () => {
+  const fetchUserRole = async (token: string) => {
     try {
-      const savedUser = localStorage.getItem('saveanimal_user') ||
-                       localStorage.getItem('saveanimal_currentUser');
-      if (savedUser) {
-        const user = JSON.parse(savedUser);
-        if (user && user.role) setCurrentUser(user);
+      const response = await fetch('/api/user/role', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        localStorage.removeItem('authToken');
+        setAuthState(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Session expired. Please log in again.'
+        }));
+        return;
       }
-    } catch (e) {}
-  };
 
-  const initializeDemoData = () => {
-    setVolunteers([
-      { id: 'V001', name: 'Rahul Kumar', email: 'rahul@saveanimal.com', phone: '9876543210', skills: ['Animal Care', 'Education'], hours: 45, joinDate: '2024-01-15', status: 'Active', activities: 5 },
-      { id: 'V002', name: 'Priya Singh', email: 'priya@saveanimal.com', phone: '9876543211', skills: ['Fundraising', 'Social Media'], hours: 32, joinDate: '2024-02-20', status: 'Active', activities: 3 },
-      { id: 'V003', name: 'Amit Patel', email: 'amit@saveanimal.com', phone: '9876543212', skills: ['Veterinary', 'Animal Care'], hours: 68, joinDate: '2023-12-01', status: 'Active', activities: 8 }
-    ]);
-    setActivities([
-      { id: 'A001', title: 'Animal Shelter Cleanup', date: '2024-06-10', volunteers: 12, status: 'Completed', description: 'Weekly cleaning and maintenance at shelter' },
-      { id: 'A002', title: 'Veterinary Camp', date: '2024-06-15', volunteers: 8, status: 'Upcoming', description: 'Free health checkup for street animals' },
-      { id: 'A003', title: 'Awareness Program', date: '2024-06-20', volunteers: 15, status: 'Upcoming', description: 'School program on animal welfare' }
-    ]);
-  };
-
-  const handleLogin = (role: string, id: string) => {
-    let userData: User;
-    if (role === 'volunteer') {
-      const vol = volunteers.find(v => v.id === id);
-      userData = vol ? { ...vol, role: 'volunteer' as const } : { id, name: 'Volunteer User', role: 'volunteer' as const };
-    } else if (role === 'admin') {
-      userData = { id: 'ADMIN001', name: 'Admin User', email: 'admin@saveanimal.com', role: 'admin' as const };
-    } else {
-      userData = { id: 'GUEST001', name: 'Guest User', role: 'visitor' as const };
+      const { userId, role, email } = await response.json();
+      setAuthState({
+        user: { uid: userId, email },
+        role: role as UserRole,
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      console.error('Failed to fetch user role:', error);
+      setAuthState(prev => ({
+        ...prev,
+        loading: false,
+        error: 'Failed to load user data'
+      }));
     }
-    try {
-      localStorage.setItem('saveanimal_user', JSON.stringify(userData));
-      localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
-    } catch (e) {}
-    setCurrentUser(userData);
-    setCurrentPage('dashboard');
   };
 
   const handleLogout = () => {
-    try {
-      localStorage.removeItem('saveanimal_user');
-      localStorage.removeItem('saveanimal_currentUser');
-    } catch (e) {}
-    setCurrentUser(null);
-    setCurrentPage('dashboard');
+    localStorage.removeItem('authToken');
+    setAuthState({
+      user: null,
+      role: 'visitor',
+      loading: false,
+      error: null
+    });
   };
 
-  if (!currentUser) return <LoginPage volunteers={volunteers} onLogin={handleLogin} />;
+  if (authState.loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+      }}>
+        <div style={{
+          background: 'white',
+          padding: '40px',
+          borderRadius: '20px',
+          textAlign: 'center',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>🐾</div>
+          <p style={{ color: '#6b7280', marginBottom: '20px' }}>Loading SaveAnimal Nepal...</p>
+          <div style={{
+            width: '30px',
+            height: '30px',
+            border: '3px solid rgba(16, 185, 129, 0.3)',
+            borderTopColor: '#10b981',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+            margin: '0 auto'
+          }} />
+        </div>
+      </div>
+    );
+  }
 
-  const renderContent = () => {
-    if (currentPage === 'profile') return <ProfilePage user={currentUser} activities={activities} onNavigate={setCurrentPage} />;
-    switch (currentUser.role) {
-      case 'admin': return <AdminDashboard volunteers={volunteers} activities={activities} currentUser={currentUser} />;
-      case 'volunteer': return <VolunteerDashboard user={currentUser} activities={activities} />;
-      default: return <VisitorHome activities={activities} />;
-    }
-  };
+  if (!authState.user) {
+    return <LoginPage />;
+  }
 
+  // Render appropriate dashboard based on role
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <Header user={currentUser} onLogout={handleLogout} sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="flex flex-1">
-        <Sidebar isOpen={sidebarOpen} currentPage={currentPage} onPageChange={setCurrentPage} userRole={currentUser.role} onLogout={handleLogout} />
-        <main className="flex-1 overflow-auto">{renderContent()}</main>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+    }}>
+      <nav style={{
+        background: 'white',
+        padding: '20px',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+        marginBottom: '20px'
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>
+            🐾 SaveAnimal Nepal
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ color: '#6b7280', marginBottom: '8px' }}>
+              Welcome, {authState.user.displayName || authState.user.email}
+            </p>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: '8px 16px',
+                background: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '20px'
+      }}>
+        {authState.role === 'admin' && (
+          <div style={{
+            background: 'white',
+            padding: '30px',
+            borderRadius: '20px',
+            marginBottom: '20px'
+          }}>
+            <h1 style={{ color: '#10b981', marginBottom: '15px' }}>👨‍💼 Admin Dashboard</h1>
+            <p style={{ color: '#6b7280', marginBottom: '20px' }}>
+              You have admin access. Manage users, roles, and system settings.
+            </p>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '20px'
+            }}>
+              <div style={{
+                background: '#f0fdf4',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #10b981'
+              }}>
+                <h3 style={{ color: '#166534', marginBottom: '10px' }}>Manage Users</h3>
+                <p style={{ color: '#4b5563', fontSize: '14px' }}>View and manage all users in the system</p>
+              </div>
+              <div style={{
+                background: '#f0fdf4',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #10b981'
+              }}>
+                <h3 style={{ color: '#166534', marginBottom: '10px' }}>Assign Roles</h3>
+                <p style={{ color: '#4b5563', fontSize: '14px' }}>Assign admin, volunteer, or user roles</p>
+              </div>
+              <div style={{
+                background: '#f0fdf4',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #10b981'
+              }}>
+                <h3 style={{ color: '#166534', marginBottom: '10px' }}>System Settings</h3>
+                <p style={{ color: '#4b5563', fontSize: '14px' }}>Configure system-wide settings</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {authState.role === 'volunteer' && (
+          <div style={{
+            background: 'white',
+            padding: '30px',
+            borderRadius: '20px',
+            marginBottom: '20px'
+          }}>
+            <h1 style={{ color: '#10b981', marginBottom: '15px' }}>🤝 Volunteer Dashboard</h1>
+            <p style={{ color: '#6b7280', marginBottom: '20px' }}>
+              Thank you for volunteering with SaveAnimal Nepal. Here you can participate in conservation efforts.
+            </p>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '20px'
+            }}>
+              <div style={{
+                background: '#fef3c7',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #f59e0b'
+              }}>
+                <h3 style={{ color: '#92400e', marginBottom: '10px' }}>Upcoming Activities</h3>
+                <p style={{ color: '#78350f', fontSize: '14px' }}>View volunteer opportunities</p>
+              </div>
+              <div style={{
+                background: '#fef3c7',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #f59e0b'
+              }}>
+                <h3 style={{ color: '#92400e', marginBottom: '10px' }}>My Contributions</h3>
+                <p style={{ color: '#78350f', fontSize: '14px' }}>Track your volunteer hours</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {authState.role === 'user' && (
+          <div style={{
+            background: 'white',
+            padding: '30px',
+            borderRadius: '20px',
+            marginBottom: '20px'
+          }}>
+            <h1 style={{ color: '#10b981', marginBottom: '15px' }}>👤 User Dashboard</h1>
+            <p style={{ color: '#6b7280', marginBottom: '20px' }}>
+              Welcome to SaveAnimal Nepal. Explore wildlife conservation efforts and learn how you can help.
+            </p>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '20px'
+            }}>
+              <div style={{
+                background: '#dbeafe',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #3b82f6'
+              }}>
+                <h3 style={{ color: '#1e40af', marginBottom: '10px' }}>Learn About Wildlife</h3>
+                <p style={{ color: '#1e3a8a', fontSize: '14px' }}>Discover conservation stories</p>
+              </div>
+              <div style={{
+                background: '#dbeafe',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #3b82f6'
+              }}>
+                <h3 style={{ color: '#1e40af', marginBottom: '10px' }}>Donate & Support</h3>
+                <p style={{ color: '#1e3a8a', fontSize: '14px' }}>Help fund conservation projects</p>
+              </div>
+              <div style={{
+                background: '#dbeafe',
+                padding: '20px',
+                borderRadius: '10px',
+                borderLeft: '4px solid #3b82f6'
+              }}>
+                <h3 style={{ color: '#1e40af', marginBottom: '10px' }}>Get Involved</h3>
+                <p style={{ color: '#1e3a8a', fontSize: '14px' }}>Join upcoming community events</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
-};
+}
 
-const rootEl = document.getElementById('root');
-if (rootEl) createRoot(rootEl).render(<App />);
+export default App;
