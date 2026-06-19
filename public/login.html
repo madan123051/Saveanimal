@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaveAnimal Nepal - Login</title>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -163,6 +162,17 @@
         .google-btn:hover {
             background: #f9fafb;
             border-color: #d1d5db;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .google-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
         }
 
         .divider {
@@ -269,8 +279,8 @@
         </div>
 
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
-            <button class="tab-btn" onclick="switchTab('signup')">Create Account</button>
+            <button class="tab-btn active" onclick="switchTab('signin', this)">Sign In</button>
+            <button class="tab-btn" onclick="switchTab('signup', this)">Create Account</button>
         </div>
 
         <!-- SIGN IN TAB -->
@@ -278,7 +288,17 @@
             <div class="error" id="signInError"></div>
             <div class="success" id="signInSuccess"></div>
 
-            <div id="googleButtonContainer"></div>
+            <!-- Google Sign-In Button -->
+            <button class="google-btn" onclick="signInWithGoogle()" id="googleSignInBtn">
+                <svg class="google-icon" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    <path fill="none" d="M0 0h48v48H0z"/>
+                </svg>
+                Continue with Google
+            </button>
 
             <div class="divider">or</div>
 
@@ -302,7 +322,7 @@
             <button class="submit-btn" onclick="signIn()" id="signInBtn">Sign In</button>
 
             <div class="switch-tab">
-                Don't have an account? <button onclick="switchTab('signup')">Create one</button>
+                Don't have an account? <button onclick="switchTab('signup', null)">Create one</button>
             </div>
         </div>
 
@@ -310,6 +330,20 @@
         <div id="signup" class="tab-content">
             <div class="error" id="signUpError"></div>
             <div class="success" id="signUpSuccess"></div>
+
+            <!-- Google Sign-Up Button -->
+            <button class="google-btn" onclick="signInWithGoogle()" id="googleSignUpBtn">
+                <svg class="google-icon" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    <path fill="none" d="M0 0h48v48H0z"/>
+                </svg>
+                Sign up with Google
+            </button>
+
+            <div class="divider">or</div>
 
             <div class="form-group">
                 <label>Full Name</label>
@@ -338,7 +372,7 @@
             <button class="submit-btn" onclick="signUp()" id="signUpBtn">Create Account</button>
 
             <div class="switch-tab">
-                Already have an account? <button onclick="switchTab('signin')">Sign in</button>
+                Already have an account? <button onclick="switchTab('signin', null)">Sign in</button>
             </div>
 
             <div class="info-box">
@@ -361,11 +395,11 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        function switchTab(tab) {
+        function switchTab(tab, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
-            event.target.classList.add('active');
+            if (btn) btn.classList.add('active');
         }
 
         function showError(elementId, message) {
@@ -380,6 +414,38 @@
             element.textContent = message;
             element.style.display = 'block';
         }
+
+        // ── Google Sign-In ────────────────────────────────────────────────────
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+
+            const btn = document.getElementById('googleSignInBtn') || document.getElementById('googleSignUpBtn');
+            if (btn) btn.disabled = true;
+
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    const user = result.user;
+                    localStorage.setItem('authToken', user.uid);
+                    // Register / sync role on server
+                    return user.getIdToken().then(token =>
+                        fetch('/api/auth/register', {
+                            method: 'POST',
+                            headers: { Authorization: 'Bearer ' + token }
+                        })
+                    ).then(() => {
+                        window.location.href = '/dashboard/';
+                    });
+                })
+                .catch(error => {
+                    const errId = document.getElementById('signin').classList.contains('active')
+                        ? 'signInError' : 'signUpError';
+                    showError(errId, error.message);
+                    if (btn) btn.disabled = false;
+                });
+        }
+        // ─────────────────────────────────────────────────────────────────────
 
         function signIn() {
             const email = document.getElementById('signInEmail').value;
