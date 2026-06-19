@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setupEventListeners() {
-  document.getElementById('loginNavBtn')?.addEventListener('click', () => openModal('loginModal'));
+  // ✅ FIXED: Redirect to Firebase login page instead of old modal
+  document.getElementById('loginNavBtn')?.addEventListener('click', () => {
+    window.location.href = '/login.html';
+  });
   document.getElementById('closeLoginModal')?.addEventListener('click', () => closeModal('loginModal'));
   document.getElementById('closeProfileModal')?.addEventListener('click', () => closeModal('profileModal'));
   document.getElementById('profileLogoutBtn')?.addEventListener('click', handleLogout);
@@ -26,7 +29,7 @@ function setupEventListeners() {
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
 
-  // Login form submission
+  // Login form submission (kept for fallback)
   document.getElementById('loginForm')?.addEventListener('submit', handleLoginFormSubmit);
 
   // Role buttons in login modal
@@ -45,44 +48,14 @@ function setupEventListeners() {
 
 function handleLoginFormSubmit(e) {
   e.preventDefault();
-  const name = document.getElementById('loginNameInput').value.trim();
-  const email = document.getElementById('loginEmailInput').value.trim();
-  const role = document.getElementById('loginRoleInput').value || 'visitor';
-
-  if (!name || !email) {
-    showStatus('loginModalStatus', 'Please enter your name and email.', 'error');
-    return;
-  }
-
-  const avatarMap = { volunteer: '🤝', admin: '🛡️', visitor: '👤' };
-  const userData = {
-    id: role.toUpperCase().slice(0,3) + '-' + Date.now(),
-    role,
-    name,
-    email,
-    avatar: avatarMap[role] || '👤',
-    loginTime: new Date().toISOString()
-  };
-
-  localStorage.setItem('saveanimal_user', JSON.stringify(userData));
-  localStorage.setItem('saveanimal_currentUser', JSON.stringify(userData));
-  currentUser = userData;
-
-  if (role === 'volunteer' || role === 'admin') {
-    closeModal('loginModal');
-    showStatus('loginModalStatus', `Welcome ${name}! Redirecting to dashboard...`, 'success');
-    setTimeout(() => { window.location.href = '/dashboard/index.html'; }, 1200);
-  } else {
-    updateUIForUser();
-    closeModal('loginModal');
-    openModal('profileModal');
-  }
+  window.location.href = '/login.html';
 }
 
 function handleLogout() {
   if (confirm('Are you sure you want to logout?')) {
     localStorage.removeItem('saveanimal_user');
     localStorage.removeItem('saveanimal_currentUser');
+    localStorage.removeItem('authToken');
     currentUser = null; updateUIForUser(); closeModal('profileModal');
     showStatus('profileModal', 'You have been logged out', 'success', 2000);
   }
