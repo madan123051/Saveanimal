@@ -1,118 +1,178 @@
 const express = require('express');
-const admin = require('firebase-admin');
 const path = require('path');
+const multer = require('multer');
+const admin = require('firebase-admin');
 
 const app = express();
-app.use(express.json());
-app.use(express.static('public'));
-app.use(express.static('dashboard/dist'));
+const PORT = process.env.PORT || 3000;
 
-// Initialize Firebase Admin SDK
-const serviceAccount = require('./firebase-service-account.json');
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://wildsaura-1ef8a-default-rtdb.firebaseio.com'
+  credential: admin.credential.applicationDefault(),
+  databaseURL: 'https://wildsaura-1ef8a-default-rtdb.firebaseio.com',
+  storageBucket: 'wildsaura-1ef8a.firebasestorage.app'
 });
 
 const db = admin.database();
-const auth = admin.auth();
 
-// Middleware: Verify Firebase Token
-async function verifyToken(req, res, next) {
-    const token = req.headers.authorization?.split('Bearer ')[1];
-    
-    if (!token) {
-        return res.status(401).json({ error: 'No token provided' });
-    }
-    
-    try {
-        const decodedToken = await auth.verifyIdToken(token);
-        req.user = decodedToken;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: 'Invalid token', details: error.message });
-    }
-}
-
-// GET /api/user/role - Get current user's role
-app.get('/api/user/role', verifyToken, async (req, res) => {
-    try {
-        const userId = req.user.uid;
-        const snapshot = await db.ref(`userRoles/${userId}`).once('value');
-        const role = snapshot.val() || 'user';
-        
-        res.json({
-            userId,
-            role,
-            email: req.user.email
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+db.ref('stats').once('value', (snap) => {
+  if (!snap.exists()) {
+    db.ref('stats').set({ rescued: 1284, volunteers: 347, donationsNpr: 2850000, activeReports: 0 });
+  }
 });
 
-// POST /api/admin/setrole - Admin only: Set user's role
-app.post('/api/admin/setrole', verifyToken, async (req, res) => {
-    try {
-        const adminId = req.user.uid;
-        const adminSnapshot = await db.ref(`userRoles/${adminId}`).once('value');
-        const adminRole = adminSnapshot.val();
-        
-        if (adminRole !== 'admin') {
-            return res.status(403).json({ error: 'Unauthorized: Admin role required' });
-        }
-        
-        const { userId, role } = req.body;
-        
-        if (!userId || !role) {
-            return res.status(400).json({ error: 'userId and role required' });
-        }
-        
-        if (!['admin', 'volunteer', 'user'].includes(role)) {
-            return res.status(400).json({ error: 'Invalid role' });
-        }
-        
-        await db.ref(`userRoles/${userId}`).set(role);
-        
-        res.json({
-            message: 'Role updated successfully',
-            userId,
-            role
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+db.ref('messages').once('value', (snap) => {
+  if (!snap.exists()) {
+    db.ref('messages').push({ from: 'bot', text: 'Hello! Need emergency rescue help? Share location and contact number.', ts: Date.now() });
+  }
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ FIX: Serve dashboard directory at /dashboard route
+app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
+
+// Serve public assets and pages
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+app.use(express.static(path.join(__dirname, 'public')));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => { cb(null, path.join(__dirname, 'public/assets/uploads')); },
+  filename: (req, file, cb) => { cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`); }
+});
+const upload = multer({ storage });
+
+app.get('/api/stats', async (req, res) => {
+  try {
+    const snap = await db.ref('stats').once('value');
+    res.json(snap.val() || { rescued: 0, volunteers: 0, donationsNpr: 0, activeReports: 0 });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/report', upload.single('animalImage'), async (req, res) => {
+  const { name, phone, location, condition } = req.body;
+  if (!name || !phone || !location || !condition) return res.status(400).json({ error: 'All required fields must be filled.' });
+  const report = { name, phone, location, condition, image: req.file ? `/assets/uploads/${req.file.filename}` : null, createdAt: new Date().toISOString(), status: 'pending' };
+  try {
+    await db.ref('reports').push(report);
+    await db.ref('stats/activeReports').transaction((n) => (n || 0) + 1);
+    res.json({ message: 'Report submitted successfully', report });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/volunteer', async (req, res) => {
+  const { fullName, email, phone, role, availability, reason } = req.body;
+  if (!fullName || !email || !phone || !role) return res.status(400).json({ error: 'Please complete required fields.' });
+  const volunteer = { fullName, email, phone, role, availability: availability || '', reason: reason || '', createdAt: new Date().toISOString() };
+  try {
+    await db.ref('volunteers').push(volunteer);
+    await db.ref('stats/volunteers').transaction((n) => (n || 0) + 1);
+    res.json({ message: 'Volunteer application submitted', volunteer });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/donate', async (req, res) => {
+  const { donorName, amount, frequency, method } = req.body;
+  if (!donorName || !amount || !frequency || !method) return res.status(400).json({ error: 'Please fill donation details.' });
+  const donation = { donorName, amount: Number(amount), frequency, method, createdAt: new Date().toISOString() };
+  try {
+    await db.ref('donations').push(donation);
+    await db.ref('stats/donationsNpr').transaction((n) => (n || 0) + Number(amount));
+    res.json({ message: 'Donation intent received', donation });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/chat', async (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: 'Message text is required.' });
+  const lower = text.toLowerCase();
+  let reply = 'Thank you for reaching SaveAnimal Nepal. Our team will respond soon.';
+  if (lower.includes('injured') || lower.includes('rescue') || lower.includes('hurt')) reply = 'For emergency rescue, call +977-9800000000 now and share your exact location.';
+  else if (lower.includes('donate')) reply = 'You can donate through eSewa, Khalti, or bank transfer on our Donation page.';
+  else if (lower.includes('volunteer')) reply = 'Wonderful! Please fill the volunteer form and choose your preferred role.';
+  try {
+    await db.ref('messages').push({ from: 'user', text, ts: Date.now() });
+    await db.ref('messages').push({ from: 'bot', text: reply, ts: Date.now() });
+    const snap = await db.ref('messages').limitToLast(8).once('value');
+    const messages = [];
+    snap.forEach((child) => messages.push(child.val()));
+    res.json({ reply, messages });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/admin', async (req, res) => {
+  try {
+    const [rSnap, vSnap, dSnap] = await Promise.all([
+      db.ref('reports').once('value'),
+      db.ref('volunteers').once('value'),
+      db.ref('donations').once('value')
+    ]);
+    res.json({
+      reports: rSnap.val() ? Object.values(rSnap.val()) : [],
+      volunteers: vSnap.val() ? Object.values(vSnap.val()) : [],
+      donations: dSnap.val() ? Object.values(dSnap.val()) : []
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ─── NEW: Firebase Auth Role Management ───────────────────────────────────────
+
+// Middleware: verify Firebase ID token
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  }
+  try {
+    const token = authHeader.split('Bearer ')[1];
+    req.user = await admin.auth().verifyIdToken(token);
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Unauthorized: Invalid token' });
+  }
+};
+
+// GET /api/auth/role — get role for the authenticated user
+app.get('/api/auth/role', verifyToken, async (req, res) => {
+  try {
+    const snap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    const role = snap.val() || 'user';
+    res.json({ uid: req.user.uid, email: req.user.email, role });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// POST /api/auth/set-role — admin only: set role for any user
+app.post('/api/auth/set-role', verifyToken, async (req, res) => {
+  try {
+    const callerSnap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    if (callerSnap.val() !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden: Admins only' });
     }
-});
-
-// GET /api/admin/users - Admin only: List all users with roles
-app.get('/api/admin/users', verifyToken, async (req, res) => {
-    try {
-        const adminId = req.user.uid;
-        const adminSnapshot = await db.ref(`userRoles/${adminId}`).once('value');
-        const adminRole = adminSnapshot.val();
-        
-        if (adminRole !== 'admin') {
-            return res.status(403).json({ error: 'Unauthorized: Admin role required' });
-        }
-        
-        const usersSnapshot = await db.ref('userRoles').once('value');
-        const users = usersSnapshot.val() || {};
-        
-        res.json({
-            count: Object.keys(users).length,
-            users
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    const { uid, role } = req.body;
+    if (!uid || !['admin', 'volunteer', 'user'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid uid or role' });
     }
+    await db.ref(`userRoles/${uid}`).set(role);
+    res.json({ message: `Role '${role}' assigned to user ${uid}` });
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Fallback: Serve React app for client-side routing
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard/dist/index.html'));
+// POST /api/auth/register — auto-assign default role on first login
+app.post('/api/auth/register', verifyToken, async (req, res) => {
+  try {
+    const snap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    if (!snap.exists()) {
+      // madan123050@gmail.com is the super admin
+      const isAdmin = req.user.email === 'madan123050@gmail.com';
+      const role = isAdmin ? 'admin' : 'user';
+      await db.ref(`userRoles/${req.user.uid}`).set(role);
+      res.json({ role, message: `New user registered as '${role}'` });
+    } else {
+      res.json({ role: snap.val(), message: 'Existing user' });
+    }
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// ─── END: Role Management ────────────────────────────────────────────────────
+
+app.listen(PORT, () => { console.log(`SaveAnimal Nepal running on http://localhost:${PORT}`); });
