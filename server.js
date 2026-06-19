@@ -115,4 +115,64 @@ app.get('/api/admin', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ─── NEW: Firebase Auth Role Management ───────────────────────────────────────
+
+// Middleware: verify Firebase ID token
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  }
+  try {
+    const token = authHeader.split('Bearer ')[1];
+    req.user = await admin.auth().verifyIdToken(token);
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Unauthorized: Invalid token' });
+  }
+};
+
+// GET /api/auth/role — get role for the authenticated user
+app.get('/api/auth/role', verifyToken, async (req, res) => {
+  try {
+    const snap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    const role = snap.val() || 'user';
+    res.json({ uid: req.user.uid, email: req.user.email, role });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// POST /api/auth/set-role — admin only: set role for any user
+app.post('/api/auth/set-role', verifyToken, async (req, res) => {
+  try {
+    const callerSnap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    if (callerSnap.val() !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden: Admins only' });
+    }
+    const { uid, role } = req.body;
+    if (!uid || !['admin', 'volunteer', 'user'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid uid or role' });
+    }
+    await db.ref(`userRoles/${uid}`).set(role);
+    res.json({ message: `Role '${role}' assigned to user ${uid}` });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// POST /api/auth/register — auto-assign default role on first login
+app.post('/api/auth/register', verifyToken, async (req, res) => {
+  try {
+    const snap = await db.ref(`userRoles/${req.user.uid}`).once('value');
+    if (!snap.exists()) {
+      // madan123050@gmail.com is the super admin
+      const isAdmin = req.user.email === 'madan123050@gmail.com';
+      const role = isAdmin ? 'admin' : 'user';
+      await db.ref(`userRoles/${req.user.uid}`).set(role);
+      res.json({ role, message: `New user registered as '${role}'` });
+    } else {
+      res.json({ role: snap.val(), message: 'Existing user' });
+    }
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ─── END: Role Management ────────────────────────────────────────────────────
+
 app.listen(PORT, () => { console.log(`SaveAnimal Nepal running on http://localhost:${PORT}`); });
