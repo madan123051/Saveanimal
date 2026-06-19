@@ -384,7 +384,7 @@
     <script>
         // Initialize Firebase
         const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_WEB_API_KEY",
+            apiKey: "AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
             authDomain: "wildsaura-1ef8a.firebaseapp.com",
             projectId: "wildsaura-1ef8a",
             storageBucket: "wildsaura-1ef8a.appspot.com",
@@ -428,7 +428,6 @@
                 .then(result => {
                     const user = result.user;
                     localStorage.setItem('authToken', user.uid);
-                    // Register / sync role on server
                     return user.getIdToken().then(token =>
                         fetch('/api/auth/register', {
                             method: 'POST',
