@@ -1,525 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveAnimal Nepal - Login</title>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-        }
-
-        .logo-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .logo-text {
-            color: #10b981;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .logo-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: none;
-            color: #9ca3af;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            color: #10b981;
-            border-bottom-color: #10b981;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            color: #374151;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .google-btn {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            color: #374151;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .google-btn:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .google-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .google-icon {
-            width: 20px;
-            height: 20px;
-        }
-
-        .divider {
-            text-align: center;
-            color: #9ca3af;
-            font-size: 14px;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 35%;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
-
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .success {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid rgba(16, 185, 129, 0.3);
-            border-top-color: #10b981;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .switch-tab {
-            text-align: center;
-            font-size: 14px;
-            color: #6b7280;
-            margin-top: 20px;
-        }
-
-        .switch-tab button {
-            background: none;
-            border: none;
-            color: #10b981;
-            cursor: pointer;
-            font-weight: 700;
-            text-decoration: underline;
-        }
-
-        .info-box {
-            background: #f0fdf4;
-            border-left: 4px solid #10b981;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #166534;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – SaveAnimal Nepal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:linear-gradient(135deg,#0f4c1f 0%,#1a6b3a 50%,#0d3819 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;padding:16px}
+    .card{width:100%;max-width:440px;background:rgba(255,255,255,.97);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.35);padding:44px 40px 36px}
+    .logo{text-align:center;margin-bottom:28px}
+    .logo h1{font-family:'Poppins',sans-serif;font-size:30px;font-weight:800;color:#0f4c1f}
+    .logo p{color:#666;font-size:13px;margin-top:4px}
+    .tabs{display:flex;background:#f0f0f0;border-radius:10px;padding:4px;margin-bottom:24px}
+    .tab{flex:1;padding:9px;border:none;background:transparent;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:#888;transition:all .2s}
+    .tab.active{background:white;color:#0f4c1f;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+    .panel{display:none}.panel.active{display:block}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
+    .field input{width:100%;padding:11px 14px;border:2px solid #e2e8f0;border-radius:9px;font-size:14px;font-family:'Inter',sans-serif;transition:border-color .2s,box-shadow .2s}
+    .field input:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+    .row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:18px}
+    .row a{color:#16a34a;text-decoration:none;font-weight:600}
+    .btn-main{width:100%;padding:13px;background:linear-gradient(135deg,#0f4c1f,#16a34a);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s,transform .15s}
+    .btn-main:hover{opacity:.92;transform:translateY(-1px)}.btn-main:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#aaa;font-size:13px}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+    .btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border:2px solid #e2e8f0;border-radius:10px;background:white;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .2s,background .2s}
+    .btn-google:hover{border-color:#4285f4;background:#f8f9ff}
+    .status{margin-top:14px;padding:10px 14px;border-radius:9px;font-size:13px;display:none;text-align:center}
+    .status.ok{display:block;background:#dcfce7;color:#15803d}
+    .status.err{display:block;background:#fee2e2;color:#b91c1c}
+    .legend{background:#f8fafc;border-radius:12px;padding:14px 16px;margin-top:22px}
+    .legend-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+    .legend-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px;color:#555}
+    .badge{padding:2px 8px;border-radius:20px;font-weight:700;font-size:11px}
+    .badge-admin{background:#fef3c7;color:#92400e}
+    .badge-vol{background:#dcfce7;color:#15803d}
+    .badge-user{background:#e0f2fe;color:#0369a1}
+    .signup-link{text-align:center;font-size:13px;color:#888;margin-top:18px}
+    .signup-link a{color:#0f4c1f;font-weight:600;text-decoration:none}
+    @media(max-width:480px){.card{padding:28px 20px 24px}}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-section">
-            <div class="logo">🐾</div>
-            <div class="logo-text">SaveAnimal Nepal</div>
-            <div class="logo-subtitle">Protecting Wildlife, Together</div>
-        </div>
-
-        <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('signin', this)">Sign In</button>
-            <button class="tab-btn" onclick="switchTab('signup', this)">Create Account</button>
-        </div>
-
-        <!-- SIGN IN TAB -->
-        <div id="signin" class="tab-content active">
-            <div class="error" id="signInError"></div>
-            <div class="success" id="signInSuccess"></div>
-
-            <!-- Google Sign-In Button -->
-            <button class="google-btn" onclick="signInWithGoogle()" id="googleSignInBtn">
-                <svg class="google-icon" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                    <path fill="none" d="M0 0h48v48H0z"/>
-                </svg>
-                Continue with Google
-            </button>
-
-            <div class="divider">or</div>
-
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="signInEmail" placeholder="your@email.com">
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="signInPassword" placeholder="Enter your password">
-                <div style="text-align: right; margin-top: 8px;">
-                    <button style="background: none; border: none; color: #10b981; cursor: pointer; font-size: 13px;" onclick="resetPassword()">Forgot password?</button>
-                </div>
-            </div>
-
-            <div class="loading" id="signInLoading">
-                <span class="spinner"></span>Signing in...
-            </div>
-
-            <button class="submit-btn" onclick="signIn()" id="signInBtn">Sign In</button>
-
-            <div class="switch-tab">
-                Don't have an account? <button onclick="switchTab('signup', null)">Create one</button>
-            </div>
-        </div>
-
-        <!-- SIGN UP TAB -->
-        <div id="signup" class="tab-content">
-            <div class="error" id="signUpError"></div>
-            <div class="success" id="signUpSuccess"></div>
-
-            <!-- Google Sign-Up Button -->
-            <button class="google-btn" onclick="signInWithGoogle()" id="googleSignUpBtn">
-                <svg class="google-icon" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                    <path fill="none" d="M0 0h48v48H0z"/>
-                </svg>
-                Sign up with Google
-            </button>
-
-            <div class="divider">or</div>
-
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="signUpName" placeholder="Your full name">
-            </div>
-
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="signUpEmail" placeholder="your@email.com">
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="signUpPassword" placeholder="At least 6 characters">
-            </div>
-
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" id="signUpConfirm" placeholder="Repeat your password">
-            </div>
-
-            <div class="loading" id="signUpLoading">
-                <span class="spinner"></span>Creating account...
-            </div>
-
-            <button class="submit-btn" onclick="signUp()" id="signUpBtn">Create Account</button>
-
-            <div class="switch-tab">
-                Already have an account? <button onclick="switchTab('signin', null)">Sign in</button>
-            </div>
-
-            <div class="info-box">
-                ℹ️ By creating an account, you'll be able to contribute to SaveAnimal Nepal's mission of protecting wildlife.
-            </div>
-        </div>
+<div class="card">
+  <div class="logo">
+    <h1>🐾 SaveAnimal</h1>
+    <p>Nepal Animal Rescue Platform</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')">Sign In</button>
+    <button class="tab" onclick="switchTab('register')">Register</button>
+  </div>
+  <!-- SIGN IN -->
+  <div id="panel-login" class="panel active">
+    <div class="field"><label>Email</label><input type="email" id="li-email" placeholder="you@example.com" /></div>
+    <div class="field"><label>Password</label><input type="password" id="li-pass" placeholder="••••••••" /></div>
+    <div class="row">
+      <label style="display:flex;align-items:center;gap:6px;color:#555;"><input type="checkbox" id="li-remember"> Remember me</label>
+      <a href="#" onclick="forgotPassword();return false;">Forgot password?</a>
     </div>
+    <button class="btn-main" id="li-btn" onclick="emailLogin()">Sign In</button>
+    <div class="divider">or continue with</div>
+    <button class="btn-google" onclick="googleLogin()">
+      <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="G"> Continue with Google
+    </button>
+    <div id="li-status" class="status"></div>
+    <div class="signup-link">No account? <a href="#" onclick="switchTab('register');return false;">Register here</a></div>
+  </div>
+  <!-- REGISTER -->
+  <div id="panel-register" class="panel">
+    <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Aarav Sharma" /></div>
+    <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" /></div>
+    <div class="field"><label>Password <small style="color:#aaa;font-weight:400">(min 6 chars)</small></label><input type="password" id="reg-pass" placeholder="••••••••" /></div>
+    <button class="btn-main" id="reg-btn" onclick="emailRegister()">Create Account</button>
+    <div class="divider">or</div>
+    <button class="btn-google" onclick="googleLogin()">
+      <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="G"> Register with Google
+    </button>
+    <div id="reg-status" class="status"></div>
+    <div class="signup-link">Have account? <a href="#" onclick="switchTab('login');return false;">Sign in</a></div>
+  </div>
+  <!-- Role legend -->
+  <div class="legend">
+    <div class="legend-title">Role Guide</div>
+    <div class="legend-row"><span class="badge badge-admin">Admin</span> Full access – manage volunteers, reports, roles</div>
+    <div class="legend-row"><span class="badge badge-vol">Volunteer</span> View tasks, log hours, join activities</div>
+    <div class="legend-row"><span class="badge badge-user">User</span> Browse events &amp; info (default on signup)</div>
+  </div>
+</div>
+<script>
+// ── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+// ⚠️  Replace YOUR_API_KEY with the key from:
+//     Firebase Console → Project Settings → General → Your apps → Web app
+const firebaseConfig = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "wildsaura-1ef8a.firebaseapp.com",
+  databaseURL:       "https://wildsaura-1ef8a-default-rtdb.firebaseio.com",
+  projectId:         "wildsaura-1ef8a",
+  storageBucket:     "wildsaura-1ef8a.firebasestorage.app",
+  messagingSenderId: "690017200836",
+  appId:             "1:690017200836:web:a3c519752907c3f66ff791"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const rtdb = firebase.database();
 
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
-            authDomain: "wildsaura-1ef8a.firebaseapp.com",
-            projectId: "wildsaura-1ef8a",
-            storageBucket: "wildsaura-1ef8a.appspot.com",
-            messagingSenderId: "1005813886857",
-            appId: "1:1005813886857:web:a69bf46a4b45b5f89d8f07"
-        };
+function setStatus(id, msg, type) {
+  var el = document.getElementById(id+'-status');
+  el.textContent = msg; el.className = 'status '+type;
+}
+function setLoading(id, v) { document.getElementById(id).disabled = v; }
+function switchTab(t) {
+  ['login','register'].forEach(function(n){
+    document.getElementById('panel-'+n).classList.toggle('active', n===t);
+  });
+  document.querySelectorAll('.tab').forEach(function(b,i){
+    b.classList.toggle('active', (i===0 && t==='login') || (i===1 && t==='register'));
+  });
+}
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+async function getRoleFromDB(uid) {
+  var snap = await rtdb.ref('userRoles/'+uid).once('value');
+  return snap.val() || 'user';
+}
+async function ensureRole(uid, def) {
+  var snap = await rtdb.ref('userRoles/'+uid).once('value');
+  if (!snap.exists()) await rtdb.ref('userRoles/'+uid).set(def);
+  return snap.val() || def;
+}
+async function handleAuthSuccess(user, statusId) {
+  setStatus(statusId, 'Logged in! Fetching role…', 'ok');
+  var role = await getRoleFromDB(user.uid);
+  var data = {
+    id: user.uid,
+    name: user.displayName || user.email.split('@')[0],
+    email: user.email,
+    photo: user.photoURL || null,
+    role: role,
+    loginTime: new Date().toISOString()
+  };
+  localStorage.setItem('saveanimal_user', JSON.stringify(data));
+  localStorage.setItem('saveanimal_currentUser', JSON.stringify(data));
+  setStatus(statusId, '✓ Welcome '+data.name+'! Redirecting…', 'ok');
+  setTimeout(function(){ window.location.href='/dashboard/'; }, 900);
+}
 
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
-            if (btn) btn.classList.add('active');
-        }
-
-        function showError(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
-            setTimeout(() => element.style.display = 'none', 5000);
-        }
-
-        function showSuccess(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
-        }
-
-        // ── Google Sign-In ────────────────────────────────────────────────────
-        function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.addScope('email');
-            provider.addScope('profile');
-
-            const btn = document.getElementById('googleSignInBtn') || document.getElementById('googleSignUpBtn');
-            if (btn) btn.disabled = true;
-
-            auth.signInWithPopup(provider)
-                .then(result => {
-                    const user = result.user;
-                    localStorage.setItem('authToken', user.uid);
-                    return user.getIdToken().then(token =>
-                        fetch('/api/auth/register', {
-                            method: 'POST',
-                            headers: { Authorization: 'Bearer ' + token }
-                        })
-                    ).then(() => {
-                        window.location.href = '/dashboard/';
-                    });
-                })
-                .catch(error => {
-                    const errId = document.getElementById('signin').classList.contains('active')
-                        ? 'signInError' : 'signUpError';
-                    showError(errId, error.message);
-                    if (btn) btn.disabled = false;
-                });
-        }
-        // ─────────────────────────────────────────────────────────────────────
-
-        function signIn() {
-            const email = document.getElementById('signInEmail').value;
-            const password = document.getElementById('signInPassword').value;
-
-            if (!email || !password) {
-                showError('signInError', 'Please fill in all fields');
-                return;
-            }
-
-            document.getElementById('signInLoading').style.display = 'block';
-            document.getElementById('signInBtn').disabled = true;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    localStorage.setItem('authToken', userCredential.user.uid);
-                    window.location.href = '/dashboard/';
-                })
-                .catch(error => {
-                    showError('signInError', error.message);
-                    document.getElementById('signInLoading').style.display = 'none';
-                    document.getElementById('signInBtn').disabled = false;
-                });
-        }
-
-        function signUp() {
-            const name = document.getElementById('signUpName').value;
-            const email = document.getElementById('signUpEmail').value;
-            const password = document.getElementById('signUpPassword').value;
-            const confirm = document.getElementById('signUpConfirm').value;
-
-            if (!name || !email || !password || !confirm) {
-                showError('signUpError', 'Please fill in all fields');
-                return;
-            }
-
-            if (password !== confirm) {
-                showError('signUpError', 'Passwords do not match');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('signUpError', 'Password must be at least 6 characters');
-                return;
-            }
-
-            document.getElementById('signUpLoading').style.display = 'block';
-            document.getElementById('signUpBtn').disabled = true;
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    userCredential.user.updateProfile({ displayName: name });
-                    localStorage.setItem('authToken', userCredential.user.uid);
-                    window.location.href = '/dashboard/';
-                })
-                .catch(error => {
-                    showError('signUpError', error.message);
-                    document.getElementById('signUpLoading').style.display = 'none';
-                    document.getElementById('signUpBtn').disabled = false;
-                });
-        }
-
-        function resetPassword() {
-            const email = document.getElementById('signInEmail').value;
-            if (!email) {
-                showError('signInError', 'Please enter your email first');
-                return;
-            }
-
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    showSuccess('signInSuccess', 'Password reset email sent! Check your inbox.');
-                })
-                .catch(error => showError('signInError', error.message));
-        }
-    </script>
+async function emailLogin() {
+  var email = document.getElementById('li-email').value.trim();
+  var pass  = document.getElementById('li-pass').value;
+  if (!email||!pass){ setStatus('li','Enter email and password.','err'); return; }
+  setLoading('li-btn', true);
+  try {
+    var c = await auth.signInWithEmailAndPassword(email, pass);
+    await handleAuthSuccess(c.user, 'li');
+  } catch(e){ setStatus('li', friendlyError(e), 'err'); setLoading('li-btn',false); }
+}
+async function emailRegister() {
+  var name  = document.getElementById('reg-name').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var pass  = document.getElementById('reg-pass').value;
+  if (!name||!email||!pass){ setStatus('reg','Fill all fields.','err'); return; }
+  if (pass.length<6){ setStatus('reg','Password: min 6 chars.','err'); return; }
+  setLoading('reg-btn', true);
+  try {
+    var c = await auth.createUserWithEmailAndPassword(email, pass);
+    await c.user.updateProfile({ displayName: name });
+    await ensureRole(c.user.uid, 'user');
+    await handleAuthSuccess(c.user, 'reg');
+  } catch(e){ setStatus('reg', friendlyError(e), 'err'); setLoading('reg-btn',false); }
+}
+async function googleLogin() {
+  var sid = document.getElementById('panel-login').classList.contains('active') ? 'li' : 'reg';
+  try {
+    var c = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    await ensureRole(c.user.uid, 'user');
+    await handleAuthSuccess(c.user, sid);
+  } catch(e){ setStatus(sid, friendlyError(e), 'err'); }
+}
+async function forgotPassword() {
+  var email = document.getElementById('li-email').value.trim();
+  if (!email){ setStatus('li','Enter your email first.','err'); return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    setStatus('li','📧 Reset link sent to '+email, 'ok');
+  } catch(e){ setStatus('li', friendlyError(e), 'err'); }
+}
+function friendlyError(e) {
+  var m = {
+    'auth/user-not-found':'No account found with that email.',
+    'auth/wrong-password':'Incorrect password.',
+    'auth/email-already-in-use':'Email already registered.',
+    'auth/invalid-email':'Invalid email address.',
+    'auth/weak-password':'Password too weak (min 6 chars).',
+    'auth/popup-closed-by-user':'Google sign-in cancelled.',
+    'auth/network-request-failed':'Network error.',
+    'auth/invalid-api-key':'⚠️ Firebase API key missing — see login.html comments.',
+  };
+  return m[e.code] || e.message;
+}
+document.addEventListener('keydown', function(e){
+  if (e.key==='Enter'){
+    if (document.getElementById('panel-login').classList.contains('active')) emailLogin();
+    else emailRegister();
+  }
+});
+auth.onAuthStateChanged(async function(user){
+  if (user) {
+    var role = await getRoleFromDB(user.uid);
+    var data = { id:user.uid, name:user.displayName||user.email.split('@')[0],
+                 email:user.email, photo:user.photoURL||null, role:role,
+                 loginTime:new Date().toISOString() };
+    localStorage.setItem('saveanimal_user', JSON.stringify(data));
+    localStorage.setItem('saveanimal_currentUser', JSON.stringify(data));
+    window.location.href='/dashboard/';
+  }
+});
+</script>
 </body>
 </html>
