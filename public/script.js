@@ -108,9 +108,27 @@ function updateProfileModal() {
   else { if (rc) rc.textContent = '—'; if (dc) dc.textContent = '—'; if (vs) vs.textContent = '—'; }
   const al = document.getElementById('myActivityList');
   if (al) {
-    if (currentUser.role === 'volunteer') al.innerHTML = `<div class="activity-item"><span>🤝</span><div><strong>Volunteer Account</strong><small>Go to dashboard for full details</small></div></div>`;
-    else if (currentUser.role === 'admin') al.innerHTML = `<div class="activity-item"><span>🛡️</span><div><strong>Admin Access</strong><small>View dashboard for full stats</small></div></div>`;
-    else al.innerHTML = `<div class="activity-item"><span>📝</span><div><strong>Visitor Mode</strong><small>Report animals and view our work</small></div></div>`;
+    if (currentUser.role === 'volunteer') {
+      al.innerHTML = `
+        <div class="activity-item" style="cursor:pointer" onclick="window.location.href='/dashboard/'">
+          <span>🤝</span>
+          <div><strong>Volunteer Account</strong><small>Go to dashboard for full details →</small></div>
+        </div>
+        <button onclick="window.location.href='/dashboard/'" style="margin-top:10px;width:100%;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer">
+          🤝 Go to Volunteer Dashboard →
+        </button>`;
+    } else if (currentUser.role === 'admin') {
+      al.innerHTML = `
+        <div class="activity-item" style="cursor:pointer" onclick="window.location.href='/dashboard/'">
+          <span>🛡️</span>
+          <div><strong>Admin Access</strong><small>View dashboard for full stats →</small></div>
+        </div>
+        <button onclick="window.location.href='/dashboard/'" style="margin-top:10px;width:100%;padding:10px;background:#0f4c1f;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer">
+          🛡️ Go to Admin Dashboard →
+        </button>`;
+    } else {
+      al.innerHTML = `<div class="activity-item"><span>📝</span><div><strong>Visitor Mode</strong><small>Report animals and view our work</small></div></div>`;
+    }
   }
 }
 
