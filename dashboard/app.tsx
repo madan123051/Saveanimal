@@ -11,6 +11,7 @@ import type { User, UserRole, Volunteer, Activity } from './types';
 
 export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
   const [sidebarOpen, setSidebarOpen]  = useState(true);
   const [currentPage, setCurrentPage]  = useState('dashboard');
   const [volunteers, setVolunteers]    = useState<Volunteer[]>([]);
@@ -34,6 +35,7 @@ export const App: React.FC = () => {
         }
       }
     } catch (_) {}
+    setSessionChecked(true);
   };
 
   const initializeDemoData = () => {
@@ -79,7 +81,24 @@ export const App: React.FC = () => {
     window.location.replace('/login.html');
   };
 
-  if (!currentUser) return <LoginPage volunteers={volunteers} onLogin={handleLogin} />;
+  // Show a brief loading screen while we read the saved session from localStorage.
+  // This prevents LoginPage from clearing the session before we can restore it.
+  if (!sessionChecked) {
+    return (
+      <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center',
+                    background:'linear-gradient(135deg,#0f4c1f,#1a6b3a)', fontFamily:'Inter,sans-serif' }}>
+        <div style={{ textAlign:'center', color:'white' }}>
+          <div style={{ fontSize:48, marginBottom:16 }}>🐾</div>
+          <p style={{ fontSize:16, opacity:0.9 }}>Loading…</p>
+        </div>
+      </div>
+    );
+  }
+  if (!currentUser) {
+    // No session found after check — redirect to login page cleanly (don't clear localStorage here)
+    window.location.replace('/login.html');
+    return null;
+  }
 
   const renderContent = () => {
     if (currentPage === 'profile')

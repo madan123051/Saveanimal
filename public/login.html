@@ -97,6 +97,12 @@
   </div>
 </div>
 <script>
+// ── ADMIN & AUTH-FLAG ─────────────────────────────────────────────────────────
+var ADMIN_EMAIL = 'madan123050@gmail.com';        // always gets admin role on every login
+// Prevents onAuthStateChanged from firing a duplicate redirect while a manual
+// login/register flow is already in progress.
+var isHandlingAuth = false;
+
 // ── FIREBASE CONFIG ──────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
@@ -136,6 +142,10 @@ async function ensureRole(uid, def) {
 }
 async function handleAuthSuccess(user, statusId) {
   setStatus(statusId, 'Logged in! Fetching role…', 'ok');
+  // Ensure admin email always has the admin role
+  if (user.email === ADMIN_EMAIL) {
+    await rtdb.ref('userRoles/' + user.uid).set('admin');
+  }
   var role = await getRoleFromDB(user.uid);
   var data = {
     id: user.uid,
@@ -156,10 +166,11 @@ async function emailLogin() {
   var pass  = document.getElementById('li-pass').value;
   if (!email||!pass){ setStatus('li','Enter email and password.','err'); return; }
   setLoading('li-btn', true);
+  isHandlingAuth = true;
   try {
     var c = await auth.signInWithEmailAndPassword(email, pass);
     await handleAuthSuccess(c.user, 'li');
-  } catch(e){ setStatus('li', friendlyError(e), 'err'); setLoading('li-btn',false); }
+  } catch(e){ isHandlingAuth = false; setStatus('li', friendlyError(e), 'err'); setLoading('li-btn',false); }
 }
 async function emailRegister() {
   var name  = document.getElementById('reg-name').value.trim();
@@ -168,20 +179,27 @@ async function emailRegister() {
   if (!name||!email||!pass){ setStatus('reg','Fill all fields.','err'); return; }
   if (pass.length<6){ setStatus('reg','Password: min 6 chars.','err'); return; }
   setLoading('reg-btn', true);
+  isHandlingAuth = true;
   try {
     var c = await auth.createUserWithEmailAndPassword(email, pass);
     await c.user.updateProfile({ displayName: name });
     await ensureRole(c.user.uid, 'user');
     await handleAuthSuccess(c.user, 'reg');
-  } catch(e){ setStatus('reg', friendlyError(e), 'err'); setLoading('reg-btn',false); }
+  } catch(e){ isHandlingAuth = false; setStatus('reg', friendlyError(e), 'err'); setLoading('reg-btn',false); }
 }
 async function googleLogin() {
   var sid = document.getElementById('panel-login').classList.contains('active') ? 'li' : 'reg';
+  isHandlingAuth = true;
   try {
     var c = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    await ensureRole(c.user.uid, 'user');
+    // Admin email always gets admin role; everyone else gets user (if not set yet)
+    if (c.user.email === ADMIN_EMAIL) {
+      await rtdb.ref('userRoles/' + c.user.uid).set('admin');
+    } else {
+      await ensureRole(c.user.uid, 'user');
+    }
     await handleAuthSuccess(c.user, sid);
-  } catch(e){ setStatus(sid, friendlyError(e), 'err'); }
+  } catch(e){ isHandlingAuth = false; setStatus(sid, friendlyError(e), 'err'); }
 }
 async function forgotPassword() {
   var email = document.getElementById('li-email').value.trim();
@@ -211,7 +229,7 @@ document.addEventListener('keydown', function(e){
   }
 });
 auth.onAuthStateChanged(async function(user){
-  if (user) {
+  if (user && !isHandlingAuth) {
     var role = await getRoleFromDB(user.uid);
     var data = { id:user.uid, name:user.displayName||user.email.split('@')[0],
                  email:user.email, photo:user.photoURL||null, role:role,
