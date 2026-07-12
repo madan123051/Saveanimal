@@ -52,6 +52,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
     setProfile((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handlePhotoUpload = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setProfile((prev) => ({ ...prev, photo: String(reader.result || '') }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const saveProfile = () => {
     const updated: User = {
       ...profile,
@@ -75,16 +84,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
     <div className="min-h-full bg-[#f4f8f2] p-4 md:p-6">
       <div className="mx-auto max-w-6xl">
         <section className="overflow-hidden rounded-lg border border-[#dfe8e1] bg-[#fffdf8] shadow-sm">
-          <div className="h-40 bg-[linear-gradient(135deg,#174f3f,#2f8f63_58%,#f5b041)] relative">
+          <div className="h-36 md:h-44 bg-[linear-gradient(135deg,#174f3f,#2f8f63_58%,#f5b041)] relative">
             <div className="absolute inset-0 opacity-25" style={{ backgroundImage:'linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.25) 1px, transparent 1px)', backgroundSize:'48px 48px' }} />
           </div>
           <div className="px-5 pb-6 md:px-7">
-            <div className="-mt-12 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start">
-                <div className="grid h-28 w-28 shrink-0 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-5xl font-black text-white shadow-lg">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex flex-col gap-4 md:flex-row md:items-end">
+                <div className="-mt-12 grid h-28 w-28 shrink-0 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-5xl font-black text-white shadow-lg">
                   {profile.photo ? <img src={profile.photo} alt="" className="h-full w-full rounded-xl object-cover" /> : initial}
                 </div>
-                <div className="pt-12 md:pt-10">
+                <div className="pt-0 md:pb-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-3xl font-black text-[#17211d]">{profile.name}</h1>
                     <VerifiedBadge verified={profile.verified || isAdmin} />
@@ -97,7 +106,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 pt-0 md:pt-10">
+              <div className="flex flex-wrap gap-2 pt-0 md:pt-6">
                 {!isAdmin && (
                   <button onClick={() => onNavigate?.('dashboard')} className="rounded-lg border border-[#dfe8e1] bg-white px-4 py-3 font-black text-[#174f3f]">
                     View Dashboard
@@ -128,6 +137,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
               <label className="grid gap-1 text-sm font-black text-[#17211d]">Email<input className={fieldClass} value={profile.email || ''} onChange={(e) => updateField('email', e.target.value)} /></label>
               <label className="grid gap-1 text-sm font-black text-[#17211d]">Location<input className={fieldClass} value={profile.location || ''} onChange={(e) => updateField('location', e.target.value)} placeholder="Kathmandu, Nepal" /></label>
               <label className="grid gap-1 text-sm font-black text-[#17211d]">Photo URL<input className={fieldClass} value={profile.photo || ''} onChange={(e) => updateField('photo', e.target.value)} placeholder="https://..." /></label>
+              <label className="grid gap-1 text-sm font-black text-[#17211d] md:col-span-2">Upload Profile Picture<input className={fieldClass} type="file" accept="image/*" onChange={(e) => handlePhotoUpload(e.target.files?.[0])} /></label>
               <label className="grid gap-1 text-sm font-black text-[#17211d] md:col-span-2">Bio<textarea className={fieldClass} rows={4} value={profile.bio || ''} onChange={(e) => updateField('bio', e.target.value)} placeholder={defaultBio} /></label>
               <label className="grid gap-1 text-sm font-black text-[#17211d] md:col-span-2">Skills, comma separated<input className={fieldClass} value={skillsText} onChange={(e) => setSkillsText(e.target.value)} placeholder="Animal Care, Rescue Support, Feeding Route" /></label>
             </div>

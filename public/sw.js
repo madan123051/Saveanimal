@@ -1,5 +1,5 @@
 const CACHE_NAME = 'saveanimal-nepal-v1';
-const APP_SHELL = ['/', '/styles.css', '/script.js', '/logo.svg', '/manifest.webmanifest'];
+const APP_SHELL = ['/', '/styles.css', '/script.js', '/logo.svg', '/logo.png', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));

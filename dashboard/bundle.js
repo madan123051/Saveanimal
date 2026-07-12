@@ -24510,11 +24510,22 @@
   var import_jsx_runtime2 = __toESM(require_jsx_runtime());
   var AdminDashboard = ({ volunteers, activities, currentUser }) => {
     const [activeModule, setActiveModule] = (0, import_react.useState)("overview");
-    const [users, setUsers] = (0, import_react.useState)([
-      { id: "U001", name: "Madan Admin", email: "madan123050@gmail.com", role: "Admin", status: "Active", joined: "2026-07-12", verified: true },
-      { id: "DEMO-VOLUNTEER", name: "Rescue Volunteer", email: "volunteer@saveanimal.local", role: "Volunteer", status: "Active", joined: "2026-07-10", verified: false },
-      { id: "DEMO-VISITOR", name: "Public Supporter", email: "visitor@saveanimal.local", role: "Visitor", status: "Pending", joined: "2026-07-08", verified: false }
-    ]);
+    const [users, setUsers] = (0, import_react.useState)(() => {
+      try {
+        const saved = JSON.parse(localStorage.getItem("saveanimal_admin_users") || "[]");
+        if (Array.isArray(saved) && saved.length) return saved;
+      } catch (_) {
+      }
+      return [{
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email || "admin@saveanimal.local",
+        role: currentUser.role === "admin" ? "Admin" : currentUser.role,
+        status: "Active",
+        joined: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+        verified: true
+      }];
+    });
     const [contentItems, setContentItems] = (0, import_react.useState)([
       { id: "P001", type: "Rescue Blog", title: "Monsoon rescue preparation", media: "Photo", status: "Published", date: "2026-07-11" },
       { id: "P002", type: "Meeting", title: "Volunteer feeding route planning", media: "Video", status: "Draft", date: "2026-07-13" },
@@ -24553,6 +24564,7 @@
     const toggleVerification = (userId) => {
       const nextUsers = users.map((u) => u.id === userId ? { ...u, verified: !u.verified, status: !u.verified ? "Verified" : "Pending" } : u);
       setUsers(nextUsers);
+      localStorage.setItem("saveanimal_admin_users", JSON.stringify(nextUsers));
       const changed = nextUsers.find((u) => u.id === userId);
       if (changed) {
         const verifiedMap = JSON.parse(localStorage.getItem("saveanimal_verified_users") || "{}");
@@ -24645,9 +24657,13 @@
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex flex-wrap justify-between gap-3 mb-4", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "font-black text-xl", children: "User Management" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-[#6b756f]", children: "Manage admins, volunteers, visitors, account status, and verification badge." })
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-[#6b756f]", children: "Manage real admins, volunteers, visitors, account status, and verification badge." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "px-4 py-2 bg-[#174f3f] text-white rounded-lg font-black", onClick: () => setUsers([{ id: `U${Date.now()}`, name: "New Volunteer", email: "new@saveanimal.local", role: "Volunteer", status: "Pending", joined: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), verified: false }, ...users]), children: "Add User" })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "px-4 py-2 bg-[#174f3f] text-white rounded-lg font-black", onClick: () => {
+            const next = [{ id: `U${Date.now()}`, name: "New User", email: "new-user@saveanimal.local", role: "Volunteer", status: "Pending", joined: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), verified: false }, ...users];
+            setUsers(next);
+            localStorage.setItem("saveanimal_admin_users", JSON.stringify(next));
+          }, children: "Add User" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "overflow-auto", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("table", { className: "w-full text-sm", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("tr", { className: "text-left text-[#6b756f] border-b border-[#dfe8e1]", children: [
@@ -24856,6 +24872,14 @@
     const updateField = (key, value) => {
       setProfile((prev) => ({ ...prev, [key]: value }));
     };
+    const handlePhotoUpload = (file) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProfile((prev) => ({ ...prev, photo: String(reader.result || "") }));
+      };
+      reader.readAsDataURL(file);
+    };
     const saveProfile = () => {
       const updated = {
         ...profile,
@@ -24875,11 +24899,11 @@
     };
     return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "min-h-full bg-[#f4f8f2] p-4 md:p-6", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "mx-auto max-w-6xl", children: [
       /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "overflow-hidden rounded-lg border border-[#dfe8e1] bg-[#fffdf8] shadow-sm", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "h-40 bg-[linear-gradient(135deg,#174f3f,#2f8f63_58%,#f5b041)] relative", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "absolute inset-0 opacity-25", style: { backgroundImage: "linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.25) 1px, transparent 1px)", backgroundSize: "48px 48px" } }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "px-5 pb-6 md:px-7", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "-mt-12 flex flex-col gap-4 md:flex-row md:items-start md:justify-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-4 md:flex-row md:items-start", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "grid h-28 w-28 shrink-0 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-5xl font-black text-white shadow-lg", children: profile.photo ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("img", { src: profile.photo, alt: "", className: "h-full w-full rounded-xl object-cover" }) : initial }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pt-12 md:pt-10", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "h-36 md:h-44 bg-[linear-gradient(135deg,#174f3f,#2f8f63_58%,#f5b041)] relative", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "absolute inset-0 opacity-25", style: { backgroundImage: "linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.25) 1px, transparent 1px)", backgroundSize: "48px 48px" } }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "px-5 pb-6 md:px-7", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-4 md:flex-row md:items-start md:justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-4 md:flex-row md:items-end", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "-mt-12 grid h-28 w-28 shrink-0 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-5xl font-black text-white shadow-lg", children: profile.photo ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("img", { src: profile.photo, alt: "", className: "h-full w-full rounded-xl object-cover" }) : initial }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pt-0 md:pb-1", children: [
               /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-wrap items-center gap-2", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "text-3xl font-black text-[#17211d]", children: profile.name }),
                 /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(VerifiedBadge, { verified: profile.verified || isAdmin })
@@ -24892,7 +24916,7 @@
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-wrap gap-2 pt-0 md:pt-10", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-wrap gap-2 pt-0 md:pt-6", children: [
             !isAdmin && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { onClick: () => onNavigate?.("dashboard"), className: "rounded-lg border border-[#dfe8e1] bg-white px-4 py-3 font-black text-[#174f3f]", children: "View Dashboard" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { onClick: () => setIsEditing(true), className: "rounded-lg bg-[#174f3f] px-4 py-3 font-black text-white", children: "Edit Profile" })
           ] })
@@ -24925,6 +24949,10 @@
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "grid gap-1 text-sm font-black text-[#17211d]", children: [
             "Photo URL",
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("input", { className: fieldClass, value: profile.photo || "", onChange: (e) => updateField("photo", e.target.value), placeholder: "https://..." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "grid gap-1 text-sm font-black text-[#17211d] md:col-span-2", children: [
+            "Upload Profile Picture",
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("input", { className: fieldClass, type: "file", accept: "image/*", onChange: (e) => handlePhotoUpload(e.target.files?.[0]) })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "grid gap-1 text-sm font-black text-[#17211d] md:col-span-2", children: [
             "Bio",

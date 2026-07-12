@@ -6,11 +6,21 @@ interface AdminDashboardProps { volunteers: Volunteer[]; activities: Activity[];
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ volunteers, activities, currentUser }) => {
   const [activeModule, setActiveModule] = useState<'overview' | 'users' | 'content' | 'finance'>('overview');
-  const [users, setUsers] = useState([
-    { id:'U001', name:'Madan Admin', email:'madan123050@gmail.com', role:'Admin', status:'Active', joined:'2026-07-12', verified:true },
-    { id:'DEMO-VOLUNTEER', name:'Rescue Volunteer', email:'volunteer@saveanimal.local', role:'Volunteer', status:'Active', joined:'2026-07-10', verified:false },
-    { id:'DEMO-VISITOR', name:'Public Supporter', email:'visitor@saveanimal.local', role:'Visitor', status:'Pending', joined:'2026-07-08', verified:false },
-  ]);
+  const [users, setUsers] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('saveanimal_admin_users') || '[]');
+      if (Array.isArray(saved) && saved.length) return saved;
+    } catch (_) {}
+    return [{
+      id: currentUser.id,
+      name: currentUser.name,
+      email: currentUser.email || 'admin@saveanimal.local',
+      role: currentUser.role === 'admin' ? 'Admin' : currentUser.role,
+      status: 'Active',
+      joined: new Date().toISOString().slice(0,10),
+      verified: true
+    }];
+  });
   const [contentItems, setContentItems] = useState([
     { id:'P001', type:'Rescue Blog', title:'Monsoon rescue preparation', media:'Photo', status:'Published', date:'2026-07-11' },
     { id:'P002', type:'Meeting', title:'Volunteer feeding route planning', media:'Video', status:'Draft', date:'2026-07-13' },
@@ -49,6 +59,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ volunteers, acti
   const toggleVerification = (userId: string) => {
     const nextUsers = users.map(u => u.id === userId ? { ...u, verified: !u.verified, status: !u.verified ? 'Verified' : 'Pending' } : u);
     setUsers(nextUsers);
+    localStorage.setItem('saveanimal_admin_users', JSON.stringify(nextUsers));
     const changed = nextUsers.find(u => u.id === userId);
     if (changed) {
       const verifiedMap = JSON.parse(localStorage.getItem('saveanimal_verified_users') || '{}');
@@ -123,7 +134,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ volunteers, acti
       </div>}
 
       {activeModule === 'users' && <section className="bg-[#fffdf8] rounded-lg shadow-sm p-5 border border-[#dfe8e1]">
-        <div className="flex flex-wrap justify-between gap-3 mb-4"><div><h4 className="font-black text-xl">User Management</h4><p className="text-[#6b756f]">Manage admins, volunteers, visitors, account status, and verification badge.</p></div><button className="px-4 py-2 bg-[#174f3f] text-white rounded-lg font-black" onClick={() => setUsers([{ id:`U${Date.now()}`, name:'New Volunteer', email:'new@saveanimal.local', role:'Volunteer', status:'Pending', joined:new Date().toISOString().slice(0,10), verified:false }, ...users])}>Add User</button></div>
+        <div className="flex flex-wrap justify-between gap-3 mb-4"><div><h4 className="font-black text-xl">User Management</h4><p className="text-[#6b756f]">Manage real admins, volunteers, visitors, account status, and verification badge.</p></div><button className="px-4 py-2 bg-[#174f3f] text-white rounded-lg font-black" onClick={() => { const next = [{ id:`U${Date.now()}`, name:'New User', email:'new-user@saveanimal.local', role:'Volunteer', status:'Pending', joined:new Date().toISOString().slice(0,10), verified:false }, ...users]; setUsers(next); localStorage.setItem('saveanimal_admin_users', JSON.stringify(next)); }}>Add User</button></div>
         <div className="overflow-auto"><table className="w-full text-sm"><thead><tr className="text-left text-[#6b756f] border-b border-[#dfe8e1]"><th className="py-3">Name</th><th>Email</th><th>Role</th><th>Badge</th><th>Status</th><th>Joined</th><th>Action</th></tr></thead><tbody>{users.map(u => <tr key={u.id} className="border-b border-[#edf2ee]"><td className="py-3 font-black">{u.name}</td><td>{u.email}</td><td><span className="px-2 py-1 rounded bg-[#dff3e7] text-[#174f3f] font-black">{u.role}</span></td><td>{u.verified ? <span className="px-2 py-1 rounded bg-[#eef8fc] text-[#286c90] font-black">Verified</span> : <span className="text-[#6b756f]">No badge</span>}</td><td>{u.status}</td><td>{u.joined}</td><td><button onClick={() => toggleVerification(u.id)} className={`px-3 py-2 rounded-lg font-black text-xs ${u.verified ? 'bg-[#fde5e2] text-[#8d2b25]' : 'bg-[#174f3f] text-white'}`}>{u.verified ? 'Remove' : 'Verify'}</button></td></tr>)}</tbody></table></div>
       </section>}
 
