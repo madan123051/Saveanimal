@@ -18,18 +18,16 @@
     *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:linear-gradient(135deg,#eef7ef 0%,#f9fbf2 54%,#dcebf0 100%);display:grid;place-items:center;padding:24px}
     .shell{width:min(1080px,100%);display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:stretch}
     .brand-panel,.auth-card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,253,248,.86);box-shadow:var(--shadow);overflow:hidden}
-    .brand-panel{position:relative;min-height:650px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#174f3f,#1f6a50)}
-    .brand-panel::before{content:"";position:absolute;inset:44px;border:1px solid rgba(255,255,255,.16);background-image:linear-gradient(rgba(255,255,255,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.11) 1px,transparent 1px);background-size:62px 62px}
-    .brand-content,.mission-card{position:relative;z-index:1}.mark{width:46px;height:46px;display:grid;place-items:center;border-radius:var(--radius);background:var(--sun);color:#14231e;font-weight:900;letter-spacing:.05em}
-    .brand-content h1{max-width:650px;margin:24px 0 14px;color:#fff;font-size:clamp(2.3rem,5vw,4.9rem);line-height:.97;letter-spacing:0}.brand-content p{max-width:560px;color:rgba(255,255,255,.78);font-size:1.05rem}
-    .mission-card{width:min(420px,100%);margin-left:auto;background:rgba(255,253,248,.94);border-radius:var(--radius);padding:18px;display:grid;gap:10px}.mission-card small{color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.mission-card strong{font-size:1.15rem}.mission-card span{color:var(--muted)}
+    .brand-panel{position:relative;min-height:650px;padding:34px;display:flex;align-items:flex-start;justify-content:center;flex-direction:column;background:#174f3f}
+    .brand-content{position:relative;z-index:1}.mark{width:58px;height:58px;display:grid;place-items:center;border-radius:var(--radius);background:var(--sun);color:#14231e;font-weight:900;letter-spacing:.05em}
+    .brand-content h1{margin:18px 0 8px;color:#fff;font-size:clamp(2rem,4vw,3.2rem);line-height:1;letter-spacing:0}.brand-content p{max-width:520px;color:rgba(255,255,255,.78);font-size:1.05rem;line-height:1.6}
     .auth-card{padding:26px;background:var(--paper)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.topbar a{color:var(--forest);font-weight:800;text-decoration:none}.auth-title h2{margin:0;font-size:1.8rem}.auth-title p{margin:6px 0 0;color:var(--muted)}
     .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);margin:22px 0}.tab{border:0;border-radius:var(--radius);background:transparent;padding:11px;font-weight:900;color:var(--muted);cursor:pointer}.tab.active{background:#fff;color:var(--forest);box-shadow:0 8px 22px rgba(23,79,63,.09)}
     .panel{display:none}.panel.active{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-size:.9rem;font-weight:800}.field input{width:100%;border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;background:#fff;color:var(--ink);font:inherit}.field input:focus{outline:3px solid rgba(47,143,99,.18);border-color:var(--leaf)}
     .row{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:.86rem;color:var(--muted)}.row a{color:var(--forest);font-weight:800;text-decoration:none}.btn-main,.btn-google,.quick-btn{width:100%;border:0;border-radius:var(--radius);padding:13px 14px;font-weight:900;cursor:pointer}.btn-main{background:var(--forest);color:#fff;box-shadow:0 12px 26px rgba(23,79,63,.22)}.btn-main:disabled{opacity:.6;cursor:not-allowed}.btn-google{display:flex;justify-content:center;align-items:center;gap:10px;background:#fff;color:var(--ink);border:1px solid var(--line)}
     .divider{display:flex;align-items:center;gap:12px;color:#9aa39d;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.divider::before,.divider::after{content:"";height:1px;flex:1;background:var(--line)}
     .status{display:none;margin-top:4px;padding:11px 12px;border-radius:var(--radius);font-size:.88rem;font-weight:800}.status.ok{display:block;background:var(--mint);color:var(--forest)}.status.err{display:block;background:#fde5e2;color:#8d2b25}.hint{padding:12px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);color:var(--muted);font-size:.86rem}
-    @media(max-width:880px){.shell{grid-template-columns:1fr}.brand-panel{min-height:420px}.mission-card{margin-left:0}}@media(max-width:520px){body{padding:12px}.auth-card,.brand-panel{padding:20px}.brand-content h1{font-size:2.35rem}.topbar{align-items:flex-start;flex-direction:column}}
+    @media(max-width:880px){.shell{grid-template-columns:1fr}.brand-panel{min-height:260px}}@media(max-width:520px){body{padding:12px}.auth-card,.brand-panel{padding:20px}.brand-content h1{font-size:2.1rem}.topbar{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
@@ -37,13 +35,8 @@
     <section class="brand-panel">
       <div class="brand-content">
         <div class="mark">SA</div>
-        <h1>Rescue access for every role.</h1>
-        <p>Sign in to manage rescue reports, volunteer work, donations, and field coordination for SaveAnimal Nepal.</p>
-      </div>
-      <div class="mission-card">
-        <small>Live authentication</small>
-        <strong>Sign in with your real SaveAnimal account.</strong>
-        <span>Admin access is assigned to approved WildSaura accounts only.</span>
+        <h1>SaveAnimal Nepal</h1>
+        <p>A WildSaura project for animal rescue reports, verified volunteers, donation records, and rescue updates.</p>
       </div>
     </section>
 
