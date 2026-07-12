@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -110,9 +111,8 @@
         </div>
         <div class="hero-visual" aria-label="SaveAnimal live rescue report board">
           <div class="map-panel">
+            <div id="liveRescueMap" class="live-rescue-map"></div>
             <div class="map-top"><span>Live rescue board</span><strong id="liveBoardCount">0 active</strong></div>
-            <div class="route-line"></div>
-            <div class="pin pin-a"></div><div class="pin pin-b"></div><div class="pin pin-c"></div>
             <div class="dispatch-card">
               <small id="liveBoardStatus">Waiting for reports</small>
               <strong id="liveBoardTitle">No complaint submitted yet</strong>
@@ -276,6 +276,7 @@
       <form id="chatForm" class="chat-form"><input name="text" placeholder="Type your message..." required /><button type="submit">Send</button></form>
     </div>
   </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="script.js"></script>
   <script>
     document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.toggle('open'));

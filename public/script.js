@@ -1,5 +1,7 @@
 // ============ INITIALIZATION ============
 let currentUser = null;
+let liveMap = null;
+let liveReportLayer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   if ('serviceWorker' in navigator) {
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedLang === 'ne') applyTranslations('ne');
   setupEventListeners();
   updatePageStats();
+  initLiveRescueMap();
   updateLiveRescueBoard();
   setupFormSubmissions();
 });
@@ -163,6 +166,7 @@ function updateLiveRescueBoard() {
   try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
   const latest = reports[reports.length - 1];
   count.textContent = `${reports.length} active`;
+  renderLiveReportMarkers(reports);
   if (!latest) {
     status.textContent = 'Waiting for reports';
     title.textContent = 'No complaint submitted yet';
@@ -172,6 +176,60 @@ function updateLiveRescueBoard() {
   status.textContent = `${latest.status || 'Pending'} complaint`;
   title.textContent = `${latest.location || 'Unknown location'}`;
   meta.textContent = `${latest.condition || 'Condition not provided'} · ${new Date(latest.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+function initLiveRescueMap() {
+  const el = document.getElementById('liveRescueMap');
+  if (!el || !window.L) return;
+  const leaflet = window.L;
+  liveMap = leaflet.map(el, { zoomControl: true, attributionControl: true }).setView([27.7172, 85.3240], 12);
+  leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri',
+    maxZoom: 18
+  }).addTo(liveMap);
+  liveReportLayer = leaflet.layerGroup().addTo(liveMap);
+  setTimeout(() => liveMap?.invalidateSize(), 250);
+}
+
+function parseReportCoords(location, index = 0) {
+  const text = String(location || '');
+  const match = text.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+  if (match) {
+    const lat = Number(match[1]);
+    const lng = Number(match[2]);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) return [lat, lng];
+  }
+  const fallback = [
+    [27.7172, 85.3240],
+    [27.6710, 85.4298],
+    [27.6766, 85.3142],
+    [27.7041, 85.3078],
+    [27.7306, 85.3354]
+  ];
+  return fallback[index % fallback.length];
+}
+
+function renderLiveReportMarkers(reports) {
+  if (!liveMap || !liveReportLayer || !window.L) return;
+  const leaflet = window.L;
+  liveReportLayer.clearLayers();
+  const markerIcon = leaflet.divIcon({
+    className: 'live-report-marker',
+    html: '<div style="width:24px;height:24px;border-radius:999px;background:#d94f45;border:4px solid #fff;box-shadow:0 0 0 8px rgba(217,79,69,.25)"></div>',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+  const latestReports = reports.slice(-8);
+  latestReports.forEach((report, index) => {
+    const coords = parseReportCoords(report.location, index);
+    leaflet.marker(coords, { icon: markerIcon })
+      .bindPopup(`<strong>${report.location || 'Reported location'}</strong><br>${report.condition || 'Condition pending'}`)
+      .addTo(liveReportLayer);
+  });
+  if (latestReports.length) {
+    const latest = latestReports[latestReports.length - 1];
+    liveMap.setView(parseReportCoords(latest.location, latestReports.length - 1), 14, { animate: true });
+  }
 }
 
 function setupFormSubmissions() {

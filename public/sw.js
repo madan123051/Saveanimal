@@ -1,4 +1,4 @@
-const CACHE_NAME = 'saveanimal-nepal-v1';
+const CACHE_NAME = 'saveanimal-nepal-v2';
 const APP_SHELL = ['/', '/styles.css', '/script.js', '/logo.svg', '/logo.png', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

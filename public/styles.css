@@ -56,13 +56,14 @@ button { cursor: pointer; }
 .btn-hero-outline { color: var(--forest); border: 1px solid rgba(23,79,63,.28); }
 .hero-visual { min-height: 440px; display: grid; place-items: center; }
 .map-panel { position: relative; width: min(100%, 500px); aspect-ratio: 1.05; background: linear-gradient(135deg, #1d5c49, #15392f); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
-.map-panel::before { content: ""; position: absolute; inset: 38px; border: 1px solid rgba(255,255,255,.12); background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 54px 54px; }
+.live-rescue-map { position: absolute; inset: 0; z-index: 0; background: linear-gradient(135deg, #1d5c49, #15392f); }
+.live-rescue-map::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10,22,18,.1), rgba(10,22,18,.45)); z-index: 400; }
+.leaflet-control-attribution { font-size: 9px; }
+.leaflet-control-zoom { border: none !important; box-shadow: var(--shadow); }
+.leaflet-marker-icon.live-report-marker { filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
 .map-top { position: absolute; top: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; gap: 12px; color: #fff; z-index: 2; }
 .map-top span { opacity: .74; }
-.route-line { position: absolute; left: 21%; top: 52%; width: 55%; height: 3px; background: var(--sun); transform: rotate(-24deg); box-shadow: 0 0 0 7px rgba(245,176,65,.14); }
-.pin { position: absolute; width: 18px; height: 18px; border-radius: 99px; background: var(--sun); border: 4px solid #fff; box-shadow: 0 0 0 9px rgba(245,176,65,.18); }
-.pin-a { left: 22%; top: 56%; } .pin-b { left: 58%; top: 34%; background: var(--rose); } .pin-c { left: 72%; top: 68%; background: var(--sky); }
-.dispatch-card { position: absolute; right: 18px; bottom: 18px; left: 18px; background: rgba(255,253,248,.94); border-radius: var(--radius); padding: 18px; display: grid; gap: 4px; }
+.dispatch-card { position: absolute; right: 18px; bottom: 18px; left: 18px; background: rgba(255,253,248,.94); border-radius: var(--radius); padding: 18px; display: grid; gap: 4px; z-index: 2; }
 .dispatch-card small, .dispatch-card span { color: var(--muted); }
 .dispatch-card strong { font-size: 1.12rem; }
 .contact-email { display: inline-flex; margin-top: 14px; color: var(--forest); font-weight: 900; font-size: 1.1rem; }
