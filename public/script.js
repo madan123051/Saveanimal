@@ -49,15 +49,6 @@ function setupEventListeners() {
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
   document.getElementById('useMyLocationBtn')?.addEventListener('click', fillCurrentReportLocation);
-  document.getElementById('liveFocusBtn')?.addEventListener('click', (event) => {
-    event.stopPropagation();
-    focusLatestLiveReport();
-  });
-  document.getElementById('liveDirectionBtn')?.addEventListener('click', (event) => {
-    event.stopPropagation();
-    openLatestLiveReportDirections();
-  });
-  document.querySelector('.dispatch-card')?.addEventListener('click', () => focusLatestLiveReport());
   document.querySelectorAll('[data-chat-prompt]').forEach(btn => {
     btn.addEventListener('click', () => sendChatMessage(btn.dataset.chatPrompt || ''));
   });
@@ -185,35 +176,22 @@ function updateLiveRescueBoard() {
   const title = document.getElementById('liveBoardTitle');
   const meta = document.getElementById('liveBoardMeta');
   const list = document.getElementById('liveReportList');
-  const card = document.querySelector('.dispatch-card');
-  const actions = document.getElementById('liveBoardActions');
   if (!count || !status || !title || !meta) return;
   let reports = [];
   try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
-  const latest = reports[reports.length - 1];
   count.textContent = `${reports.length} active`;
   renderLiveReportMarkers(reports);
   renderLiveReportList(reports);
-  if (!latest) {
+  if (!reports.length) {
     status.textContent = 'Waiting for reports';
     title.textContent = 'No complaint submitted yet';
     meta.textContent = 'Submit the report form to show it here live.';
     if (list) list.innerHTML = '';
-    if (card) {
-      card.classList.remove('has-report');
-      card.removeAttribute('data-report-id');
-    }
-    if (actions) actions.style.display = 'none';
     return;
   }
-  status.textContent = `${latest.status || 'Pending'} complaint`;
-  title.textContent = `${latest.location || 'Unknown location'}`;
-  meta.textContent = `${latest.condition || 'Condition not provided'} · ${new Date(latest.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  if (card) {
-    card.classList.add('has-report');
-    card.setAttribute('data-report-id', getReportKey(latest, reports.length - 1));
-  }
-  if (actions) actions.style.display = 'flex';
+  status.textContent = 'Live report queue';
+  title.textContent = `${reports.length} active rescue ${reports.length === 1 ? 'report' : 'reports'}`;
+  meta.textContent = 'Tap a report to zoom the satellite map or open directions.';
 }
 
 function initLiveRescueMap() {
@@ -280,20 +258,41 @@ function getReportKey(report, index = 0) {
 function renderLiveReportList(reports) {
   const list = document.getElementById('liveReportList');
   if (!list) return;
-  const latestReports = reports.slice(-6, -1).reverse();
+  const latestReports = reports.slice(-6).reverse();
   if (!latestReports.length) {
     list.innerHTML = '';
     return;
   }
   list.innerHTML = latestReports.map((report, index) => {
     const time = report.timestamp ? new Date(report.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now';
-    return `<button class="live-report-item" type="button" data-report-id="${escapeHtml(getReportKey(report, latestReports.length - 1 - index))}">
-      <strong>${escapeHtml(report.location || 'Unknown location')}</strong>
-      <span>${escapeHtml(report.condition || 'Condition pending')} · ${time}</span>
-    </button>`;
+    const reportKey = getReportKey(report, reports.length - 1 - index);
+    return `<article class="live-report-item" role="button" tabindex="0" data-report-id="${escapeHtml(reportKey)}">
+      <div class="live-report-copy">
+        <strong>${escapeHtml(report.location || 'Unknown location')}</strong>
+        <span>${escapeHtml(report.condition || 'Condition pending')} · ${time}</span>
+      </div>
+      <div class="live-report-actions">
+        <button type="button" data-action="show" data-report-id="${escapeHtml(reportKey)}">Show</button>
+        <button type="button" data-action="direction" data-report-id="${escapeHtml(reportKey)}">Direction</button>
+      </div>
+    </article>`;
   }).join('');
   list.querySelectorAll('.live-report-item').forEach((button) => {
     button.addEventListener('click', () => focusLiveReport(button.dataset.reportId, button));
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        focusLiveReport(button.dataset.reportId, button);
+      }
+    });
+  });
+  list.querySelectorAll('.live-report-actions button').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const reportId = button.getAttribute('data-report-id');
+      if (button.getAttribute('data-action') === 'direction') openReportDirections(reportId);
+      else focusLiveReport(reportId, button.closest('.live-report-item'));
+    });
   });
 }
 
@@ -306,19 +305,11 @@ function focusLiveReport(reportId, button) {
   marker.openPopup();
 }
 
-function focusLatestLiveReport() {
-  let reports = [];
-  try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
-  if (!reports.length) return;
-  focusLiveReport(getReportKey(reports[reports.length - 1], reports.length - 1));
-}
-
-function openLatestLiveReportDirections() {
-  let reports = [];
-  try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
-  if (!reports.length) return;
-  const coords = parseReportCoords(reports[reports.length - 1].location, reports.length - 1);
-  window.open(getDirectionsUrl(coords), '_blank', 'noopener');
+function openReportDirections(reportId) {
+  const marker = liveReportMarkers.get(reportId);
+  if (!marker) return;
+  const { lat, lng } = marker.getLatLng();
+  window.open(getDirectionsUrl([lat, lng]), '_blank', 'noopener');
 }
 
 function getDirectionsUrl(coords) {

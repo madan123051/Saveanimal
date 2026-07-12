@@ -110,17 +110,15 @@
           </div>
         </div>
         <div class="hero-visual" aria-label="SaveAnimal live rescue report board">
-          <div class="map-panel">
-            <div id="liveRescueMap" class="live-rescue-map"></div>
-            <div class="map-top"><span>Live rescue board</span><strong id="liveBoardCount">0 active</strong></div>
-            <div class="dispatch-card">
+          <div class="live-board-shell">
+            <div class="map-panel">
+              <div id="liveRescueMap" class="live-rescue-map"></div>
+              <div class="map-top"><span>Live rescue board</span><strong id="liveBoardCount">0 active</strong></div>
+            </div>
+            <div class="dispatch-card report-feed-card">
               <small id="liveBoardStatus">Waiting for reports</small>
               <strong id="liveBoardTitle">No complaint submitted yet</strong>
               <span id="liveBoardMeta">Submit the report form to show it here live.</span>
-              <div id="liveBoardActions" class="live-board-actions" style="display:none">
-                <button id="liveFocusBtn" type="button">Show on map</button>
-                <button id="liveDirectionBtn" type="button">Get Direction</button>
-              </div>
               <div id="liveReportList" class="live-report-list" aria-label="Recent live rescue reports"></div>
             </div>
           </div>
