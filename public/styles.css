@@ -64,8 +64,12 @@ button { cursor: pointer; }
 .map-top { position: absolute; top: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; gap: 12px; color: #fff; z-index: 2; }
 .map-top span { opacity: .74; }
 .dispatch-card { position: absolute; right: 18px; bottom: 18px; left: 18px; max-height: 58%; overflow: auto; background: rgba(255,253,248,.94); border-radius: var(--radius); padding: 18px; display: grid; gap: 4px; z-index: 2; }
+.dispatch-card.has-report { cursor: pointer; }
 .dispatch-card small, .dispatch-card span { color: var(--muted); }
 .dispatch-card strong { font-size: 1.12rem; }
+.live-board-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.live-board-actions button { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--forest); padding: 8px 10px; font-size: .82rem; font-weight: 900; }
+.live-board-actions button:last-child { background: var(--forest); color: #fff; border-color: var(--forest); }
 .live-report-list { display: grid; gap: 8px; margin-top: 10px; }
 .live-report-item { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 9px 10px; text-align: left; display: grid; gap: 2px; color: var(--ink); box-shadow: none; }
 .live-report-item:hover, .live-report-item.active { border-color: var(--leaf); background: var(--mint); }

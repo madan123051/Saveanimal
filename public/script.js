@@ -49,6 +49,15 @@ function setupEventListeners() {
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
   document.getElementById('useMyLocationBtn')?.addEventListener('click', fillCurrentReportLocation);
+  document.getElementById('liveFocusBtn')?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    focusLatestLiveReport();
+  });
+  document.getElementById('liveDirectionBtn')?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    openLatestLiveReportDirections();
+  });
+  document.querySelector('.dispatch-card')?.addEventListener('click', () => focusLatestLiveReport());
   document.querySelectorAll('[data-chat-prompt]').forEach(btn => {
     btn.addEventListener('click', () => sendChatMessage(btn.dataset.chatPrompt || ''));
   });
@@ -176,6 +185,8 @@ function updateLiveRescueBoard() {
   const title = document.getElementById('liveBoardTitle');
   const meta = document.getElementById('liveBoardMeta');
   const list = document.getElementById('liveReportList');
+  const card = document.querySelector('.dispatch-card');
+  const actions = document.getElementById('liveBoardActions');
   if (!count || !status || !title || !meta) return;
   let reports = [];
   try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
@@ -188,11 +199,21 @@ function updateLiveRescueBoard() {
     title.textContent = 'No complaint submitted yet';
     meta.textContent = 'Submit the report form to show it here live.';
     if (list) list.innerHTML = '';
+    if (card) {
+      card.classList.remove('has-report');
+      card.removeAttribute('data-report-id');
+    }
+    if (actions) actions.style.display = 'none';
     return;
   }
   status.textContent = `${latest.status || 'Pending'} complaint`;
   title.textContent = `${latest.location || 'Unknown location'}`;
   meta.textContent = `${latest.condition || 'Condition not provided'} · ${new Date(latest.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  if (card) {
+    card.classList.add('has-report');
+    card.setAttribute('data-report-id', getReportKey(latest, reports.length - 1));
+  }
+  if (actions) actions.style.display = 'flex';
 }
 
 function initLiveRescueMap() {
@@ -240,8 +261,9 @@ function renderLiveReportMarkers(reports) {
   const latestReports = reports.slice(-8);
   latestReports.forEach((report, index) => {
     const coords = parseReportCoords(report.location, index);
+    const directionUrl = getDirectionsUrl(coords);
     const marker = leaflet.marker(coords, { icon: markerIcon })
-      .bindPopup(`<strong>${report.location || 'Reported location'}</strong><br>${report.condition || 'Condition pending'}`)
+      .bindPopup(`<strong>${report.location || 'Reported location'}</strong><br>${report.condition || 'Condition pending'}<br><a href="${directionUrl}" target="_blank" rel="noopener">Get Direction</a>`)
       .addTo(liveReportLayer);
     liveReportMarkers.set(getReportKey(report, index), marker);
   });
@@ -258,7 +280,7 @@ function getReportKey(report, index = 0) {
 function renderLiveReportList(reports) {
   const list = document.getElementById('liveReportList');
   if (!list) return;
-  const latestReports = reports.slice(-5).reverse();
+  const latestReports = reports.slice(-6, -1).reverse();
   if (!latestReports.length) {
     list.innerHTML = '';
     return;
@@ -282,6 +304,25 @@ function focusLiveReport(reportId, button) {
   button?.classList.add('active');
   liveMap.flyTo(marker.getLatLng(), 16, { animate: true, duration: 0.8 });
   marker.openPopup();
+}
+
+function focusLatestLiveReport() {
+  let reports = [];
+  try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
+  if (!reports.length) return;
+  focusLiveReport(getReportKey(reports[reports.length - 1], reports.length - 1));
+}
+
+function openLatestLiveReportDirections() {
+  let reports = [];
+  try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
+  if (!reports.length) return;
+  const coords = parseReportCoords(reports[reports.length - 1].location, reports.length - 1);
+  window.open(getDirectionsUrl(coords), '_blank', 'noopener');
+}
+
+function getDirectionsUrl(coords) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${coords[0]},${coords[1]}`)}`;
 }
 
 function escapeHtml(value) {
