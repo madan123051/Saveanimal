@@ -5,6 +5,8 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { VolunteerDashboard } from './components/VolunteerDashboard';
 import { VisitorHome } from './components/VisitorHome';
 import { ProfilePage } from './components/ProfilePage';
+import { AdminReports } from './components/AdminReports';
+import { AdminActivities } from './components/AdminActivities';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import type { User, UserRole, Volunteer, Activity } from './types';
@@ -105,8 +107,13 @@ export const App: React.FC = () => {
   const renderContent = () => {
     if (currentPage === 'profile')
       return <ProfilePage user={currentUser} activities={activities} onNavigate={setCurrentPage} onUserUpdate={setCurrentUser} />;
+    if (currentUser.role === 'admin') {
+      if (currentPage === 'reports') return <AdminReports />;
+      if (currentPage === 'activities') return <AdminActivities activities={activities} volunteers={volunteers} />;
+      if (currentPage === 'volunteers') return <AdminActivities activities={activities} volunteers={volunteers} />;
+      return <AdminDashboard volunteers={volunteers} activities={activities} currentUser={currentUser} />;
+    }
     switch (currentUser.role) {
-      case 'admin':     return <AdminDashboard volunteers={volunteers} activities={activities} currentUser={currentUser} />;
       case 'volunteer': return <VolunteerDashboard user={currentUser} activities={activities} />;
       case 'visitor':
       case 'user':

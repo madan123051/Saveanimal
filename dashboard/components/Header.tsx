@@ -32,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onToggleSidebar 
         </div>
       </div>
       <div className="flex items-center gap-3">
+        <button onClick={() => window.location.href = '/'} className="hidden sm:inline-flex px-3 py-2 rounded-lg text-sm font-black bg-[#fff] text-[#174f3f] border border-[#dfe8e1] hover:bg-[#dff3e7] transition">Open Site</button>
         <span className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-black bg-[#dff3e7] text-[#174f3f] border border-[#bfe6cd]">{getRoleLabel(user.role)}</span>
         <button onClick={onLogout} className="px-3 py-2 rounded-lg text-sm text-[#8d2b25] hover:bg-[#fde5e2] transition font-black">Logout</button>
       </div>

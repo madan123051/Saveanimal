@@ -1084,7 +1084,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState4(initialState) {
+          function useState5(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1112,7 +1112,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo2(create, deps) {
+          function useMemo3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create, deps);
           }
@@ -1884,10 +1884,10 @@
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect;
-          exports.useMemo = useMemo2;
+          exports.useMemo = useMemo3;
           exports.useReducer = useReducer;
           exports.useRef = useRef;
-          exports.useState = useState4;
+          exports.useState = useState5;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2383,9 +2383,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React4 = require_react();
+          var React5 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React4.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React5.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -3992,7 +3992,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React4.Children.forEach(props.children, function(child) {
+                  React5.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -23588,7 +23588,7 @@
       if (true) {
         (function() {
           "use strict";
-          var React4 = require_react();
+          var React5 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -23614,7 +23614,7 @@
             }
             return null;
           }
-          var ReactSharedInternals = React4.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React5.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               {
@@ -24464,11 +24464,11 @@
               return jsxWithValidation(type, props, key, false);
             }
           }
-          var jsx9 = jsxWithValidationDynamic;
-          var jsxs9 = jsxWithValidationStatic;
+          var jsx11 = jsxWithValidationDynamic;
+          var jsxs11 = jsxWithValidationStatic;
           exports.Fragment = REACT_FRAGMENT_TYPE;
-          exports.jsx = jsx9;
-          exports.jsxs = jsxs9;
+          exports.jsx = jsx11;
+          exports.jsxs = jsxs11;
         })();
       }
     }
@@ -24487,7 +24487,7 @@
   });
 
   // dashboard/app.tsx
-  var import_react3 = __toESM(require_react());
+  var import_react4 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // dashboard/components/AdminDashboard.tsx
@@ -25026,59 +25026,208 @@
     ] }) });
   };
 
-  // dashboard/components/Sidebar.tsx
+  // dashboard/components/AdminReports.tsx
+  var import_react3 = __toESM(require_react());
   var import_jsx_runtime6 = __toESM(require_jsx_runtime());
-  var Sidebar = ({ isOpen, currentPage, onPageChange, userRole, onLogout }) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+  var fallbackReports = [
+    { id: "R001", name: "Community caller", phone: "Pending", location: "Kathmandu Durbar Marg", condition: "Injured street dog needs pickup", timestamp: (/* @__PURE__ */ new Date()).toISOString(), status: "Pending" },
+    { id: "R002", name: "Volunteer tip", phone: "Pending", location: "27.671000, 85.429800", condition: "Weak calf near roadside", timestamp: new Date(Date.now() - 36e5).toISOString(), status: "Assigned" }
+  ];
+  var AdminReports = () => {
+    const [reports, setReports] = (0, import_react3.useState)(() => {
+      try {
+        const saved = JSON.parse(localStorage.getItem("rescueReports") || "[]");
+        if (Array.isArray(saved) && saved.length) return saved;
+      } catch (_) {
+      }
+      return fallbackReports;
+    });
+    const counts = (0, import_react3.useMemo)(() => ({
+      total: reports.length,
+      pending: reports.filter((r) => (r.status || "Pending") === "Pending").length,
+      assigned: reports.filter((r) => (r.status || "") === "Assigned").length,
+      resolved: reports.filter((r) => (r.status || "") === "Resolved").length
+    }), [reports]);
+    const updateStatus = (reportId, status) => {
+      const next = reports.map((report, index) => {
+        const id = report.id || String(index);
+        return id === (reportId || "") ? { ...report, status } : report;
+      });
+      setReports(next);
+      localStorage.setItem("rescueReports", JSON.stringify(next));
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-4 md:p-6 bg-[#f4f8f2] min-h-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "mb-6 rounded-lg bg-[#174f3f] text-white p-6 md:p-8 border border-white/10 shadow-lg", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs uppercase tracking-[0.16em] font-black text-[#f5b041]", children: "Reports" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-3xl md:text-4xl font-black mt-2", children: "Rescue complaint board" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-white/70 mt-2 max-w-2xl", children: "Review submitted rescue reports, assign action, and jump back to the live satellite board." })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-4 mb-6", children: [
+        ["Total Reports", counts.total],
+        ["Pending", counts.pending],
+        ["Assigned", counts.assigned],
+        ["Resolved", counts.resolved]
+      ].map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs uppercase tracking-[.14em] font-black text-[#6b756f]", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { className: "mt-2 block text-3xl text-[#17211d]", children: value })
+      ] }, label)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h4", { className: "text-xl font-black text-[#17211d]", children: "Latest rescue reports" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-[#6b756f]", children: "Reports submitted from the public site appear here on this device." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => window.location.href = "/#home", className: "rounded-lg bg-[#174f3f] px-4 py-2 font-black text-white", children: "Open live board" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "grid gap-3", children: reports.map((report, index) => {
+          const id = report.id || String(index);
+          const status = report.status || "Pending";
+          return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "rounded-lg border border-[#dfe8e1] bg-[#f4f8f2] p-4", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex flex-wrap justify-between gap-3", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "font-black text-[#17211d]", children: report.location || "Unknown location" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-1 text-sm text-[#6b756f]", children: report.condition || "Condition not provided" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "mt-2 text-xs font-bold text-[#6b756f]", children: [
+                  report.name || "Reporter",
+                  " \xB7 ",
+                  report.phone || "No phone",
+                  " \xB7 ",
+                  report.timestamp ? new Date(report.timestamp).toLocaleString() : "New report"
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: `h-fit rounded-lg px-3 py-1 text-xs font-black ${status === "Resolved" ? "bg-[#dff3e7] text-[#174f3f]" : status === "Assigned" ? "bg-[#eef8fc] text-[#286c90]" : "bg-[#fff4da] text-[#8a5b00]"}`, children: status })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "mt-4 flex flex-wrap gap-2", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => updateStatus(id, "Assigned"), className: "rounded-lg border border-[#dfe8e1] bg-white px-3 py-2 text-sm font-black text-[#174f3f]", children: "Assign" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => updateStatus(id, "Resolved"), className: "rounded-lg border border-[#bfe6cd] bg-[#dff3e7] px-3 py-2 text-sm font-black text-[#174f3f]", children: "Resolve" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => updateStatus(id, "Pending"), className: "rounded-lg border border-[#dfe8e1] bg-white px-3 py-2 text-sm font-black text-[#6b756f]", children: "Reopen" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => window.location.href = "/#home", className: "rounded-lg bg-[#174f3f] px-3 py-2 text-sm font-black text-white", children: "View on map" })
+            ] })
+          ] }, id);
+        }) })
+      ] })
+    ] });
+  };
+
+  // dashboard/components/AdminActivities.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime());
+  var AdminActivities = ({ activities, volunteers }) => {
+    const upcoming = activities.filter((activity) => activity.status === "Upcoming");
+    const completed = activities.filter((activity) => activity.status === "Completed");
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "p-4 md:p-6 bg-[#f4f8f2] min-h-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mb-6 rounded-lg bg-[#174f3f] text-white p-6 md:p-8 border border-white/10 shadow-lg", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-xs uppercase tracking-[0.16em] font-black text-[#f5b041]", children: "Activities" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { className: "text-3xl md:text-4xl font-black mt-2", children: "Rescue activity planner" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-white/70 mt-2 max-w-2xl", children: "Track cleanups, veterinary camps, feeding routes, awareness programs, and meeting work." })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 mb-6", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-xs uppercase tracking-[.14em] font-black text-[#6b756f]", children: "Upcoming" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { className: "mt-2 block text-3xl", children: upcoming.length })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-xs uppercase tracking-[.14em] font-black text-[#6b756f]", children: "Completed" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { className: "mt-2 block text-3xl", children: completed.length })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-xs uppercase tracking-[.14em] font-black text-[#6b756f]", children: "Volunteer Capacity" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { className: "mt-2 block text-3xl", children: volunteers.reduce((sum, v) => sum + v.activities, 0) })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "grid grid-cols-1 lg:grid-cols-[1fr_.8fr] gap-5", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mb-4 flex flex-wrap justify-between gap-3", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { className: "text-xl font-black", children: "Activity schedule" }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-[#6b756f]", children: "Current rescue and community activities." })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: "rounded-lg bg-[#174f3f] px-4 py-2 font-black text-white", children: "Create Activity" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "grid gap-3", children: activities.map((activity) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("article", { className: "rounded-lg border border-[#dfe8e1] bg-[#f4f8f2] p-4", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-wrap justify-between gap-3", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h5", { className: "font-black text-[#17211d]", children: activity.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mt-1 text-sm text-[#6b756f]", children: activity.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "mt-2 text-xs font-bold text-[#6b756f]", children: [
+                activity.date,
+                " \xB7 ",
+                activity.volunteers,
+                " volunteers needed"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: `h-fit rounded-lg px-3 py-1 text-xs font-black ${activity.status === "Completed" ? "bg-[#dff3e7] text-[#174f3f]" : "bg-[#eef8fc] text-[#286c90]"}`, children: activity.status })
+          ] }) }, activity.id)) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#fffdf8] p-5 shadow-sm", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { className: "text-xl font-black", children: "Volunteer assignment" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mb-4 text-[#6b756f]", children: "Active helpers ready for activity work." }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "grid gap-3", children: volunteers.map((volunteer) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rounded-lg border border-[#dfe8e1] bg-[#f4f8f2] p-4", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "font-black", children: volunteer.name }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-sm text-[#6b756f]", children: volunteer.skills.join(", ") }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "mt-2 text-xs font-bold text-[#6b756f]", children: [
+              volunteer.hours,
+              " hours \xB7 ",
+              volunteer.activities,
+              " activities"
+            ] })
+          ] }, volunteer.id)) })
+        ] })
+      ] })
+    ] });
+  };
+
+  // dashboard/components/Sidebar.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime());
+  var Sidebar = ({ isOpen, currentPage, onPageChange, userRole, onLogout }) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
     "aside",
     {
       className: `bg-[#13231e] text-white flex flex-col transition-all duration-300 border-r border-white/10 ${isOpen ? "w-64" : "w-0 overflow-hidden"}`,
       style: { minHeight: "calc(100vh - 56px)" },
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "p-4 flex items-center gap-3 border-b border-white/10", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "w-10 h-10 rounded-lg bg-[#f5b041] text-[#13231e] grid place-items-center font-black text-sm", children: "SA" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "font-black text-lg block leading-tight", children: "SaveAnimal" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-xs text-white/50 font-bold", children: "Nepal Rescue" })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "p-4 flex items-center gap-3 border-b border-white/10", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "w-10 h-10 rounded-lg bg-[#f5b041] text-[#13231e] grid place-items-center font-black text-sm", children: "SA" }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "font-black text-lg block leading-tight", children: "SaveAnimal" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "text-xs text-white/50 font-bold", children: "Nepal Rescue" })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("nav", { className: "flex-1 p-3 space-y-2", children: [
-          userRole === "admin" && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "01", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "03", label: "Volunteers", active: currentPage === "volunteers", onClick: () => onPageChange("volunteers") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "04", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "05", label: "Reports", active: currentPage === "reports", onClick: () => onPageChange("reports") })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("nav", { className: "flex-1 p-3 space-y-2", children: [
+          userRole === "admin" && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "01", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "03", label: "Volunteers", active: currentPage === "volunteers", onClick: () => onPageChange("volunteers") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "04", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "05", label: "Reports", active: currentPage === "reports", onClick: () => onPageChange("reports") })
           ] }),
-          userRole === "volunteer" && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "01", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "03", label: "My Hours", active: currentPage === "hours", onClick: () => onPageChange("hours") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "04", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") })
+          userRole === "volunteer" && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "01", label: "Dashboard", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "03", label: "My Hours", active: currentPage === "hours", onClick: () => onPageChange("hours") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "04", label: "Activities", active: currentPage === "activities", onClick: () => onPageChange("activities") })
           ] }),
-          (userRole === "visitor" || userRole === "user") && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "01", label: "Home", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(NavItem, { icon: "03", label: "Events", active: currentPage === "activities", onClick: () => onPageChange("activities") })
+          (userRole === "visitor" || userRole === "user") && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "01", label: "Home", active: currentPage === "dashboard", onClick: () => onPageChange("dashboard") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "02", label: "My Profile", active: currentPage === "profile", onClick: () => onPageChange("profile") }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(NavItem, { icon: "03", label: "Events", active: currentPage === "activities", onClick: () => onPageChange("activities") })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "p-3 border-t border-white/10", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: onLogout, className: "w-full py-2.5 px-3 rounded-lg text-sm text-[#ffb4ad] hover:bg-white/10 transition flex items-center gap-2 font-black", children: "Logout" }) })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "p-3 border-t border-white/10", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { onClick: onLogout, className: "w-full py-2.5 px-3 rounded-lg text-sm text-[#ffb4ad] hover:bg-white/10 transition flex items-center gap-2 font-black", children: "Logout" }) })
       ]
     }
   );
-  var NavItem = ({ icon, label, onClick, active }) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+  var NavItem = ({ icon, label, onClick, active }) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
     "button",
     {
       onClick,
       className: `w-full text-left px-3 py-3 rounded-lg flex items-center gap-3 text-sm transition ${active ? "bg-[#2f8f63] text-white font-black shadow-lg shadow-black/10" : "text-white/70 hover:bg-white/10 hover:text-white font-bold"}`,
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "w-7 h-7 rounded-md grid place-items-center bg-white/10 text-[11px] font-black", children: icon }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: label })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "w-7 h-7 rounded-md grid place-items-center bg-white/10 text-[11px] font-black", children: icon }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: label })
       ]
     }
   );
 
   // dashboard/components/Header.tsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime());
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime());
   var Header = ({ user, onLogout, onToggleSidebar }) => {
     const getRoleLabel = (role) => {
       switch (role) {
@@ -25092,38 +25241,39 @@
           return role;
       }
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("header", { className: "bg-[#fffdf8]/95 backdrop-blur border-b border-[#dfe8e1] px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-40", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center gap-3 min-w-0", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: "p-2 rounded-lg hover:bg-[#f4f8f2] transition border border-[#dfe8e1]", onClick: onToggleSidebar, "aria-label": "Toggle sidebar", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", viewBox: "0 0 24 24", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("line", { x1: "3", y1: "6", x2: "21", y2: "6" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("line", { x1: "3", y1: "12", x2: "21", y2: "12" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("line", { x1: "3", y1: "18", x2: "21", y2: "18" })
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("header", { className: "bg-[#fffdf8]/95 backdrop-blur border-b border-[#dfe8e1] px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-40", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "flex items-center gap-3 min-w-0", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { className: "p-2 rounded-lg hover:bg-[#f4f8f2] transition border border-[#dfe8e1]", onClick: onToggleSidebar, "aria-label": "Toggle sidebar", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", viewBox: "0 0 24 24", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("line", { x1: "3", y1: "6", x2: "21", y2: "6" }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("line", { x1: "3", y1: "12", x2: "21", y2: "12" }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("line", { x1: "3", y1: "18", x2: "21", y2: "18" })
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "min-w-0", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-xs uppercase tracking-[0.14em] font-black text-[#2f8f63]", children: "SaveAnimal Command Center" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h2", { className: "text-lg md:text-xl font-black text-[#17211d] truncate", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "text-xs uppercase tracking-[0.14em] font-black text-[#2f8f63]", children: "SaveAnimal Command Center" }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("h2", { className: "text-lg md:text-xl font-black text-[#17211d] truncate", children: [
             "Welcome, ",
             user.name
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center gap-3", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-black bg-[#dff3e7] text-[#174f3f] border border-[#bfe6cd]", children: getRoleLabel(user.role) }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { onClick: onLogout, className: "px-3 py-2 rounded-lg text-sm text-[#8d2b25] hover:bg-[#fde5e2] transition font-black", children: "Logout" })
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { onClick: () => window.location.href = "/", className: "hidden sm:inline-flex px-3 py-2 rounded-lg text-sm font-black bg-[#fff] text-[#174f3f] border border-[#dfe8e1] hover:bg-[#dff3e7] transition", children: "Open Site" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-black bg-[#dff3e7] text-[#174f3f] border border-[#bfe6cd]", children: getRoleLabel(user.role) }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { onClick: onLogout, className: "px-3 py-2 rounded-lg text-sm text-[#8d2b25] hover:bg-[#fde5e2] transition font-black", children: "Logout" })
       ] })
     ] });
   };
 
   // dashboard/app.tsx
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime());
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime());
   var App = () => {
-    const [currentUser, setCurrentUser] = (0, import_react3.useState)(null);
-    const [sessionChecked, setSessionChecked] = (0, import_react3.useState)(false);
-    const [sidebarOpen, setSidebarOpen] = (0, import_react3.useState)(true);
-    const [currentPage, setCurrentPage] = (0, import_react3.useState)("dashboard");
-    const [volunteers, setVolunteers] = (0, import_react3.useState)([]);
-    const [activities, setActivities] = (0, import_react3.useState)([]);
-    (0, import_react3.useEffect)(() => {
+    const [currentUser, setCurrentUser] = (0, import_react4.useState)(null);
+    const [sessionChecked, setSessionChecked] = (0, import_react4.useState)(false);
+    const [sidebarOpen, setSidebarOpen] = (0, import_react4.useState)(true);
+    const [currentPage, setCurrentPage] = (0, import_react4.useState)("dashboard");
+    const [volunteers, setVolunteers] = (0, import_react4.useState)([]);
+    const [activities, setActivities] = (0, import_react4.useState)([]);
+    (0, import_react4.useEffect)(() => {
       initializeDemoData();
       restoreUserSession();
     }, []);
@@ -25187,16 +25337,16 @@
       window.location.replace("/login.html");
     };
     if (!sessionChecked) {
-      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { style: {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { style: {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         background: "linear-gradient(135deg,#0f4c1f,#1a6b3a)",
         fontFamily: "Inter,sans-serif"
-      }, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { style: { textAlign: "center", color: "white" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { style: { fontSize: 48, marginBottom: 16 }, children: "\u{1F43E}" }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { style: { fontSize: 16, opacity: 0.9 }, children: "Loading\u2026" })
+      }, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { style: { textAlign: "center", color: "white" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { style: { fontSize: 48, marginBottom: 16 }, children: "\u{1F43E}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { style: { fontSize: 16, opacity: 0.9 }, children: "Loading\u2026" })
       ] }) });
     }
     if (!currentUser) {
@@ -25205,28 +25355,32 @@
     }
     const renderContent = () => {
       if (currentPage === "profile")
-        return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(ProfilePage, { user: currentUser, activities, onNavigate: setCurrentPage, onUserUpdate: setCurrentUser });
+        return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(ProfilePage, { user: currentUser, activities, onNavigate: setCurrentPage, onUserUpdate: setCurrentUser });
+      if (currentUser.role === "admin") {
+        if (currentPage === "reports") return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AdminReports, {});
+        if (currentPage === "activities") return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AdminActivities, { activities, volunteers });
+        if (currentPage === "volunteers") return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AdminActivities, { activities, volunteers });
+        return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AdminDashboard, { volunteers, activities, currentUser });
+      }
       switch (currentUser.role) {
-        case "admin":
-          return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AdminDashboard, { volunteers, activities, currentUser });
         case "volunteer":
-          return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(VolunteerDashboard, { user: currentUser, activities });
+          return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(VolunteerDashboard, { user: currentUser, activities });
         case "visitor":
         case "user":
         default:
-          return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(VisitorHome, { activities });
+          return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(VisitorHome, { activities });
       }
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex flex-col min-h-screen bg-gray-100", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Header, { user: currentUser, onLogout: handleLogout, sidebarOpen, onToggleSidebar: () => setSidebarOpen(!sidebarOpen) }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex flex-1", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Sidebar, { isOpen: sidebarOpen, currentPage, onPageChange: setCurrentPage, userRole: currentUser.role, onLogout: handleLogout }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("main", { className: "flex-1 overflow-auto", children: renderContent() })
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "flex flex-col min-h-screen bg-gray-100", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Header, { user: currentUser, onLogout: handleLogout, sidebarOpen, onToggleSidebar: () => setSidebarOpen(!sidebarOpen) }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "flex flex-1", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Sidebar, { isOpen: sidebarOpen, currentPage, onPageChange: setCurrentPage, userRole: currentUser.role, onLogout: handleLogout }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("main", { className: "flex-1 overflow-auto", children: renderContent() })
       ] })
     ] });
   };
   var rootEl = document.getElementById("root");
-  if (rootEl) (0, import_client.createRoot)(rootEl).render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(App, {}));
+  if (rootEl) (0, import_client.createRoot)(rootEl).render(/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(App, {}));
 })();
 /*! Bundled license information:
 
