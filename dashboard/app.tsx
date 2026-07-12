@@ -104,7 +104,7 @@ export const App: React.FC = () => {
 
   const renderContent = () => {
     if (currentPage === 'profile')
-      return <ProfilePage user={currentUser} activities={activities} onNavigate={setCurrentPage} />;
+      return <ProfilePage user={currentUser} activities={activities} onNavigate={setCurrentPage} onUserUpdate={setCurrentUser} />;
     switch (currentUser.role) {
       case 'admin':     return <AdminDashboard volunteers={volunteers} activities={activities} currentUser={currentUser} />;
       case 'volunteer': return <VolunteerDashboard user={currentUser} activities={activities} />;
