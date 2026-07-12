@@ -19,10 +19,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
   const isAdmin = user.role === 'admin';
   const initial = (user.name || 'U').charAt(0).toUpperCase();
   const roleLabel = isAdmin ? 'System Admin' : isVolunteer ? 'Verified Rescue Volunteer' : 'SaveAnimal Supporter';
-  const bio = user.bio || (isVolunteer
-    ? 'Helping with field rescue, feeding routes, first-aid coordination, and community animal welfare work.'
-    : isAdmin
-      ? 'Managing SaveAnimal Nepal rescue operations, volunteers, content, and donation records.'
+  const bio = isAdmin
+    ? 'Managing SaveAnimal Nepal rescue operations, volunteers, content, user verification, and donation records.'
+    : user.bio || (isVolunteer
+      ? 'Helping with field rescue, feeding routes, first-aid coordination, and community animal welfare work.'
       : 'Following rescue stories and supporting animal welfare work in Nepal.');
   const stats = [
     { label:'Reports Helped', value:isAdmin ? 42 : isVolunteer ? (user.activities || 8) : 0 },
@@ -37,12 +37,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
           <div className="absolute inset-0 opacity-25" style={{ backgroundImage:'linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.25) 1px, transparent 1px)', backgroundSize:'48px 48px' }} />
         </div>
         <div className="px-5 pb-6 md:px-7">
-          <div className="-mt-14 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="flex flex-col gap-4 md:flex-row md:items-end">
-              <div className="grid h-28 w-28 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-5xl font-black text-white shadow-lg">
+          <div className="-mt-10 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start">
+              <div className="grid h-24 w-24 shrink-0 place-items-center rounded-2xl border-4 border-[#fffdf8] bg-[#174f3f] text-4xl font-black text-white shadow-lg">
                 {user.photo ? <img src={user.photo} alt="" className="h-full w-full rounded-xl object-cover" /> : initial}
               </div>
-              <div className="pb-1">
+              <div className="pt-10 md:pt-8">
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-3xl font-black text-[#17211d]">{user.name}</h1>
                   <VerifiedBadge verified={user.verified || isAdmin} />
@@ -51,7 +51,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, activities, onNa
                 <div className="mt-3 flex flex-wrap gap-2">
                   <span className="rounded-lg bg-[#dff3e7] px-3 py-1 text-sm font-black text-[#174f3f]">{user.role}</span>
                   <span className="rounded-lg bg-[#fff8e8] px-3 py-1 text-sm font-black text-[#8a5d0b]">{user.location || 'Kathmandu, Nepal'}</span>
-                  <span className="rounded-lg bg-[#f4f8f2] px-3 py-1 text-sm font-black text-[#6b756f]">{user.demo ? 'Demo Account' : 'Live Account'}</span>
+                  <span className="rounded-lg bg-[#f4f8f2] px-3 py-1 text-sm font-black text-[#6b756f]">Live Account</span>
                 </div>
               </div>
             </div>

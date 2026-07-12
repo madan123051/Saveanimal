@@ -64,6 +64,8 @@ button { cursor: pointer; }
 .dispatch-card { position: absolute; right: 18px; bottom: 18px; left: 18px; background: rgba(255,253,248,.94); border-radius: var(--radius); padding: 18px; display: grid; gap: 4px; }
 .dispatch-card small, .dispatch-card span { color: var(--muted); }
 .dispatch-card strong { font-size: 1.12rem; }
+.contact-email { display: inline-flex; margin-top: 14px; color: var(--forest); font-weight: 900; font-size: 1.1rem; }
+.contact-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
 
 .stats-section { background: var(--forest); color: #fff; }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }

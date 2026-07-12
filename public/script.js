@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedLang === 'ne') applyTranslations('ne');
   setupEventListeners();
   updatePageStats();
+  updateLiveRescueBoard();
   setupFormSubmissions();
 });
 
@@ -152,6 +153,27 @@ function updatePageStats() {
   } catch(e) { console.error('Error updating stats:',e); }
 }
 
+function updateLiveRescueBoard() {
+  const count = document.getElementById('liveBoardCount');
+  const status = document.getElementById('liveBoardStatus');
+  const title = document.getElementById('liveBoardTitle');
+  const meta = document.getElementById('liveBoardMeta');
+  if (!count || !status || !title || !meta) return;
+  let reports = [];
+  try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
+  const latest = reports[reports.length - 1];
+  count.textContent = `${reports.length} active`;
+  if (!latest) {
+    status.textContent = 'Waiting for reports';
+    title.textContent = 'No complaint submitted yet';
+    meta.textContent = 'Submit the report form to show it here live.';
+    return;
+  }
+  status.textContent = `${latest.status || 'Pending'} complaint`;
+  title.textContent = `${latest.location || 'Unknown location'}`;
+  meta.textContent = `${latest.condition || 'Condition not provided'} · ${new Date(latest.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
+
 function setupFormSubmissions() {
   document.getElementById('reportForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -159,7 +181,7 @@ function setupFormSubmissions() {
     const report = { id:'RESCUE-'+Date.now(), name:f.get('name'), phone:f.get('phone'), location:f.get('location'), condition:f.get('condition'), timestamp:new Date().toISOString(), status:'Pending' };
     let reports = JSON.parse(localStorage.getItem('rescueReports')||'[]');
     reports.push(report); localStorage.setItem('rescueReports', JSON.stringify(reports));
-    showStatus('reportStatus','✓ Report submitted! Our team will respond soon.','success'); e.target.reset(); updatePageStats();
+    showStatus('reportStatus','✓ Report submitted! It is now visible on the live rescue board.','success'); e.target.reset(); updatePageStats(); updateLiveRescueBoard();
   });
   document.getElementById('donationForm')?.addEventListener('submit', (e) => {
     e.preventDefault();

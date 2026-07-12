@@ -108,15 +108,15 @@
             <a class="btn-hero-outline" href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
           </div>
         </div>
-        <div class="hero-visual" aria-label="SaveAnimal rescue dashboard preview">
+        <div class="hero-visual" aria-label="SaveAnimal live rescue report board">
           <div class="map-panel">
-            <div class="map-top"><span>Live rescue board</span><strong>Kathmandu Valley</strong></div>
+            <div class="map-top"><span>Live rescue board</span><strong id="liveBoardCount">0 active</strong></div>
             <div class="route-line"></div>
             <div class="pin pin-a"></div><div class="pin pin-b"></div><div class="pin pin-c"></div>
             <div class="dispatch-card">
-              <small>Priority case</small>
-              <strong>Injured dog near Patan</strong>
-              <span>Team ETA: 18 minutes</span>
+              <small id="liveBoardStatus">Waiting for reports</small>
+              <strong id="liveBoardTitle">No complaint submitted yet</strong>
+              <span id="liveBoardMeta">Submit the report form to show it here live.</span>
             </div>
           </div>
         </div>
@@ -208,15 +208,35 @@
 
     <section id="about" class="about-section">
       <div class="container about-grid">
-        <div><span class="section-tag">Our Story</span><h2>Built for practical animal welfare</h2><p>SaveAnimal Nepal connects people who spot animals in danger with volunteers, donors, and caretakers who can act quickly. It is part of the WildSaura network.</p></div>
-        <div class="about-card"><strong>What we focus on</strong><span>Emergency rescue</span><span>Medical support</span><span>Feeding routes</span><span>Adoption and awareness</span></div>
+        <div>
+          <span class="section-tag">About WildSaura</span>
+          <h2>Rescue coordination for animals who need fast help</h2>
+          <p>SaveAnimal Nepal is a WildSaura initiative for reporting injured street animals, coordinating volunteers, recording donations, and sharing transparent rescue updates. The platform is built for practical field work: clear reports, quick response, verified volunteers, and accountable donation records.</p>
+          <p>Our goal is simple: make it easier for people to report suffering animals and easier for rescue teams to act with the right information.</p>
+        </div>
+        <div class="about-card">
+          <strong>What we do</strong>
+          <span>Emergency animal rescue reporting</span>
+          <span>Volunteer verification and task coordination</span>
+          <span>Medical care, feeding route, and shelter support</span>
+          <span>Donation tracking for rescue expenses</span>
+          <span>Rescue blogs, photos, videos, and meeting updates</span>
+        </div>
       </div>
     </section>
 
     <section id="contact" class="contact-section">
       <div class="container contact-band">
-        <div><span class="section-tag">Get in Touch</span><h2>Coordinate a rescue or partnership</h2><p>For urgent help, submit a report. For collaboration, volunteering, or donations, send a message through the chat widget.</p></div>
-        <a class="btn-hero-primary" href="#report">Start a rescue report</a>
+        <div>
+          <span class="section-tag">Contact</span>
+          <h2>Need help, partnership, or rescue support?</h2>
+          <p>For rescue reports, use the report form above so the live board gets updated. For collaboration, volunteer verification, media, donation records, or general support, email WildSaura directly.</p>
+          <a class="contact-email" href="mailto:help@wildsaura.com">help@wildsaura.com</a>
+        </div>
+        <div class="contact-actions">
+          <a class="btn-hero-primary" href="#report">Start a rescue report</a>
+          <a class="btn-hero-secondary" href="mailto:help@wildsaura.com">Email support</a>
+        </div>
       </div>
     </section>
 
