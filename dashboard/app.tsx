@@ -31,6 +31,8 @@ export const App: React.FC = () => {
         const validRoles: UserRole[] = ['admin', 'volunteer', 'visitor', 'user'];
         if (u && u.id) {
           u.role = validRoles.includes(u.role) ? u.role : 'user';
+          const verifiedMap = JSON.parse(localStorage.getItem('saveanimal_verified_users') || '{}');
+          u.verified = u.role === 'admin' || !!u.verified || !!verifiedMap[u.email || ''] || !!verifiedMap[u.id];
           setCurrentUser(u);
         }
       }

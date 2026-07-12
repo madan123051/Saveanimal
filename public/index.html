@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveAnimal Nepal · WildSaura</title>
+  <title>SaveAnimal Nepal | Rescue, Care, Rehome</title>
+  <meta name="theme-color" content="#174f3f" />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/logo.svg" />
+  <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="navbar">
     <div class="container nav-inner">
-      <a href="#home" class="logo">
-        <span class="logo-icon">🐾</span>
+      <a href="#home" class="logo" aria-label="SaveAnimal Nepal home">
+        <img class="logo-img" src="/logo.svg" alt="" />
         <span class="logo-text">SaveAnimal <span>Nepal</span></span>
       </a>
       <nav id="mainNav" class="nav-links">
@@ -26,18 +30,16 @@
         <a href="#contact" data-i18n="nav_contact">Contact</a>
       </nav>
       <div class="nav-actions">
-        <button id="langToggle" class="btn-lang">नेपाली</button>
+        <button id="langToggle" class="btn-lang" type="button">नेपाली</button>
         <button id="loginNavBtn" class="btn-primary" type="button">Login</button>
         <button id="profileNavBtn" class="profile-pill" type="button" style="display:none">
-          <span id="navAvatar" style="font-size:1.2rem"></span>
-          <span id="navName"></span>
+          <span id="navAvatar"></span><span id="navName"></span>
         </button>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu" type="button"><span></span><span></span><span></span></button>
       </div>
     </div>
   </header>
+
   <div class="mobile-nav" id="mobileNav">
     <a href="#home" data-i18n="nav_home">Home</a>
     <a href="#stories" data-i18n="nav_stories">Stories</a>
@@ -48,370 +50,217 @@
     <a href="#contact" data-i18n="nav_contact">Contact</a>
   </div>
 
-  <!-- ===== LOGIN MODAL ===== -->
   <div id="loginModal" class="modal-overlay" style="display:none">
     <div class="modal-card login-card">
-      <button class="modal-close" id="closeLoginModal">✕</button>
+      <button class="modal-close" id="closeLoginModal" type="button">x</button>
       <div class="login-brand">
-        <span class="login-paw">🐾</span>
+        <span class="login-paw">SA</span>
         <h3>Welcome to SaveAnimal Nepal</h3>
         <p>Enter your details to continue</p>
       </div>
       <form id="loginForm" autocomplete="off">
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px">Your Name</label>
-          <input id="loginNameInput" type="text" placeholder="e.g. Ramesh Thapa" required
-            style="width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box"/>
+        <div class="form-group"><label>Your Name</label><input id="loginNameInput" type="text" placeholder="e.g. Ramesh Thapa" required /></div>
+        <div class="form-group"><label>Email Address</label><input id="loginEmailInput" type="email" placeholder="you@example.com" required /></div>
+        <input type="hidden" id="loginRoleInput" value="visitor"/>
+        <div class="role-row">
+          <button type="button" class="role-btn" data-role="volunteer">Volunteer</button>
+          <button type="button" class="role-btn" data-role="admin">Admin</button>
+          <button type="button" class="role-btn selected" data-role="visitor">Visitor</button>
         </div>
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px">Email Address</label>
-          <input id="loginEmailInput" type="email" placeholder="you@example.com" required
-            style="width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box"/>
-        </div>
-        <div class="form-group" style="margin-bottom:18px">
-          <label style="font-size:0.85rem;font-weight:600;color:#374151;display:block;margin-bottom:8px">Login As:</label>
-          <input type="hidden" id="loginRoleInput" value="visitor"/>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" class="role-btn" data-role="volunteer"
-              style="flex:1;padding:9px 8px;border:2px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:0.82rem;font-weight:600;color:#374151;transition:all .2s;min-width:80px">
-              🤝 Volunteer
-            </button>
-            <button type="button" class="role-btn" data-role="admin"
-              style="flex:1;padding:9px 8px;border:2px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:0.82rem;font-weight:600;color:#374151;transition:all .2s;min-width:80px">
-              🛡️ Admin
-            </button>
-            <button type="button" class="role-btn selected" data-role="visitor"
-              style="flex:1;padding:9px 8px;border:2px solid #16a34a;border-radius:8px;background:#f0fdf4;cursor:pointer;font-size:0.82rem;font-weight:600;color:#16a34a;transition:all .2s;min-width:80px">
-              👤 Visitor
-            </button>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit" style="width:100%;padding:12px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer">
-          Continue →
-        </button>
+        <button type="submit" class="btn-submit">Continue</button>
       </form>
-      <p id="loginModalStatus" class="status neutral" style="display:none;margin-top:10px"></p>
+      <p id="loginModalStatus" class="status neutral" style="display:none"></p>
     </div>
   </div>
 
-  <!-- ===== PROFILE MODAL ===== -->
   <div id="profileModal" class="modal-overlay" style="display:none">
     <div class="modal-card profile-card">
-      <button class="modal-close" id="closeProfileModal">✕</button>
+      <button class="modal-close" id="closeProfileModal" type="button">x</button>
       <div class="profile-header">
-        <div id="profilePhoto" style="font-size:3rem;line-height:1"></div>
+        <div id="profilePhoto" class="profile-photo"></div>
         <div class="profile-info">
           <h3 id="profileDisplayName">User</h3>
           <p id="profileEmail" class="profile-email"></p>
-          <div class="profile-badges">
-            <span id="profileRoleBadge" class="badge badge-visitor">Visitor</span>
-            <span id="profileProviderBadge" class="badge badge-provider"></span>
-          </div>
+          <div class="profile-badges"><span id="profileRoleBadge" class="badge badge-visitor">Visitor</span><span id="profileProviderBadge" class="badge badge-provider"></span></div>
         </div>
       </div>
       <div class="profile-stats-row">
-        <div class="pstat"><strong id="myReportCount">—</strong><span>Reports</span></div>
-        <div class="pstat"><strong id="myDonationCount">—</strong><span>Donations</span></div>
-        <div class="pstat"><strong id="myVolunteerStatus">—</strong><span>Volunteer</span></div>
+        <div class="pstat"><strong id="myReportCount">-</strong><span>Reports</span></div>
+        <div class="pstat"><strong id="myDonationCount">-</strong><span>Donations</span></div>
+        <div class="pstat"><strong id="myVolunteerStatus">-</strong><span>Volunteer</span></div>
       </div>
       <h4 class="activity-heading">Recent Activity</h4>
       <div id="myActivityList" class="activity-list"></div>
-      <button class="btn ghost profile-logout-btn" id="profileLogoutBtn">Logout</button>
+      <button class="btn ghost profile-logout-btn" id="profileLogoutBtn" type="button">Logout</button>
     </div>
   </div>
 
   <main>
     <section id="home" class="hero">
-      <div class="hero-bg">
-        <div class="hero-overlay"></div>
-      </div>
-      <div class="container hero-content">
-        <div class="hero-badge">🐾 WildSaura Network</div>
-        <h1 data-i18n="hero_title">Help Save Lives –<br>Rescue Animals in Nepal</h1>
-        <p data-i18n="hero_text">Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.</p>
-        <div class="hero-actions">
-          <a class="btn-hero-primary" href="#report" data-i18n="cta_report">Report an Animal</a>
-          <a class="btn-hero-secondary" href="#donate" data-i18n="cta_donate">Donate Now</a>
-          <a class="btn-hero-outline" href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="hero-badge">WildSaura Rescue Network</div>
+          <h1 data-i18n="hero_title">Fast rescue care for injured animals across Nepal</h1>
+          <p data-i18n="hero_text">Report emergencies, fund treatment, and join coordinated field teams helping street animals recover with dignity.</p>
+          <div class="hero-actions">
+            <a class="btn-hero-primary" href="#report" data-i18n="cta_report">Report an Animal</a>
+            <a class="btn-hero-secondary" href="#donate" data-i18n="cta_donate">Donate Now</a>
+            <a class="btn-hero-outline" href="#volunteer" data-i18n="cta_volunteer">Join as Volunteer</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="SaveAnimal rescue dashboard preview">
+          <div class="map-panel">
+            <div class="map-top"><span>Live rescue board</span><strong>Kathmandu Valley</strong></div>
+            <div class="route-line"></div>
+            <div class="pin pin-a"></div><div class="pin pin-b"></div><div class="pin pin-c"></div>
+            <div class="dispatch-card">
+              <small>Priority case</small>
+              <strong>Injured dog near Patan</strong>
+              <span>Team ETA: 18 minutes</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
     <section class="stats-section">
       <div class="container stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">🐾</div>
-          <strong id="rescuedCount">0</strong>
-          <span data-i18n="stat_rescued">Animals Rescued</span>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🤝</div>
-          <strong id="volunteerCount">0</strong>
-          <span data-i18n="stat_volunteers">Volunteers</span>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">💛</div>
-          <strong id="donationCount">0</strong>
-          <span data-i18n="stat_donations">Donations (NPR)</span>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🚨</div>
-          <strong id="reportCount">0</strong>
-          <span data-i18n="stat_reports">Active Reports</span>
-        </div>
+        <div class="stat-card"><strong id="rescuedCount">0</strong><span data-i18n="stat_rescued">Animals Rescued</span></div>
+        <div class="stat-card"><strong id="volunteerCount">0</strong><span data-i18n="stat_volunteers">Volunteers</span></div>
+        <div class="stat-card"><strong id="donationCount">0</strong><span data-i18n="stat_donations">Donations (NPR)</span></div>
+        <div class="stat-card"><strong id="reportCount">0</strong><span data-i18n="stat_reports">Active Reports</span></div>
       </div>
     </section>
+
     <section class="how-section">
       <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Simple Process</span>
-          <h2>How It Works</h2>
-          <p>Three easy steps to help a life</p>
-        </div>
+        <div class="section-header"><span class="section-tag">Rescue Flow</span><h2>From report to recovery</h2><p>Simple tools for urgent action and long-term care.</p></div>
         <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-num">01</div>
-            <div class="step-icon">📍</div>
-            <h4>Spot &amp; Report</h4>
-            <p>See an injured animal? Fill our quick report form with location and condition details.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">02</div>
-            <div class="step-icon">🚑</div>
-            <h4>We Rescue</h4>
-            <p>Our trained rescue team responds quickly to provide emergency care and transport.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">03</div>
-            <div class="step-icon">❤️</div>
-            <h4>Heal &amp; Rehome</h4>
-            <p>Animals receive medical treatment, rehabilitation, and are placed in loving homes.</p>
-          </div>
+          <article class="step-card"><span>01</span><h3>Report with detail</h3><p>Share location, condition, and optional photos so responders understand urgency.</p></article>
+          <article class="step-card"><span>02</span><h3>Dispatch a team</h3><p>Volunteers coordinate transport, first aid, and clinic support from one rescue log.</p></article>
+          <article class="step-card"><span>03</span><h3>Track healing</h3><p>Donations and volunteer work support treatment, shelter, and rehoming.</p></article>
         </div>
       </div>
     </section>
+
     <section id="stories" class="stories-section">
       <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Success Stories</span>
-          <h2 data-i18n="stories_title">Featured Rescue Stories</h2>
-          <p>Real lives changed through compassion and care</p>
-        </div>
+        <div class="section-header"><span class="section-tag">Impact</span><h2 data-i18n="stories_title">Featured Rescue Stories</h2><p>Every rescue becomes a record of care, recovery, and community effort.</p></div>
         <div class="stories-grid" id="storiesGrid">
-          <div class="empty-state-block">
-            <span class="empty-icon">📖</span>
-            <p>Rescue stories will appear here as we save more lives.</p>
-          </div>
+          <article class="story-card"><span>Recovered</span><h3>Maya's leg treatment</h3><p>A street dog reported by a student received transport, surgery support, and foster care.</p></article>
+          <article class="story-card"><span>Rehomed</span><h3>Two kittens from Bhaktapur</h3><p>Volunteers coordinated feeding and clinic checks before both kittens found homes.</p></article>
+          <article class="story-card"><span>Ongoing</span><h3>Monsoon feeding route</h3><p>Local donors keep dry food and first-aid supplies moving through high-need areas.</p></article>
         </div>
       </div>
     </section>
+
     <section id="report" class="form-section">
       <div class="container form-layout">
-        <div class="form-info">
-          <span class="section-tag">Emergency Help</span>
-          <h2 data-i18n="report_title">Report an Injured Animal</h2>
-          <p>Spotted an injured animal? Fill the form and our team will respond as soon as possible.</p>
-        </div>
+        <div class="form-info"><span class="section-tag">Emergency Help</span><h2 data-i18n="report_title">Report an injured animal</h2><p>Use the rescue form for urgent street animal cases. Clear location details help the team respond faster.</p><div class="info-list"><span>Location first</span><span>Photo if safe</span><span>Phone required</span></div></div>
         <div class="form-panel">
           <form id="reportForm">
-            <div class="form-group">
-              <label>Your Name</label>
-              <input name="name" placeholder="Full name" required />
-            </div>
-            <div class="form-group">
-              <label>Phone Number</label>
-              <input name="phone" placeholder="+977-XXXXXXXXXX" required />
-            </div>
-            <div class="form-group">
-              <label>Location</label>
-              <input name="location" placeholder="Location or GPS coordinates" required />
-            </div>
-            <div class="form-group">
-              <label>Animal Condition</label>
-              <textarea name="condition" placeholder="Describe injuries, species, behaviour…" required></textarea>
-            </div>
-            <div class="form-group">
-              <label>Photo (optional)</label>
-              <input type="file" name="animalImage" accept="image/*" class="file-input" />
-            </div>
-            <button type="submit" class="btn-submit">Submit Report →</button>
+            <div class="form-group"><label>Your Name</label><input name="name" placeholder="Full name" required /></div>
+            <div class="form-group"><label>Phone Number</label><input name="phone" placeholder="+977-XXXXXXXXXX" required /></div>
+            <div class="form-group"><label>Location</label><input name="location" placeholder="Street, landmark, or GPS" required /></div>
+            <div class="form-group"><label>Animal Condition</label><textarea name="condition" placeholder="Describe injuries, species, behaviour..." required></textarea></div>
+            <div class="form-group"><label>Photo (optional)</label><input type="file" name="animalImage" accept="image/*" class="file-input" /></div>
+            <button type="submit" class="btn-submit">Submit Report</button>
           </form>
           <p id="reportStatus" class="form-status"></p>
         </div>
       </div>
     </section>
+
     <section id="donate" class="donate-section">
       <div class="container form-layout reverse">
-        <div class="form-info">
-          <span class="section-tag">Make an Impact</span>
-          <h2>Support Our Mission</h2>
-          <p>Your donation directly funds rescue operations, medical care, and shelter for Nepal's street animals.</p>
-        </div>
+        <div class="form-info"><span class="section-tag">Fund Care</span><h2>Support the rescue fund</h2><p>Donations help with transport, medicine, food, vaccines, sterilization, and safe recovery spaces.</p><div class="impact-stack"><strong>NPR 500</strong><span>can cover food and first-aid supplies for an emergency case.</span></div></div>
         <div class="form-panel">
           <form id="donationForm">
-            <div class="form-group">
-              <label>Donor Name</label>
-              <input name="donorName" placeholder="Your name" required />
-            </div>
-            <div class="form-group">
-              <label>Amount (NPR)</label>
-              <input type="number" name="amount" min="100" placeholder="Minimum NPR 100" required />
-            </div>
+            <div class="form-group"><label>Donor Name</label><input name="donorName" placeholder="Your name" required /></div>
+            <div class="form-group"><label>Amount (NPR)</label><input type="number" name="amount" min="100" placeholder="Minimum NPR 100" required /></div>
             <div class="form-row">
-              <div class="form-group">
-                <label>Frequency</label>
-                <select name="frequency" required>
-                  <option value="one-time">One-time</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Payment Method</label>
-                <select name="method" required>
-                  <option value="eSewa">eSewa</option>
-                  <option value="Khalti">Khalti</option>
-                  <option value="Bank Transfer">Bank Transfer</option>
-                </select>
-              </div>
+              <div class="form-group"><label>Frequency</label><select name="frequency" required><option value="one-time">One-time</option><option value="monthly">Monthly</option></select></div>
+              <div class="form-group"><label>Payment Method</label><select name="method" required><option value="eSewa">eSewa</option><option value="Khalti">Khalti</option><option value="Bank Transfer">Bank Transfer</option></select></div>
             </div>
-            <button class="btn-submit" type="submit">Donate Now →</button>
+            <button class="btn-submit" type="submit">Donate Now</button>
           </form>
           <p id="donationStatus" class="form-status"></p>
         </div>
       </div>
     </section>
+
     <section id="volunteer" class="form-section alt">
       <div class="container form-layout">
-        <div class="form-info">
-          <span class="section-tag">Join the Team</span>
-          <h2>Become a Volunteer</h2>
-          <p>Be part of Nepal's growing animal welfare movement. Every hour you give saves lives.</p>
-        </div>
+        <div class="form-info"><span class="section-tag">Join Field Work</span><h2>Become a volunteer</h2><p>Help with rescue calls, feeding routes, shelter care, transport, outreach, or digital coordination.</p></div>
         <div class="form-panel">
           <form id="volunteerForm">
-            <div class="form-group">
-              <label>Full Name</label>
-              <input name="fullName" placeholder="Your full name" required />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="you@email.com" required />
-              </div>
-              <div class="form-group">
-                <label>Phone</label>
-                <input name="phone" placeholder="+977-XXXXXXXXXX" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Preferred Role</label>
-              <select name="role" required>
-                <option value="Rescue team">Rescue Team</option>
-                <option value="Feeding team">Feeding Team</option>
-                <option value="Social media">Social Media</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Availability</label>
-              <input name="availability" placeholder="e.g. Weekends, Evenings…" />
-            </div>
-            <div class="form-group">
-              <label>Why do you want to volunteer?</label>
-              <textarea name="reason" placeholder="Tell us your motivation…"></textarea>
-            </div>
-            <button class="btn-submit" type="submit">Join Program →</button>
+            <div class="form-group"><label>Full Name</label><input name="fullName" placeholder="Your full name" required /></div>
+            <div class="form-row"><div class="form-group"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div><div class="form-group"><label>Phone</label><input name="phone" placeholder="+977-XXXXXXXXXX" required /></div></div>
+            <div class="form-group"><label>Preferred Role</label><select name="role" required><option value="Rescue team">Rescue Team</option><option value="Feeding team">Feeding Team</option><option value="Social media">Social Media</option></select></div>
+            <div class="form-group"><label>Availability</label><input name="availability" placeholder="e.g. Weekends, evenings" /></div>
+            <div class="form-group"><label>Why do you want to volunteer?</label><textarea name="reason" placeholder="Tell us your motivation"></textarea></div>
+            <button class="btn-submit" type="submit">Join Program</button>
           </form>
           <p id="volunteerStatus" class="form-status"></p>
         </div>
       </div>
     </section>
+
     <section id="about" class="about-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Our Story</span>
-          <h2>About SaveAnimal Nepal</h2>
-          <p>Our mission is to rescue, heal, and protect vulnerable animals across Nepal. Part of the <strong>WildSaura</strong> network.</p>
-        </div>
+      <div class="container about-grid">
+        <div><span class="section-tag">Our Story</span><h2>Built for practical animal welfare</h2><p>SaveAnimal Nepal connects people who spot animals in danger with volunteers, donors, and caretakers who can act quickly. It is part of the WildSaura network.</p></div>
+        <div class="about-card"><strong>What we focus on</strong><span>Emergency rescue</span><span>Medical support</span><span>Feeding routes</span><span>Adoption and awareness</span></div>
       </div>
     </section>
+
     <section id="contact" class="contact-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Get in Touch</span>
-          <h2>Contact Us</h2>
-          <p>Have questions or want to collaborate? Reach out to us.</p>
-        </div>
+      <div class="container contact-band">
+        <div><span class="section-tag">Get in Touch</span><h2>Coordinate a rescue or partnership</h2><p>For urgent help, submit a report. For collaboration, volunteering, or donations, send a message through the chat widget.</p></div>
+        <a class="btn-hero-primary" href="#report">Start a rescue report</a>
       </div>
     </section>
+
     <section id="admin" class="container admin-panel section-gap" style="display:none">
-      <div class="admin-header">
-        <div>
-          <h3>🛡️ Admin Dashboard</h3>
-          <p class="admin-subtitle">WildSaura · SaveAnimal Nepal</p>
-        </div>
-        <button id="refreshAdmin" class="btn btn-sm">↻ Refresh</button>
-      </div>
+      <div class="admin-header"><div><h3>Admin Dashboard</h3><p class="admin-subtitle">WildSaura · SaveAnimal Nepal</p></div><button id="refreshAdmin" class="btn btn-sm" type="button">Refresh</button></div>
       <div class="admin-summary">
-        <div class="ascard"><span class="asicon">🐾</span><strong id="as-rescued">—</strong><small>Rescued</small></div>
-        <div class="ascard"><span class="asicon">👥</span><strong id="as-volunteers">—</strong><small>Volunteers</small></div>
-        <div class="ascard orange"><span class="asicon">💰</span><strong id="as-donations">—</strong><small>Donations (NPR)</small></div>
-        <div class="ascard red"><span class="asicon">🚨</span><strong id="as-reports">—</strong><small>Active Reports</small></div>
+        <div class="ascard"><strong id="as-rescued">-</strong><small>Rescued</small></div>
+        <div class="ascard"><strong id="as-volunteers">-</strong><small>Volunteers</small></div>
+        <div class="ascard orange"><strong id="as-donations">-</strong><small>Donations (NPR)</small></div>
+        <div class="ascard red"><strong id="as-reports">-</strong><small>Active Reports</small></div>
       </div>
-      <div class="admin-tabs">
-        <button class="tab-btn active" data-tab="tab-reports">🐾 Reports</button>
-        <button class="tab-btn" data-tab="tab-volunteers">👥 Volunteers</button>
-        <button class="tab-btn" data-tab="tab-donations">💰 Donations</button>
-        <button class="tab-btn" data-tab="tab-messages">💬 Messages</button>
-      </div>
+      <div class="admin-tabs"><button class="tab-btn active" data-tab="tab-reports">Reports</button><button class="tab-btn" data-tab="tab-volunteers">Volunteers</button><button class="tab-btn" data-tab="tab-donations">Donations</button><button class="tab-btn" data-tab="tab-messages">Messages</button></div>
       <div id="tab-reports" class="tab-content active"><div id="adminReportsList" class="admin-cards"></div></div>
       <div id="tab-volunteers" class="tab-content"><div id="adminVolunteersList" class="admin-cards"></div></div>
       <div id="tab-donations" class="tab-content"><div id="adminDonationsList" class="admin-cards"></div></div>
       <div id="tab-messages" class="tab-content"><div id="adminMessagesList" class="admin-cards"></div></div>
     </section>
   </main>
+
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-brand">
-        <span>🐾</span>
-        <div>
-          <strong>SaveAnimal Nepal</strong>
-          <p>Part of the WildSaura Network</p>
-        </div>
-      </div>
-      <p class="footer-copy">© 2026 SaveAnimal Nepal · Built with ❤️ for Nepal's animals</p>
+      <div class="footer-brand"><span class="logo-mark">SA</span><div><strong>SaveAnimal Nepal</strong><p>Part of the WildSaura Network</p></div></div>
+      <p class="footer-copy">2026 SaveAnimal Nepal. Built for rescue, care, and community action.</p>
     </div>
   </footer>
+
   <div id="chat" class="chat-widget minimized">
-    <button id="chatToggle" class="chat-toggle-btn" type="button">💬 Open Chat</button>
+    <button id="chatToggle" class="chat-toggle-btn" type="button">Open Chat</button>
     <div class="chat-body">
-      <div class="chat-header">
-        <span>🐾</span>
-        <div>
-          <strong>Quick Help</strong>
-          <p>SaveAnimal Nepal Support</p>
-        </div>
-      </div>
+      <div class="chat-header"><span>SA</span><div><strong>Quick Help</strong><p>SaveAnimal Nepal Support</p></div></div>
       <div id="chatMessages" class="chat-messages"></div>
-      <form id="chatForm" class="chat-form">
-        <input name="text" placeholder="Type your message…" required />
-        <button type="submit">→</button>
-      </form>
+      <div class="chat-quick-actions">
+        <button type="button" data-chat-prompt="I found an injured animal. What should I do?">Injured animal</button>
+        <button type="button" data-chat-prompt="How can I donate?">Donate</button>
+        <button type="button" data-chat-prompt="How can I volunteer?">Volunteer</button>
+      </div>
+      <form id="chatForm" class="chat-form"><input name="text" placeholder="Type your message..." required /><button type="submit">Send</button></form>
     </div>
   </div>
-  <style>
-    .role-btn.selected { border-color: #16a34a !important; background: #f0fdf4 !important; color: #16a34a !important; }
-    .role-btn:hover { border-color: #9ca3af !important; }
-  </style>
   <script type="module" src="script.js"></script>
   <script>
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileNav').classList.toggle('open');
-    });
-    document.querySelectorAll('.mobile-nav a').forEach(a => {
-      a.addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
-    });
-    window.addEventListener('scroll', () => {
-      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
-    });
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.toggle('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open')));
+    window.addEventListener('scroll', () => document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 24));
   </script>
 </body>
 </html>

@@ -1,0 +1,31 @@
+{
+  "name": "SaveAnimal Nepal",
+  "short_name": "SaveAnimal",
+  "description": "Rescue, donation, volunteer, and admin dashboard for animal welfare work.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fffdf8",
+  "theme_color": "#174f3f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Report Animal",
+      "short_name": "Report",
+      "url": "/#report"
+    },
+    {
+      "name": "Admin Dashboard",
+      "short_name": "Admin",
+      "url": "/dashboard/"
+    }
+  ]
+}

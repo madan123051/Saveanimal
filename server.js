@@ -6,20 +6,23 @@ const admin = require('firebase-admin');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  databaseURL: 'https://wildsaura-1ef8a-default-rtdb.firebaseio.com',
-  storageBucket: 'wildsaura-1ef8a.firebasestorage.app'
-});
-
-const db = admin.database();
-
-db.ref('stats').once('value', (snap) => {
-  if (!snap.exists()) db.ref('stats').set({ rescued:1284, volunteers:347, donationsNpr:2850000, activeReports:0 });
-});
-db.ref('messages').once('value', (snap) => {
-  if (!snap.exists()) db.ref('messages').push({ from:'bot', text:'Hello! Need emergency rescue help? Share location and contact number.', ts:Date.now() });
-});
+let db = null;
+try {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: 'https://wildsaura-1ef8a-default-rtdb.firebaseio.com',
+    storageBucket: 'wildsaura-1ef8a.firebasestorage.app'
+  });
+  db = admin.database();
+  db.ref('stats').once('value', (snap) => {
+    if (!snap.exists()) db.ref('stats').set({ rescued:1284, volunteers:347, donationsNpr:2850000, activeReports:0 });
+  });
+  db.ref('messages').once('value', (snap) => {
+    if (!snap.exists()) db.ref('messages').push({ from:'bot', text:'Hello! Need emergency rescue help? Share location and contact number.', ts:Date.now() });
+  });
+} catch (error) {
+  console.warn('Firebase credentials not available. Public site will run with browser/local fallback data.');
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

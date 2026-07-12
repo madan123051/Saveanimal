@@ -12,6 +12,12 @@ export interface User {
   joinDate?: string;
   status?: string;
   activities?: number;
+  verified?: boolean;
+  bio?: string;
+  location?: string;
+  cover?: string;
+  loginTime?: string;
+  demo?: boolean;
 }
 
 export interface Volunteer {

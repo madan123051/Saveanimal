@@ -3,242 +3,142 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login – SaveAnimal Nepal</title>
+  <title>Login | SaveAnimal Nepal</title>
+  <meta name="theme-color" content="#174f3f" />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Firebase SDK -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{background:linear-gradient(135deg,#0f4c1f 0%,#1a6b3a 50%,#0d3819 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;padding:16px}
-    .card{width:100%;max-width:440px;background:rgba(255,255,255,.97);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.35);padding:44px 40px 36px}
-    .logo{text-align:center;margin-bottom:28px}
-    .logo h1{font-family:'Poppins',sans-serif;font-size:30px;font-weight:800;color:#0f4c1f}
-    .logo p{color:#666;font-size:13px;margin-top:4px}
-    .tabs{display:flex;background:#f0f0f0;border-radius:10px;padding:4px;margin-bottom:24px}
-    .tab{flex:1;padding:9px;border:none;background:transparent;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:#888;transition:all .2s}
-    .tab.active{background:white;color:#0f4c1f;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-    .panel{display:none}.panel.active{display:block}
-    .field{margin-bottom:18px}
-    .field label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
-    .field input{width:100%;padding:11px 14px;border:2px solid #e2e8f0;border-radius:9px;font-size:14px;font-family:'Inter',sans-serif;transition:border-color .2s,box-shadow .2s}
-    .field input:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
-    .row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:18px}
-    .row a{color:#16a34a;text-decoration:none;font-weight:600}
-    .btn-main{width:100%;padding:13px;background:linear-gradient(135deg,#0f4c1f,#16a34a);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s,transform .15s}
-    .btn-main:hover{opacity:.92;transform:translateY(-1px)}.btn-main:disabled{opacity:.5;cursor:not-allowed;transform:none}
-    .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#aaa;font-size:13px}
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
-    .btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border:2px solid #e2e8f0;border-radius:10px;background:white;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .2s,background .2s}
-    .btn-google:hover{border-color:#4285f4;background:#f8f9ff}
-    .status{margin-top:14px;padding:10px 14px;border-radius:9px;font-size:13px;display:none;text-align:center}
-    .status.ok{display:block;background:#dcfce7;color:#15803d}
-    .status.err{display:block;background:#fee2e2;color:#b91c1c}
-    .legend{background:#f8fafc;border-radius:12px;padding:14px 16px;margin-top:22px}
-    .legend-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-    .legend-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px;color:#555}
-    .badge{padding:2px 8px;border-radius:20px;font-weight:700;font-size:11px}
-    .badge-admin{background:#fef3c7;color:#92400e}
-    .badge-vol{background:#dcfce7;color:#15803d}
-    .badge-user{background:#e0f2fe;color:#0369a1}
-    .signup-link{text-align:center;font-size:13px;color:#888;margin-top:18px}
-    .signup-link a{color:#0f4c1f;font-weight:600;text-decoration:none}
-    @media(max-width:480px){.card{padding:28px 20px 24px}}
+    :root{--ink:#17211d;--muted:#6b756f;--paper:#fffdf8;--soft:#f4f8f2;--line:#dfe8e1;--forest:#174f3f;--leaf:#2f8f63;--mint:#dff3e7;--sun:#f5b041;--rose:#d94f45;--sky:#407b9b;--shadow:0 22px 70px rgba(23,79,63,.16);--radius:8px}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:linear-gradient(135deg,#eef7ef 0%,#f9fbf2 54%,#dcebf0 100%);display:grid;place-items:center;padding:24px}
+    .shell{width:min(1080px,100%);display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:stretch}
+    .brand-panel,.auth-card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,253,248,.86);box-shadow:var(--shadow);overflow:hidden}
+    .brand-panel{position:relative;min-height:650px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#174f3f,#1f6a50)}
+    .brand-panel::before{content:"";position:absolute;inset:44px;border:1px solid rgba(255,255,255,.16);background-image:linear-gradient(rgba(255,255,255,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.11) 1px,transparent 1px);background-size:62px 62px}
+    .brand-content,.mission-card{position:relative;z-index:1}.mark{width:46px;height:46px;display:grid;place-items:center;border-radius:var(--radius);background:var(--sun);color:#14231e;font-weight:900;letter-spacing:.05em}
+    .brand-content h1{max-width:650px;margin:24px 0 14px;color:#fff;font-size:clamp(2.3rem,5vw,4.9rem);line-height:.97;letter-spacing:0}.brand-content p{max-width:560px;color:rgba(255,255,255,.78);font-size:1.05rem}
+    .mission-card{width:min(420px,100%);margin-left:auto;background:rgba(255,253,248,.94);border-radius:var(--radius);padding:18px;display:grid;gap:10px}.mission-card small{color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.mission-card strong{font-size:1.15rem}.mission-card span{color:var(--muted)}
+    .auth-card{padding:26px;background:var(--paper)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.topbar a{color:var(--forest);font-weight:800;text-decoration:none}.auth-title h2{margin:0;font-size:1.8rem}.auth-title p{margin:6px 0 0;color:var(--muted)}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);margin:22px 0}.tab{border:0;border-radius:var(--radius);background:transparent;padding:11px;font-weight:900;color:var(--muted);cursor:pointer}.tab.active{background:#fff;color:var(--forest);box-shadow:0 8px 22px rgba(23,79,63,.09)}
+    .panel{display:none}.panel.active{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-size:.9rem;font-weight:800}.field input{width:100%;border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;background:#fff;color:var(--ink);font:inherit}.field input:focus{outline:3px solid rgba(47,143,99,.18);border-color:var(--leaf)}
+    .row{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:.86rem;color:var(--muted)}.row a{color:var(--forest);font-weight:800;text-decoration:none}.btn-main,.btn-google,.quick-btn{width:100%;border:0;border-radius:var(--radius);padding:13px 14px;font-weight:900;cursor:pointer}.btn-main{background:var(--forest);color:#fff;box-shadow:0 12px 26px rgba(23,79,63,.22)}.btn-main:disabled{opacity:.6;cursor:not-allowed}.btn-google{display:flex;justify-content:center;align-items:center;gap:10px;background:#fff;color:var(--ink);border:1px solid var(--line)}
+    .divider{display:flex;align-items:center;gap:12px;color:#9aa39d;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.divider::before,.divider::after{content:"";height:1px;flex:1;background:var(--line)}
+    .quick-grid{display:grid;grid-template-columns:1fr;gap:8px}.quick-btn{text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink);display:flex;justify-content:space-between;align-items:center}.quick-btn span{color:var(--muted);font-size:.8rem;font-weight:700}.quick-btn.admin{border-color:#f1cf82;background:#fff8e8}.quick-btn.vol{border-color:#bfe6cd;background:#f1fbf4}.quick-btn.user{border-color:#bed8e6;background:#eef8fc}
+    .status{display:none;margin-top:4px;padding:11px 12px;border-radius:var(--radius);font-size:.88rem;font-weight:800}.status.ok{display:block;background:var(--mint);color:var(--forest)}.status.err{display:block;background:#fde5e2;color:#8d2b25}.hint{padding:12px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);color:var(--muted);font-size:.86rem}
+    @media(max-width:880px){.shell{grid-template-columns:1fr}.brand-panel{min-height:420px}.mission-card{margin-left:0}}@media(max-width:520px){body{padding:12px}.auth-card,.brand-panel{padding:20px}.brand-content h1{font-size:2.35rem}.topbar{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">
-    <h1>🐾 SaveAnimal</h1>
-    <p>Nepal Animal Rescue Platform</p>
-  </div>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('login')">Sign In</button>
-    <button class="tab" onclick="switchTab('register')">Register</button>
-  </div>
-  <!-- SIGN IN -->
-  <div id="panel-login" class="panel active">
-    <div class="field"><label>Email</label><input type="email" id="li-email" placeholder="you@example.com" /></div>
-    <div class="field"><label>Password</label><input type="password" id="li-pass" placeholder="••••••••" /></div>
-    <div class="row">
-      <label style="display:flex;align-items:center;gap:6px;color:#555;"><input type="checkbox" id="li-remember"> Remember me</label>
-      <a href="#" onclick="forgotPassword();return false;">Forgot password?</a>
-    </div>
-    <button class="btn-main" id="li-btn" onclick="emailLogin()">Sign In</button>
-    <div class="divider">or continue with</div>
-    <button class="btn-google" onclick="googleLogin()">
-      <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="G"> Continue with Google
-    </button>
-    <div id="li-status" class="status"></div>
-    <div class="signup-link">No account? <a href="#" onclick="switchTab('register');return false;">Register here</a></div>
-  </div>
-  <!-- REGISTER -->
-  <div id="panel-register" class="panel">
-    <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Aarav Sharma" /></div>
-    <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" /></div>
-    <div class="field"><label>Password <small style="color:#aaa;font-weight:400">(min 6 chars)</small></label><input type="password" id="reg-pass" placeholder="••••••••" /></div>
-    <button class="btn-main" id="reg-btn" onclick="emailRegister()">Create Account</button>
-    <div class="divider">or</div>
-    <button class="btn-google" onclick="googleLogin()">
-      <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="G"> Register with Google
-    </button>
-    <div id="reg-status" class="status"></div>
-    <div class="signup-link">Have account? <a href="#" onclick="switchTab('login');return false;">Sign in</a></div>
-  </div>
-  <!-- Role legend -->
-  <div class="legend">
-    <div class="legend-title">Role Guide</div>
-    <div class="legend-row"><span class="badge badge-admin">Admin</span> Full access – manage volunteers, reports, roles</div>
-    <div class="legend-row"><span class="badge badge-vol">Volunteer</span> View tasks, log hours, join activities</div>
-    <div class="legend-row"><span class="badge badge-user">User</span> Browse events &amp; info (default on signup)</div>
-  </div>
-</div>
-<script>
-// ── ADMIN & AUTH-FLAG ─────────────────────────────────────────────────────────
-var ADMIN_EMAIL = 'madan123050@gmail.com';        // always gets admin role on every login
-// Prevents onAuthStateChanged from firing a duplicate redirect while a manual
-// login/register flow is already in progress.
-var isHandlingAuth = false;
+  <main class="shell">
+    <section class="brand-panel">
+      <div class="brand-content">
+        <div class="mark">SA</div>
+        <h1>Rescue access for every role.</h1>
+        <p>Sign in to manage rescue reports, volunteer work, donations, and field coordination for SaveAnimal Nepal.</p>
+      </div>
+      <div class="mission-card">
+        <small>Local preview ready</small>
+        <strong>Use demo buttons to verify admin dashboard instantly.</strong>
+        <span>Firebase email/Google login still works when the project credentials and account are available.</span>
+      </div>
+    </section>
 
-// ── FIREBASE CONFIG ──────────────────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey:            "AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
-  authDomain:        "wildsaura-1ef8a.firebaseapp.com",
-  databaseURL:       "https://wildsaura-1ef8a-default-rtdb.firebaseio.com",
-  projectId:         "wildsaura-1ef8a",
-  storageBucket:     "wildsaura-1ef8a.firebasestorage.app",
-  messagingSenderId: "690017200836",
-  appId:             "1:690017200836:web:a3c519752907c3f66ff791"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const rtdb = firebase.database();
+    <section class="auth-card">
+      <div class="topbar">
+        <div class="auth-title"><h2>Welcome back</h2><p>Choose sign in, register, or demo access.</p></div>
+        <a href="/">Home</a>
+      </div>
 
-function setStatus(id, msg, type) {
-  var el = document.getElementById(id+'-status');
-  el.textContent = msg; el.className = 'status '+type;
-}
-function setLoading(id, v) { document.getElementById(id).disabled = v; }
-function switchTab(t) {
-  ['login','register'].forEach(function(n){
-    document.getElementById('panel-'+n).classList.toggle('active', n===t);
-  });
-  document.querySelectorAll('.tab').forEach(function(b,i){
-    b.classList.toggle('active', (i===0 && t==='login') || (i===1 && t==='register'));
-  });
-}
+      <div class="tabs">
+        <button class="tab active" type="button" onclick="switchTab('login')">Sign In</button>
+        <button class="tab" type="button" onclick="switchTab('register')">Register</button>
+      </div>
 
-async function getRoleFromDB(uid) {
-  var snap = await rtdb.ref('userRoles/'+uid).once('value');
-  return snap.val() || 'user';
-}
-async function ensureRole(uid, def) {
-  var snap = await rtdb.ref('userRoles/'+uid).once('value');
-  if (!snap.exists()) await rtdb.ref('userRoles/'+uid).set(def);
-  return snap.val() || def;
-}
-async function handleAuthSuccess(user, statusId) {
-  setStatus(statusId, 'Logged in! Fetching role…', 'ok');
-  // Ensure admin email always has the admin role
-  if (user.email === ADMIN_EMAIL) {
-    await rtdb.ref('userRoles/' + user.uid).set('admin');
-  }
-  var role = await getRoleFromDB(user.uid);
-  var data = {
-    id: user.uid,
-    name: user.displayName || user.email.split('@')[0],
-    email: user.email,
-    photo: user.photoURL || null,
-    role: role,
-    loginTime: new Date().toISOString()
-  };
-  localStorage.setItem('saveanimal_user', JSON.stringify(data));
-  localStorage.setItem('saveanimal_currentUser', JSON.stringify(data));
-  setStatus(statusId, '✓ Welcome '+data.name+'! Redirecting…', 'ok');
-  setTimeout(function(){ window.location.href='/dashboard/'; }, 900);
-}
+      <div id="panel-login" class="panel active">
+        <div class="field"><label>Email</label><input type="email" id="li-email" placeholder="madan123050@gmail.com" autocomplete="email" /></div>
+        <div class="field"><label>Password</label><input type="password" id="li-pass" placeholder="Minimum 6 characters" autocomplete="current-password" /></div>
+        <div class="row"><label><input type="checkbox" id="li-remember"> Remember me</label><a href="#" onclick="forgotPassword();return false;">Forgot password?</a></div>
+        <button class="btn-main" id="li-btn" type="button" onclick="emailLogin()">Sign In</button>
+        <div class="divider">or continue with</div>
+        <button class="btn-google" type="button" onclick="googleLogin()"><img src="https://www.google.com/favicon.ico" width="18" height="18" alt=""> Google</button>
+        <div class="divider">demo check</div>
+        <div class="quick-grid">
+          <button class="quick-btn admin" type="button" onclick="demoLogin('admin')"><strong>Open Admin Dashboard</strong><span>full access</span></button>
+          <button class="quick-btn vol" type="button" onclick="demoLogin('volunteer')"><strong>Open Volunteer Dashboard</strong><span>task view</span></button>
+          <button class="quick-btn user" type="button" onclick="demoLogin('visitor')"><strong>Open Visitor View</strong><span>public account</span></button>
+        </div>
+        <div id="li-status" class="status"></div>
+      </div>
 
-async function emailLogin() {
-  var email = document.getElementById('li-email').value.trim();
-  var pass  = document.getElementById('li-pass').value;
-  if (!email||!pass){ setStatus('li','Enter email and password.','err'); return; }
-  setLoading('li-btn', true);
-  isHandlingAuth = true;
-  try {
-    var c = await auth.signInWithEmailAndPassword(email, pass);
-    await handleAuthSuccess(c.user, 'li');
-  } catch(e){ isHandlingAuth = false; setStatus('li', friendlyError(e), 'err'); setLoading('li-btn',false); }
-}
-async function emailRegister() {
-  var name  = document.getElementById('reg-name').value.trim();
-  var email = document.getElementById('reg-email').value.trim();
-  var pass  = document.getElementById('reg-pass').value;
-  if (!name||!email||!pass){ setStatus('reg','Fill all fields.','err'); return; }
-  if (pass.length<6){ setStatus('reg','Password: min 6 chars.','err'); return; }
-  setLoading('reg-btn', true);
-  isHandlingAuth = true;
-  try {
-    var c = await auth.createUserWithEmailAndPassword(email, pass);
-    await c.user.updateProfile({ displayName: name });
-    await ensureRole(c.user.uid, 'user');
-    await handleAuthSuccess(c.user, 'reg');
-  } catch(e){ isHandlingAuth = false; setStatus('reg', friendlyError(e), 'err'); setLoading('reg-btn',false); }
-}
-async function googleLogin() {
-  var sid = document.getElementById('panel-login').classList.contains('active') ? 'li' : 'reg';
-  isHandlingAuth = true;
-  try {
-    var c = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    // Admin email always gets admin role; everyone else gets user (if not set yet)
-    if (c.user.email === ADMIN_EMAIL) {
-      await rtdb.ref('userRoles/' + c.user.uid).set('admin');
-    } else {
-      await ensureRole(c.user.uid, 'user');
+      <div id="panel-register" class="panel">
+        <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Aarav Sharma" autocomplete="name" /></div>
+        <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" /></div>
+        <div class="field"><label>Password</label><input type="password" id="reg-pass" placeholder="Minimum 6 characters" autocomplete="new-password" /></div>
+        <button class="btn-main" id="reg-btn" type="button" onclick="emailRegister()">Create Account</button>
+        <button class="btn-google" type="button" onclick="googleLogin()"><img src="https://www.google.com/favicon.ico" width="18" height="18" alt=""> Register with Google</button>
+        <div id="reg-status" class="status"></div>
+        <div class="hint">New Firebase users are created as visitors. Admin role is automatically assigned to madan123050@gmail.com.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var ADMIN_EMAIL = 'madan123050@gmail.com';
+    var isHandlingAuth = false;
+    var auth = null;
+    var rtdb = null;
+
+    try {
+      firebase.initializeApp({
+        apiKey:"AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
+        authDomain:"wildsaura-1ef8a.firebaseapp.com",
+        databaseURL:"https://wildsaura-1ef8a-default-rtdb.firebaseio.com",
+        projectId:"wildsaura-1ef8a",
+        storageBucket:"wildsaura-1ef8a.firebasestorage.app",
+        messagingSenderId:"690017200836",
+        appId:"1:690017200836:web:a3c519752907c3f66ff791"
+      });
+      auth = firebase.auth();
+      rtdb = firebase.database();
+    } catch (e) {
+      console.warn('Firebase unavailable, demo login remains available.', e);
     }
-    await handleAuthSuccess(c.user, sid);
-  } catch(e){ isHandlingAuth = false; setStatus(sid, friendlyError(e), 'err'); }
-}
-async function forgotPassword() {
-  var email = document.getElementById('li-email').value.trim();
-  if (!email){ setStatus('li','Enter your email first.','err'); return; }
-  try {
-    await auth.sendPasswordResetEmail(email);
-    setStatus('li','📧 Reset link sent to '+email, 'ok');
-  } catch(e){ setStatus('li', friendlyError(e), 'err'); }
-}
-function friendlyError(e) {
-  var m = {
-    'auth/user-not-found':'No account found with that email.',
-    'auth/wrong-password':'Incorrect password.',
-    'auth/email-already-in-use':'Email already registered.',
-    'auth/invalid-email':'Invalid email address.',
-    'auth/weak-password':'Password too weak (min 6 chars).',
-    'auth/popup-closed-by-user':'Google sign-in cancelled.',
-    'auth/network-request-failed':'Network error.',
-    'auth/invalid-api-key':'⚠️ Firebase API key missing — see login.html comments.',
-  };
-  return m[e.code] || e.message;
-}
-document.addEventListener('keydown', function(e){
-  if (e.key==='Enter'){
-    if (document.getElementById('panel-login').classList.contains('active')) emailLogin();
-    else emailRegister();
-  }
-});
-auth.onAuthStateChanged(async function(user){
-  if (user && !isHandlingAuth) {
-    var role = await getRoleFromDB(user.uid);
-    var data = { id:user.uid, name:user.displayName||user.email.split('@')[0],
-                 email:user.email, photo:user.photoURL||null, role:role,
-                 loginTime:new Date().toISOString() };
-    localStorage.setItem('saveanimal_user', JSON.stringify(data));
-    localStorage.setItem('saveanimal_currentUser', JSON.stringify(data));
-    window.location.href='/dashboard/';
-  }
-});
-</script>
+
+    function setStatus(id,msg,type){var el=document.getElementById(id+'-status');el.textContent=msg;el.className='status '+type;}
+    function setLoading(id,v){document.getElementById(id).disabled=v;}
+    function switchTab(t){['login','register'].forEach(function(n){document.getElementById('panel-'+n).classList.toggle('active',n===t)});document.querySelectorAll('.tab').forEach(function(b,i){b.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register'))});}
+    function saveUser(data){localStorage.setItem('saveanimal_user',JSON.stringify(data));localStorage.setItem('saveanimal_currentUser',JSON.stringify(data));}
+    function goDashboard(){window.location.href='/dashboard/';}
+    function demoLogin(role){
+      var names={admin:'Madan Admin',volunteer:'Rescue Volunteer',visitor:'SaveAnimal Visitor'};
+      var verifiedMap = JSON.parse(localStorage.getItem('saveanimal_verified_users') || '{}');
+      var email = role+'@saveanimal.local';
+      var user={id:'DEMO-'+role.toUpperCase(),name:names[role],email:email,photo:null,avatar:role==='admin'?'A':role==='volunteer'?'V':'U',role:role,verified:role==='admin'||!!verifiedMap[email]||!!verifiedMap['DEMO-'+role.toUpperCase()],bio:role==='volunteer'?'Field volunteer for feeding, first aid, and rescue coordination.':'Animal welfare supporter with SaveAnimal Nepal.',location:'Kathmandu, Nepal',loginTime:new Date().toISOString(),demo:true};
+      saveUser(user);
+      setStatus('li','Demo '+role+' ready. Opening dashboard...', 'ok');
+      setTimeout(goDashboard,450);
+    }
+    async function getRoleFromDB(uid){if(!rtdb)return'user';var snap=await rtdb.ref('userRoles/'+uid).once('value');return snap.val()||'user';}
+    async function ensureRole(uid,def){if(!rtdb)return def;var snap=await rtdb.ref('userRoles/'+uid).once('value');if(!snap.exists())await rtdb.ref('userRoles/'+uid).set(def);return snap.val()||def;}
+    async function handleAuthSuccess(user,statusId){
+      setStatus(statusId,'Logged in. Fetching role...', 'ok');
+      if(user.email===ADMIN_EMAIL&&rtdb)await rtdb.ref('userRoles/'+user.uid).set('admin');
+      var role=await getRoleFromDB(user.uid);
+      var data={id:user.uid,name:user.displayName||user.email.split('@')[0],email:user.email,photo:user.photoURL||null,avatar:(user.displayName||user.email||'U').slice(0,1).toUpperCase(),role:role,loginTime:new Date().toISOString()};
+      saveUser(data);setStatus(statusId,'Welcome '+data.name+'. Opening dashboard...', 'ok');setTimeout(goDashboard,650);
+    }
+    async function emailLogin(){if(!auth){setStatus('li','Firebase is not available. Use demo admin login for local check.','err');return;}var email=document.getElementById('li-email').value.trim();var pass=document.getElementById('li-pass').value;if(!email||!pass){setStatus('li','Enter email and password.','err');return;}setLoading('li-btn',true);isHandlingAuth=true;try{var c=await auth.signInWithEmailAndPassword(email,pass);await handleAuthSuccess(c.user,'li')}catch(e){isHandlingAuth=false;setStatus('li',friendlyError(e),'err');setLoading('li-btn',false)}}
+    async function emailRegister(){if(!auth){setStatus('reg','Firebase is not available. Use demo login for local check.','err');return;}var name=document.getElementById('reg-name').value.trim();var email=document.getElementById('reg-email').value.trim();var pass=document.getElementById('reg-pass').value;if(!name||!email||!pass){setStatus('reg','Fill all fields.','err');return;}if(pass.length<6){setStatus('reg','Password must be at least 6 characters.','err');return;}setLoading('reg-btn',true);isHandlingAuth=true;try{var c=await auth.createUserWithEmailAndPassword(email,pass);await c.user.updateProfile({displayName:name});await ensureRole(c.user.uid,email===ADMIN_EMAIL?'admin':'visitor');await handleAuthSuccess(c.user,'reg')}catch(e){isHandlingAuth=false;setStatus('reg',friendlyError(e),'err');setLoading('reg-btn',false)}}
+    async function googleLogin(){if(!auth){setStatus('li','Firebase is not available. Use demo admin login for local check.','err');return;}var sid=document.getElementById('panel-login').classList.contains('active')?'li':'reg';isHandlingAuth=true;try{var c=await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());if(c.user.email===ADMIN_EMAIL&&rtdb)await rtdb.ref('userRoles/'+c.user.uid).set('admin');else await ensureRole(c.user.uid,'visitor');await handleAuthSuccess(c.user,sid)}catch(e){isHandlingAuth=false;setStatus(sid,friendlyError(e),'err')}}
+    async function forgotPassword(){if(!auth){setStatus('li','Firebase is not available right now.','err');return;}var email=document.getElementById('li-email').value.trim();if(!email){setStatus('li','Enter your email first.','err');return;}try{await auth.sendPasswordResetEmail(email);setStatus('li','Reset link sent to '+email,'ok')}catch(e){setStatus('li',friendlyError(e),'err')}}
+    function friendlyError(e){var m={'auth/user-not-found':'No account found with that email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already registered.','auth/invalid-email':'Invalid email address.','auth/weak-password':'Password too weak.','auth/popup-closed-by-user':'Google sign-in cancelled.','auth/network-request-failed':'Network error.'};return m[e.code]||e.message||'Login failed.'}
+    document.addEventListener('keydown',function(e){if(e.key==='Enter'){document.getElementById('panel-login').classList.contains('active')?emailLogin():emailRegister()}});
+    if(auth){auth.onAuthStateChanged(async function(user){if(user&&!isHandlingAuth){var role=await getRoleFromDB(user.uid);saveUser({id:user.uid,name:user.displayName||user.email.split('@')[0],email:user.email,photo:user.photoURL||null,avatar:(user.displayName||user.email||'U').slice(0,1).toUpperCase(),role:role,loginTime:new Date().toISOString()});goDashboard();}})}
+  </script>
 </body>
 </html>

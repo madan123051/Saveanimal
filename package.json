@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "npm run build:dashboard && npm run start",
-    "build:dashboard": "esbuild dashboard/app.tsx --bundle --outfile=dashboard/bundle.js --platform=browser --jsx=automatic --external:lucide-react --external:react --external:react-dom"
+    "build:dashboard": "esbuild dashboard/app.tsx --bundle --outfile=dashboard/bundle.js --platform=browser --jsx=automatic"
   },
   "dependencies": {
     "express": "^4.19.2",

@@ -2,6 +2,9 @@
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
   const savedUser = localStorage.getItem('saveanimal_user');
   if (savedUser) {
     try { currentUser = JSON.parse(savedUser); updateUIForUser(); }
@@ -28,6 +31,10 @@ function setupEventListeners() {
   document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
+  document.querySelectorAll('[data-chat-prompt]').forEach(btn => {
+    btn.addEventListener('click', () => sendChatMessage(btn.dataset.chatPrompt || ''));
+  });
+  restoreChatMessages();
 
   // Login form submission (kept for fallback)
   document.getElementById('loginForm')?.addEventListener('submit', handleLoginFormSubmit);
@@ -172,30 +179,79 @@ function setupFormSubmissions() {
   });
 }
 
+function restoreChatMessages() {
+  const div = document.getElementById('chatMessages');
+  if (!div) return;
+  let messages = [];
+  try { messages = JSON.parse(localStorage.getItem('saveanimal_chat') || '[]'); } catch (_) {}
+  if (!messages.length) {
+    messages = [{ from: 'bot', text: 'Namaste. Tell me if this is a rescue emergency, donation question, or volunteer question.' }];
+  }
+  div.innerHTML = '';
+  messages.slice(-8).forEach(m => appendChatMessage(m.from, m.text, false));
+  div.scrollTop = div.scrollHeight;
+}
+
+function saveChatMessage(from, text) {
+  let messages = [];
+  try { messages = JSON.parse(localStorage.getItem('saveanimal_chat') || '[]'); } catch (_) {}
+  messages.push({ from, text, ts: Date.now() });
+  localStorage.setItem('saveanimal_chat', JSON.stringify(messages.slice(-16)));
+}
+
+function appendChatMessage(from, text, shouldSave = true) {
+  const div = document.getElementById('chatMessages');
+  if (!div || !text) return;
+  const msg = document.createElement('div');
+  msg.className = `chat-msg ${from === 'user' ? 'user-msg' : 'bot-msg'}`;
+  msg.textContent = text;
+  div.appendChild(msg);
+  div.scrollTop = div.scrollHeight;
+  if (shouldSave) saveChatMessage(from, text);
+}
+
+function getChatReply(message) {
+  const lower = message.toLowerCase();
+  if (lower.includes('injured') || lower.includes('hurt') || lower.includes('rescue') || lower.includes('accident')) {
+    return 'For rescue: keep distance, note the exact location, take a photo only if safe, then submit the Report form. For urgent danger, call the local rescue contact immediately.';
+  }
+  if (lower.includes('donate') || lower.includes('money') || lower.includes('fund')) {
+    return 'You can donate through the Donate section. Choose eSewa, Khalti, or bank transfer and the amount will be recorded for rescue supplies and treatment.';
+  }
+  if (lower.includes('volunteer') || lower.includes('join') || lower.includes('help')) {
+    return 'To volunteer, fill the Volunteer form with your role and availability. Rescue, feeding, transport, and social media help are all useful.';
+  }
+  if (lower.includes('admin') || lower.includes('dashboard') || lower.includes('login')) {
+    return 'Use Login, then Demo Admin for local testing. Real admin access is assigned to the configured admin email.';
+  }
+  return 'Thanks. Share location, animal condition, and your phone number if this is a rescue case. I can also help with donation or volunteer steps.';
+}
+
+function sendChatMessage(message) {
+  message = (message || '').trim();
+  if (!message) return;
+  appendChatMessage('user', message);
+  setTimeout(() => appendChatMessage('bot', getChatReply(message)), 350);
+}
+
 function handleChatSubmit(e) {
   e.preventDefault();
   const input = e.target.querySelector('input[name="text"]');
   const message = input.value.trim();
   if (!message) return;
-  const div = document.getElementById('chatMessages');
-  const userMsg = document.createElement('div'); userMsg.className = 'chat-msg user-msg'; userMsg.textContent = message; div.appendChild(userMsg);
-  setTimeout(() => {
-    const botMsg = document.createElement('div'); botMsg.className = 'chat-msg bot-msg';
-    const r = ['🐾 How can I help you today?','That\'s a great question! 💙','We\'re here to help! 🐾','Thank you! 🙏 Contact us via email.','You can report animals via our form. 📝'];
-    botMsg.textContent = r[Math.floor(Math.random()*r.length)]; div.appendChild(botMsg); div.scrollTop = div.scrollHeight;
-  }, 500);
-  input.value = ''; div.scrollTop = div.scrollHeight;
+  sendChatMessage(message);
+  input.value = '';
 }
 
 function toggleChat() {
   const w = document.getElementById('chat'); w.classList.toggle('minimized');
-  document.getElementById('chatToggle').textContent = w.classList.contains('minimized') ? '💬 Open Chat' : '💬 Close Chat';
+  document.getElementById('chatToggle').textContent = w.classList.contains('minimized') ? 'Open Chat' : 'Close Chat';
 }
 
 // ============ LANGUAGE ============
 const translations = {
-  en: { nav_home:'Home', nav_stories:'Stories', nav_report:'Report', nav_donate:'Donate', nav_volunteer:'Volunteer', nav_about:'About', nav_contact:'Contact', hero_title:'Help Save Lives –<br>Rescue Animals in Nepal', hero_text:'Together, we rescue injured street animals, provide food and medical care, and build a kinder Nepal.', cta_report:'Report an Animal', cta_donate:'Donate Now', cta_volunteer:'Join as Volunteer', stat_rescued:'Animals Rescued', stat_volunteers:'Volunteers', stat_donations:'Donations (NPR)', stat_reports:'Active Reports', stories_title:'Featured Rescue Stories', report_title:'Report an Injured Animal' },
-  ne: { nav_home:'गृहपृष्ठ', nav_stories:'कथाहरू', nav_report:'रिपोर्ट', nav_donate:'दान दिनुहोस्', nav_volunteer:'स्वयंसेवक', nav_about:'हाम्रोबारे', nav_contact:'सम्पर्क', hero_title:'जीवन बचाउन मद्दत गर्नुस् –<br>नेपालमा जनावरहरू उद्धार गर्नुस्', hero_text:'हामी मिलेर घाइते सडक जनावरहरू उद्धार गर्छौं, खाना र औषधि उपचार प्रदान गर्छौं, र दयालु नेपाल निर्माण गर्छौं।', cta_report:'जनावर रिपोर्ट गर्नुस्', cta_donate:'अहिले दान दिनुस्', cta_volunteer:'स्वयंसेवकको रूपमा जोडिनुस्', stat_rescued:'उद्धार गरिएका जनावरहरू', stat_volunteers:'स्वयंसेवकहरू', stat_donations:'दान (NPR)', stat_reports:'सक्रिय रिपोर्टहरू', stories_title:'विशेष उद्धार कथाहरू', report_title:'घाइते जनावर रिपोर्ट गर्नुस्' }
+  en: { nav_home:'Home', nav_stories:'Stories', nav_report:'Report', nav_donate:'Donate', nav_volunteer:'Volunteer', nav_about:'About', nav_contact:'Contact', hero_title:'Fast rescue care for injured animals across Nepal', hero_text:'Report emergencies, fund treatment, and join coordinated field teams helping street animals recover with dignity.', cta_report:'Report an Animal', cta_donate:'Donate Now', cta_volunteer:'Join as Volunteer', stat_rescued:'Animals Rescued', stat_volunteers:'Volunteers', stat_donations:'Donations (NPR)', stat_reports:'Active Reports', stories_title:'Featured Rescue Stories', report_title:'Report an Injured Animal' },
+  ne: { nav_home:'गृहपृष्ठ', nav_stories:'कथाहरू', nav_report:'रिपोर्ट', nav_donate:'दान दिनुहोस्', nav_volunteer:'स्वयंसेवक', nav_about:'हाम्रोबारे', nav_contact:'सम्पर्क', hero_title:'नेपालभर घाइते जनावरका लागि छिटो उद्धार सेवा', hero_text:'आपतकालीन रिपोर्ट पठाउनुहोस्, उपचारमा सहयोग गर्नुहोस्, र सडक जनावरलाई सम्मानका साथ निको हुन मद्दत गर्ने टोलीमा जोडिनुहोस्।', cta_report:'जनावर रिपोर्ट गर्नुस्', cta_donate:'अहिले दान दिनुस्', cta_volunteer:'स्वयंसेवकको रूपमा जोडिनुस्', stat_rescued:'उद्धार गरिएका जनावरहरू', stat_volunteers:'स्वयंसेवकहरू', stat_donations:'दान (NPR)', stat_reports:'सक्रिय रिपोर्टहरू', stories_title:'विशेष उद्धार कथाहरू', report_title:'घाइते जनावर रिपोर्ट गर्नुस्' }
 };
 
 function applyTranslations(lang) {
