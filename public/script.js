@@ -3,6 +3,7 @@ let currentUser = null;
 let liveMap = null;
 let liveReportLayer = null;
 let appConfig = {};
+const liveReportMarkers = new Map();
 
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) {
@@ -47,6 +48,7 @@ function setupEventListeners() {
   document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
   document.getElementById('chatToggle')?.addEventListener('click', toggleChat);
   document.getElementById('chatForm')?.addEventListener('submit', handleChatSubmit);
+  document.getElementById('useMyLocationBtn')?.addEventListener('click', fillCurrentReportLocation);
   document.querySelectorAll('[data-chat-prompt]').forEach(btn => {
     btn.addEventListener('click', () => sendChatMessage(btn.dataset.chatPrompt || ''));
   });
@@ -173,16 +175,19 @@ function updateLiveRescueBoard() {
   const status = document.getElementById('liveBoardStatus');
   const title = document.getElementById('liveBoardTitle');
   const meta = document.getElementById('liveBoardMeta');
+  const list = document.getElementById('liveReportList');
   if (!count || !status || !title || !meta) return;
   let reports = [];
   try { reports = JSON.parse(localStorage.getItem('rescueReports') || '[]'); } catch (_) {}
   const latest = reports[reports.length - 1];
   count.textContent = `${reports.length} active`;
   renderLiveReportMarkers(reports);
+  renderLiveReportList(reports);
   if (!latest) {
     status.textContent = 'Waiting for reports';
     title.textContent = 'No complaint submitted yet';
     meta.textContent = 'Submit the report form to show it here live.';
+    if (list) list.innerHTML = '';
     return;
   }
   status.textContent = `${latest.status || 'Pending'} complaint`;
@@ -225,6 +230,7 @@ function renderLiveReportMarkers(reports) {
   if (!liveMap || !liveReportLayer || !window.L) return;
   const leaflet = window.L;
   liveReportLayer.clearLayers();
+  liveReportMarkers.clear();
   const markerIcon = leaflet.divIcon({
     className: 'live-report-marker',
     html: '<div style="width:24px;height:24px;border-radius:999px;background:#d94f45;border:4px solid #fff;box-shadow:0 0 0 8px rgba(217,79,69,.25)"></div>',
@@ -234,14 +240,72 @@ function renderLiveReportMarkers(reports) {
   const latestReports = reports.slice(-8);
   latestReports.forEach((report, index) => {
     const coords = parseReportCoords(report.location, index);
-    leaflet.marker(coords, { icon: markerIcon })
+    const marker = leaflet.marker(coords, { icon: markerIcon })
       .bindPopup(`<strong>${report.location || 'Reported location'}</strong><br>${report.condition || 'Condition pending'}`)
       .addTo(liveReportLayer);
+    liveReportMarkers.set(getReportKey(report, index), marker);
   });
   if (latestReports.length) {
     const latest = latestReports[latestReports.length - 1];
     liveMap.setView(parseReportCoords(latest.location, latestReports.length - 1), 14, { animate: true });
   }
+}
+
+function getReportKey(report, index = 0) {
+  return report.id || report.timestamp || `${report.location || 'unknown'}-${index}`;
+}
+
+function renderLiveReportList(reports) {
+  const list = document.getElementById('liveReportList');
+  if (!list) return;
+  const latestReports = reports.slice(-5).reverse();
+  if (!latestReports.length) {
+    list.innerHTML = '';
+    return;
+  }
+  list.innerHTML = latestReports.map((report, index) => {
+    const time = report.timestamp ? new Date(report.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now';
+    return `<button class="live-report-item" type="button" data-report-id="${escapeHtml(getReportKey(report, latestReports.length - 1 - index))}">
+      <strong>${escapeHtml(report.location || 'Unknown location')}</strong>
+      <span>${escapeHtml(report.condition || 'Condition pending')} · ${time}</span>
+    </button>`;
+  }).join('');
+  list.querySelectorAll('.live-report-item').forEach((button) => {
+    button.addEventListener('click', () => focusLiveReport(button.dataset.reportId, button));
+  });
+}
+
+function focusLiveReport(reportId, button) {
+  const marker = liveReportMarkers.get(reportId);
+  if (!marker || !liveMap) return;
+  document.querySelectorAll('.live-report-item').forEach((item) => item.classList.remove('active'));
+  button?.classList.add('active');
+  liveMap.flyTo(marker.getLatLng(), 16, { animate: true, duration: 0.8 });
+  marker.openPopup();
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
+}
+
+function fillCurrentReportLocation() {
+  const input = document.getElementById('reportLocationInput');
+  const button = document.getElementById('useMyLocationBtn');
+  if (!input || !navigator.geolocation) {
+    showStatus('reportStatus', 'GPS is not available on this device.', 'error');
+    return;
+  }
+  if (button) button.textContent = 'Finding...';
+  navigator.geolocation.getCurrentPosition((position) => {
+    const lat = position.coords.latitude.toFixed(6);
+    const lng = position.coords.longitude.toFixed(6);
+    input.value = `${lat}, ${lng}`;
+    showStatus('reportStatus', 'GPS location added. Submit report to show it on the map.', 'success', 2500);
+    if (button) button.textContent = 'Use GPS';
+  }, () => {
+    showStatus('reportStatus', 'Could not get GPS location. Please type street, landmark, or coordinates.', 'error');
+    if (button) button.textContent = 'Use GPS';
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
 }
 
 function setupFormSubmissions() {

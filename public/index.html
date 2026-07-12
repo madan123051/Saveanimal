@@ -117,6 +117,7 @@
               <small id="liveBoardStatus">Waiting for reports</small>
               <strong id="liveBoardTitle">No complaint submitted yet</strong>
               <span id="liveBoardMeta">Submit the report form to show it here live.</span>
+              <div id="liveReportList" class="live-report-list" aria-label="Recent live rescue reports"></div>
             </div>
           </div>
         </div>
@@ -161,7 +162,13 @@
           <form id="reportForm">
             <div class="form-group"><label>Your Name</label><input name="name" placeholder="Full name" required /></div>
             <div class="form-group"><label>Phone Number</label><input name="phone" placeholder="+977-XXXXXXXXXX" required /></div>
-            <div class="form-group"><label>Location</label><input name="location" placeholder="Street, landmark, or GPS" required /></div>
+            <div class="form-group">
+              <label>Location</label>
+              <div class="location-input-row">
+                <input id="reportLocationInput" name="location" placeholder="Street, landmark, or GPS" required />
+                <button id="useMyLocationBtn" class="btn-location" type="button">Use GPS</button>
+              </div>
+            </div>
             <div class="form-group"><label>Animal Condition</label><textarea name="condition" placeholder="Describe injuries, species, behaviour..." required></textarea></div>
             <div class="form-group"><label>Photo (optional)</label><input type="file" name="animalImage" accept="image/*" class="file-input" /></div>
             <button type="submit" class="btn-submit">Submit Report</button>
