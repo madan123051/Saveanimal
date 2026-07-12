@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const admin = require('firebase-admin');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,8 +11,8 @@ let db = null;
 try {
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://wildsaura-1ef8a-default-rtdb.firebaseio.com',
-    storageBucket: 'wildsaura-1ef8a.firebasestorage.app'
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET
   });
   db = admin.database();
   db.ref('stats').once('value', (snap) => {
@@ -29,6 +30,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+function buildMapTileUrl() {
+  const fallback = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+  const template = process.env.MAP_TILE_URL_TEMPLATE || fallback;
+  return template.replace('{key}', encodeURIComponent(process.env.MAP_API_KEY || ''));
+}
+
+app.get('/api/config', (req, res) => {
+  res.json({
+    adminEmail: process.env.ADMIN_EMAIL || '',
+    firebase: {
+      apiKey: process.env.PUBLIC_FIREBASE_API_KEY || '',
+      authDomain: process.env.PUBLIC_FIREBASE_AUTH_DOMAIN || '',
+      databaseURL: process.env.PUBLIC_FIREBASE_DATABASE_URL || process.env.FIREBASE_DATABASE_URL || '',
+      projectId: process.env.PUBLIC_FIREBASE_PROJECT_ID || '',
+      storageBucket: process.env.PUBLIC_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET || '',
+      messagingSenderId: process.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
+      appId: process.env.PUBLIC_FIREBASE_APP_ID || ''
+    },
+    map: {
+      tileUrl: buildMapTileUrl(),
+      attribution: process.env.MAP_ATTRIBUTION || 'Tiles © Esri'
+    }
+  });
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => { cb(null, path.join(__dirname, 'public/assets/uploads')); },

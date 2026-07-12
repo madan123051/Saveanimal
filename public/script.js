@@ -2,11 +2,13 @@
 let currentUser = null;
 let liveMap = null;
 let liveReportLayer = null;
+let appConfig = {};
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
+  appConfig = await loadAppConfig();
   const savedUser = localStorage.getItem('saveanimal_user');
   if (savedUser) {
     try { currentUser = JSON.parse(savedUser); updateUIForUser(); }
@@ -22,6 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   updateLiveRescueBoard();
   setupFormSubmissions();
 });
+
+async function loadAppConfig() {
+  try {
+    const response = await fetch('/api/config', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Config request failed');
+    return await response.json();
+  } catch (error) {
+    return {};
+  }
+}
 
 function setupEventListeners() {
   // ✅ FIXED: Redirect to Firebase login page instead of old modal
@@ -183,8 +195,8 @@ function initLiveRescueMap() {
   if (!el || !window.L) return;
   const leaflet = window.L;
   liveMap = leaflet.map(el, { zoomControl: true, attributionControl: true }).setView([27.7172, 85.3240], 12);
-  leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles © Esri',
+  leaflet.tileLayer(appConfig.map?.tileUrl || 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: appConfig.map?.attribution || 'Tiles © Esri',
     maxZoom: 18
   }).addTo(liveMap);
   liveReportLayer = leaflet.layerGroup().addTo(liveMap);

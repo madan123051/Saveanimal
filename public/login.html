@@ -74,25 +74,33 @@
   </main>
 
   <script>
-    var ADMIN_EMAIL = 'madan123050@gmail.com';
+    var ADMIN_EMAIL = '';
     var isHandlingAuth = false;
     var auth = null;
     var rtdb = null;
 
-    try {
-      firebase.initializeApp({
-        apiKey:"AIzaSyCXDJrFmn-pzbqys91tj4Fruqn4tl58p9Y",
-        authDomain:"wildsaura-1ef8a.firebaseapp.com",
-        databaseURL:"https://wildsaura-1ef8a-default-rtdb.firebaseio.com",
-        projectId:"wildsaura-1ef8a",
-        storageBucket:"wildsaura-1ef8a.firebasestorage.app",
-        messagingSenderId:"690017200836",
-        appId:"1:690017200836:web:a3c519752907c3f66ff791"
-      });
-      auth = firebase.auth();
-      rtdb = firebase.database();
-    } catch (e) {
-      console.warn('Firebase unavailable, demo login remains available.', e);
+    loadRuntimeConfig();
+
+    async function loadRuntimeConfig(){
+      try {
+        var res = await fetch('/api/config', { cache: 'no-store' });
+        var config = await res.json();
+        ADMIN_EMAIL = config.adminEmail || '';
+        var firebaseConfig = config.firebase || {};
+        if (!firebaseConfig.apiKey || !window.firebase) return;
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        rtdb = firebase.database();
+        auth.onAuthStateChanged(async function(user){
+          if(user&&!isHandlingAuth){
+            var role=await getRoleFromDB(user.uid);
+            saveUser({id:user.uid,name:user.displayName||user.email.split('@')[0],email:user.email,photo:user.photoURL||null,avatar:(user.displayName||user.email||'U').slice(0,1).toUpperCase(),role:role,loginTime:new Date().toISOString()});
+            goDashboard();
+          }
+        });
+      } catch (e) {
+        console.warn('Firebase unavailable.', e);
+      }
     }
 
     function setStatus(id,msg,type){var el=document.getElementById(id+'-status');el.textContent=msg;el.className='status '+type;}
@@ -115,7 +123,6 @@
     async function forgotPassword(){if(!auth){setStatus('li','Firebase is not available right now.','err');return;}var email=document.getElementById('li-email').value.trim();if(!email){setStatus('li','Enter your email first.','err');return;}try{await auth.sendPasswordResetEmail(email);setStatus('li','Reset link sent to '+email,'ok')}catch(e){setStatus('li',friendlyError(e),'err')}}
     function friendlyError(e){var m={'auth/user-not-found':'No account found with that email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already registered.','auth/invalid-email':'Invalid email address.','auth/weak-password':'Password too weak.','auth/popup-closed-by-user':'Google sign-in cancelled.','auth/network-request-failed':'Network error.'};return m[e.code]||e.message||'Login failed.'}
     document.addEventListener('keydown',function(e){if(e.key==='Enter'){document.getElementById('panel-login').classList.contains('active')?emailLogin():emailRegister()}});
-    if(auth){auth.onAuthStateChanged(async function(user){if(user&&!isHandlingAuth){var role=await getRoleFromDB(user.uid);saveUser({id:user.uid,name:user.displayName||user.email.split('@')[0],email:user.email,photo:user.photoURL||null,avatar:(user.displayName||user.email||'U').slice(0,1).toUpperCase(),role:role,loginTime:new Date().toISOString()});goDashboard();}})}
   </script>
 </body>
 </html>
